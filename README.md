@@ -2,11 +2,11 @@
 
 ## Autores
 
-Óscar Alejandro Manteiga Seoane
-Nicolás Vázquez Cancela
-Hugo Sanjiao Varela
-Eduardo Juaristi Pérez
-Antonio Vila Leis
+- Óscar Alejandro Manteiga Seoane
+- Nicolás Vázquez Cancela
+- Hugo Sanjiao Varela
+- Eduardo Juaristi Pérez
+- Antonio Vila Leis
 
 ## Descripción
 
