@@ -7,7 +7,8 @@ TODO:
 ?- Crear pantalla de incio (con menú?).
 ?- Crear pantalla de pausa.
 ?- Crear pantalla de opciones.
-?- ñadir sonidos.
+?- Solucionar hitbox (más pequeñas).
+?- Añadir sonidos.
 """
 
 def display_score():
