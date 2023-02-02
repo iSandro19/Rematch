@@ -1,6 +1,14 @@
 import pygame
 from sys import exit
 
+"""
+TODO:
+?- Remodelar pantalla de fin.
+?- Crear pantalla de incio (con menú?).
+?- Crear pantalla de pausa.
+?- Crear pantalla de opciones.
+"""
+
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
     score_surface = test_font.render(f'{current_time}', False, (64, 64, 64))
