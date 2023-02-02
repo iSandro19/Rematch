@@ -1,4 +1,5 @@
 import pygame
+from sys import exit
 
 def display_score():
     current_time = int(pygame.time.get_ticks() / 1000) - start_time
@@ -20,17 +21,17 @@ text = "Prueba"
 clock = pygame.time.Clock()
 
 # Load graphics
-test_font = pygame.font.Font("G:/CIIE/2D/Prueba/font/Pixeltype.ttf", 40)
-sky_surface = pygame.image.load("G:/CIIE/2D/Prueba/graphics/sky.png").convert()
-ground_surface = pygame.image.load("G:/CIIE/2D/Prueba/graphics/ground.png").convert()
+test_font = pygame.font.Font("font/Pixeltype.ttf", 40)
+sky_surface = pygame.image.load("graphics/sky.png").convert()
+ground_surface = pygame.image.load("graphics/ground.png").convert()
 
 score_surface = test_font.render("Prueba", False, (0, 0, 0))
 score_rectangle = score_surface.get_rect(center = (400, 50))
 
-snail_surface = pygame.image.load("G:/CIIE/2D/Prueba/graphics/snail/snail1.png").convert_alpha()
+snail_surface = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
 snail_rectangle = snail_surface.get_rect(midbottom = (600, 300))
 
-player_surface = pygame.image.load("G:/CIIE/2D/Prueba/graphics/player/player_walk_1.png").convert_alpha()
+player_surface = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
 player_rectangle = player_surface.get_rect(midbottom = (80, 300))
 player_gravity = 0
 
