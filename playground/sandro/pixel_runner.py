@@ -1,12 +1,6 @@
-from time import sleep
 import pygame
 from sys import exit
 from random import randint, choice
-
-""" ToDo LIST
-- Make nail and fly hitboxes smaller.
-- Create a database to store highscores with a nickname.
-"""
 
 # Player class
 class Player(pygame.sprite.Sprite):
@@ -192,6 +186,7 @@ while True:
             # Go to game screen
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_state = 1
+                start_sound.play()
                 start_time = int(pygame.time.get_ticks() / 1000)
 
     # State 0: Start Screen
