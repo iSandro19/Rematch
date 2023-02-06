@@ -10,7 +10,7 @@ Autores del proyecto:
 - Hugo Sanjiao Varela
 - Antonio Vila Leis
 
-## Metodologías Kanban
+## Metodología Kanban
 https://trello.com/w/rematch8
 
 ## Historia
