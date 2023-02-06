@@ -23,7 +23,8 @@ class Player(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         if keys[pygame.K_SPACE] and game_state == 1 and self.rect.bottom >= 300:
             self.player_gravity = -20
-    
+            jump_sound.play()
+
     def apply_gravity(self):
         self.player_gravity += 1
         self.rect.y += self.player_gravity
@@ -171,9 +172,6 @@ while True:
         # Game screen
         elif game_state == 1:
             if event.type == pygame.KEYDOWN:
-                # Jump
-                if event.key == pygame.K_SPACE:
-                    jump_sound.play()
                 # Go to main screen
                 if event.key == pygame.K_ESCAPE:
                     game_state = 0
