@@ -1,44 +1,15 @@
 import pygame as pg
 from pygame.locals import *
 from typing import List, Dict, Tuple, Union, Callable
-import numpy as np
-from scipy.sparse import csr_matrix
+from objstate import *
+
 
 WIND_SIZE:Tuple[int, int] = 128, 128
 FPS:int = 60
 
 
-class ParamError(Exception):
-	def __init__(self, msg=""):
-		super(ParamError, self).__init__(msg)
-
-class FinishedError(Exception):
-	def __init__(self, msg=""):
-		super(FinishedError, self).__init__(msg)
-
-class ObjState(object):
-	state:int = 0
-	states:List[Callable[[object], None]] = None
-	arcs:List[List[List[Callable[[object], object]]]] = None
-
-	def next(self, act:Callable[[object], object])->None:
-		for nState in range(len(self.arcs)):
-			if act in self.arcs[self.state][nState]:
-				self.state = nState
-				return
-
-		raise ParamError("{} not allowed in state {}".format(act, self.state))
-
-	def update(self):
-		iState = self.state-1
-
-		if iState != -1:
-			self.states[iState](self)
-		else:
-			raise FinishedError()
-
-
 class Test(ObjState, pg.sprite.Sprite):
+	containers:pg.sprite.Group = None
 	screen:pg.Rect = None
 	speed:int = None
 
@@ -101,7 +72,7 @@ def main() -> int:
 	assert pg.image.get_extended()
 
 	tests = pg.sprite.Group()
-	test = Test(tests, 4, wind.get_rect())
+	test = Test(tests, 2, wind.get_rect())
 
 	while notExit and tests:
 		for event in pg.event.get():
