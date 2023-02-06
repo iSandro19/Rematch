@@ -7,9 +7,9 @@ class Player(pygame.sprite.Sprite):
     global game_state
     def __init__(self):
         super().__init__()
-        walk1 = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
-        walk2 = pygame.image.load("graphics/player/player_walk_2.png").convert_alpha()
-        self.jump = pygame.image.load("graphics/player/player_jump.png").convert_alpha()
+        walk1 = pygame.image.load("../graphics/player/player_walk_1.png").convert_alpha()
+        walk2 = pygame.image.load("../graphics/player/player_walk_2.png").convert_alpha()
+        self.jump = pygame.image.load("../graphics/player/player_jump.png").convert_alpha()
         self.player_walk_index = [walk1, walk2]
         self.player_index = 0
         self.player_gravity = 0
@@ -49,13 +49,13 @@ class Obstacle(pygame.sprite.Sprite):
     def __init__(self, type):
         super().__init__()
         if type == "fly":
-            fly1 = pygame.image.load("graphics/fly/fly1.png").convert_alpha()
-            fly2 = pygame.image.load("graphics/fly/fly2.png").convert_alpha()
+            fly1 = pygame.image.load("../graphics/fly/fly1.png").convert_alpha()
+            fly2 = pygame.image.load("../graphics/fly/fly2.png").convert_alpha()
             self.frames = [fly1, fly2]
             y = 200
         elif type == "snail":
-            snail1 = pygame.image.load("graphics/snail/snail1.png").convert_alpha()
-            snail2 = pygame.image.load("graphics/snail/snail2.png").convert_alpha()
+            snail1 = pygame.image.load("../graphics/snail/snail1.png").convert_alpha()
+            snail2 = pygame.image.load("../graphics/snail/snail2.png").convert_alpha()
             self.frames = [snail1, snail2]
             y = 300
         else:
@@ -116,18 +116,18 @@ start_time = 0
 clock = pygame.time.Clock()
 
 # Load sounds
-background_music = pygame.mixer.Sound("audio/music.wav")
+background_music = pygame.mixer.Sound("../audio/music.wav")
 background_music.set_volume(0.1)
-game_over_sound = pygame.mixer.Sound("audio/game_over.wav")
+game_over_sound = pygame.mixer.Sound("../audio/game_over.wav")
 game_over_sound.set_volume(0.4)
-start_sound = pygame.mixer.Sound("audio/start.wav")
+start_sound = pygame.mixer.Sound("../audio/start.wav")
 start_sound.set_volume(0.8)
-jump_sound = pygame.mixer.Sound("audio/jump.wav")
+jump_sound = pygame.mixer.Sound("../audio/jump.wav")
 jump_sound.set_volume(0.2)
 
 # Background
-sky_surface = pygame.image.load("graphics/sky.png").convert()
-ground_surface = pygame.image.load("graphics/ground.png").convert()
+sky_surface = pygame.image.load("../graphics/sky.png").convert()
+ground_surface = pygame.image.load("../graphics/ground.png").convert()
 background_music.play(-1)
 
 # Groups
@@ -135,13 +135,13 @@ player = pygame.sprite.GroupSingle(); player.add(Player())
 obstacles = pygame.sprite.Group()
 
 # Player stand
-player_stand_surface = pygame.image.load("graphics/player/player_stand.png").convert_alpha()
+player_stand_surface = pygame.image.load("../graphics/player/player_stand.png").convert_alpha()
 player_stand_surface = pygame.transform.rotozoom(player_stand_surface, 0, 1.5)
 player_stand_rectangle = player_stand_surface.get_rect(center = (400, 200))
 
 # Load fonts
-text_font = pygame.font.Font("font/Pixeltype.ttf", 40)
-name_font = pygame.font.Font("font/Pixeltype.ttf", 80)
+text_font = pygame.font.Font("../font/Pixeltype.ttf", 40)
+name_font = pygame.font.Font("../font/Pixeltype.ttf", 80)
 
 # Game name
 game_name = name_font.render("Pixel Runner", False, (0, 0, 0))
@@ -168,6 +168,7 @@ while True:
             # Main screen
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 start_sound.play()
+                start_time = int(pygame.time.get_ticks() / 1000)
                 game_state = 1
         # Game screen
         elif game_state == 1:
