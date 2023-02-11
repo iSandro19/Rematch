@@ -10,7 +10,7 @@ class Player(pygame.sprite.Sprite):
         walk1 = pygame.image.load("../img/player/player_walk_1.png").convert_alpha()
         walk2 = pygame.image.load("../img/player/player_walk_2.png").convert_alpha()
         self.jump = pygame.image.load("../img/player/player_jump.png").convert_alpha()
-        self.player_walk_index = [walk1, walk2]
+        self.playesr_walk_index = [walk1, walk2]
         self.player_index = 0
         self.player_gravity = 0
         self.jumps = 0
