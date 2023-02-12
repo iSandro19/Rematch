@@ -10,8 +10,23 @@ Autores del proyecto:
 - Hugo Sanjiao Varela
 - Antonio Vila Leis
 
-## Metodología Kanban
-https://trello.com/w/rematch8
+## Enlaces
+
+### Repositorio
+
+<https://github.com/iSandro19/Rematch>
+
+### Organización (Metodología Kanbam)
+
+<https://trello.com/w/rematch_toyota>
+
+### Documentación
+
+<https://docs.google.com/document/d/1v0zA85QekKT9FsvyTZ1hQLCanTSHlwu2UHCTeFgAQZY/edit?usp=sharing>
+
+### Mapa
+
+<https://docs.google.com/spreadsheets/d/1_GIMI2xkNzhqEdy4Vba26_w4FT0jxLoSiZegfjnVvlE/edit?usp=sharing>
 
 ## Historia
 
