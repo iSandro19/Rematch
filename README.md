@@ -38,7 +38,7 @@ Magnus Carlsen, uno de los mejores ajedrecistas de todos los tiempos, tras 10 a√
   - audio: carpeta donde se encuentran los archivos de audio del juego.
   - font: carpeta donde se encuentran los archivos de fuentes del juego.
   - img: carpeta donde se encuentran los archivos de im√°genes del juego.
-- doc: carpeta donde se encuentran los documentos del proyecto.
+- docs: carpeta donde se encuentran los documentos del proyecto.
 - src: carpeta donde se encuentran los archivos fuente del proyecto.
 - playground: carpeta donde se encuentran los archivos, juegos y elementos de prueba de cada uno para no afectar al proyecto principal.
 
