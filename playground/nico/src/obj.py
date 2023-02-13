@@ -47,6 +47,7 @@ class FinishedError(Exception):
 		super().__init__(msg)
 
 class ObjState(Obj):
+	state = 0
 	@abstractmethod
 	def __init__(self)->None:
 		pass
@@ -54,14 +55,13 @@ class ObjState(Obj):
 	def setStates(states):
 		ObjState._states = np.array(states)
 	def setArcs(arcs):
-		ObjState._arcs = csrmat(arcs)
+		ObjState._arcs = CSRMat(arcs)
 
 	def next(self, act):
-		for row in ObjState._arcs[self.state]:
-			for acts, nextState in row:
-				if act in acts:
-					self.state = nState
-					return
+		for actsXnextState in self._arcs[self.state]:
+			if act in actsXnextState[0]:
+				self.state = actXnextState[1]
+				return
 		raise ParamError("{} not allowed in state {}".format(act, self.state))
 
 	def update(self):
