@@ -20,9 +20,9 @@ Autores del proyecto:
 
 <https://trello.com/w/rematch_toyota>
 
-### Documentaci√≥n
+### Memoria
 
-<https://docs.google.com/document/d/1v0zA85QekKT9FsvyTZ1hQLCanTSHlwu2UHCTeFgAQZY/edit?usp=sharing>
+<https://docs.google.com/document/d/1FLFKSRdOCkTBWEM-sJhEycrtQ9Y_UUYJhOP0IztbFAA/edit?usp=sharing>
 
 ### Mapa
 
@@ -49,5 +49,3 @@ Magnus Carlsen, uno de los mejores ajedrecistas de todos los tiempos, tras 10 a√
 3. Clonar el repositorio: `git clone
 
 Para ejecutarlo...
-
-## Controles
