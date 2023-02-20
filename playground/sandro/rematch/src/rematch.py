@@ -2,6 +2,8 @@ import pygame
 from sys import exit
 from random import randint, choice
 
+GROUND_COORDINATE = 365;
+
 # Player class
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -14,11 +16,11 @@ class Player(pygame.sprite.Sprite):
         self.player_gravity = 0
 
         self.image = self.player_walk_index[self.player_index]
-        self.rect = self.image.get_rect(midbottom = (80, 300))
+        self.rect = self.image.get_rect(midbottom = (80, GROUND_COORDINATE))
         
     def player_input(self):
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and self.rect.bottom >= 300 or keys[pygame.K_w] and self.rect.bottom >= 300:
+        if keys[pygame.K_SPACE] and self.rect.bottom >= GROUND_COORDINATE or keys[pygame.K_w] and self.rect.bottom >= GROUND_COORDINATE:
             self.player_gravity = -20
         if keys[pygame.K_d] and self.rect.right < 800:
             self.rect.x += 5
@@ -28,11 +30,11 @@ class Player(pygame.sprite.Sprite):
     def apply_gravity(self):
         self.player_gravity += 1
         self.rect.y += self.player_gravity
-        if self.rect.bottom >= 300:
-            self.rect.bottom = 300
+        if self.rect.bottom >= GROUND_COORDINATE:
+            self.rect.bottom = GROUND_COORDINATE
 
     def player_animation(self):
-        if self.rect.bottom < 300:
+        if self.rect.bottom < GROUND_COORDINATE:
             self.image = self.jump
         else:
             # Animate only if a or d key is pressed
@@ -55,6 +57,8 @@ pygame.init()
 
 # Create screen
 screen = pygame.display.set_mode((800, 400))
+icon = pygame.image.load("../assets/ideas/logo/logo10.jpeg")
+pygame.display.set_icon(icon)
 pygame.display.set_caption("Rematch")
 
 # Game variables
@@ -62,8 +66,9 @@ start_time = 0
 clock = pygame.time.Clock()
 
 # Background
-sky_surface = pygame.image.load("../assets/img/sky.png").convert()
-ground_surface = pygame.image.load("../assets/img/ground.png").convert()
+sky_surface = pygame.image.load("../assets/img/fondo_jardin.png").convert()
+sky_surface = pygame.transform.scale(sky_surface, (800, 400))
+ground_surface = pygame.image.load("../assets/img/suelo_jardin.png").convert()
 
 # Groups
 player = pygame.sprite.GroupSingle()
@@ -79,7 +84,10 @@ while True:
 
     # Background
     screen.blit(sky_surface, (0, 0))
-    screen.blit(ground_surface, (0, 300))
+    screen.blit(ground_surface, (0, GROUND_COORDINATE))
+    screen.blit(ground_surface, (200, GROUND_COORDINATE))
+    screen.blit(ground_surface, (400, GROUND_COORDINATE))
+    screen.blit(ground_surface, (600, GROUND_COORDINATE))
 
     # Player
     player.draw(screen)
