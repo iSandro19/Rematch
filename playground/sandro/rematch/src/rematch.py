@@ -6,9 +6,9 @@ from random import randint, choice
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        walk1 = pygame.image.load("../img/player/player_walk_1.png").convert_alpha()
-        walk2 = pygame.image.load("../img/player/player_walk_2.png").convert_alpha()
-        self.jump = pygame.image.load("../img/player/player_jump.png").convert_alpha()
+        walk1 = pygame.image.load("../assets/img/player/player_walk_1.png").convert_alpha()
+        walk2 = pygame.image.load("../assets/img/player/player_walk_2.png").convert_alpha()
+        self.jump = pygame.image.load("../assets/img/player/player_jump.png").convert_alpha()
         self.player_walk_index = [walk1, walk2]
         self.player_index = 0
         self.player_gravity = 0
@@ -62,8 +62,8 @@ start_time = 0
 clock = pygame.time.Clock()
 
 # Background
-sky_surface = pygame.image.load("../img/sky.png").convert()
-ground_surface = pygame.image.load("../img/ground.png").convert()
+sky_surface = pygame.image.load("../assets/img/sky.png").convert()
+ground_surface = pygame.image.load("../assets/img/ground.png").convert()
 
 # Groups
 player = pygame.sprite.GroupSingle()

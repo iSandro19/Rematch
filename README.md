@@ -24,6 +24,10 @@ Autores del proyecto:
 
 <https://docs.google.com/document/d/1FLFKSRdOCkTBWEM-sJhEycrtQ9Y_UUYJhOP0IztbFAA/edit?usp=sharing>
 
+## Ideas guión (desarrollo del juego)
+
+<https://docs.google.com/document/d/1WG1SQZflKWM2cxuBEkt94OpshZiz2bGjeTlTMAoXc4I/edit?usp=sharing>
+
 ### Mapa
 
 <https://docs.google.com/spreadsheets/d/1_GIMI2xkNzhqEdy4Vba26_w4FT0jxLoSiZegfjnVvlE/edit?usp=sharing>
