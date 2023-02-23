@@ -1,4 +1,4 @@
-from obj.draw import ObjDraw
+from obj.base import ObjDraw
 import pygame as pg
 from abc import abstractmethod
 
@@ -30,4 +30,4 @@ class ObjPhysic(ObjRelative):
 		self.vel.y += self.acc.y
 
 	def updatePos(self):
-		self.pos += self.vel
+		self.pos.move_ip(self.vel)

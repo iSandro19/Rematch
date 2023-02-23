@@ -1,19 +1,29 @@
 from typing import (
 	Dict,
+	Tuple,
 	Callable,
 	Iterable,
+	Iterator,
 	Optional,
 	Final,
 	Any
 )
 from abc import ABC, abstractmethod
+import pygame as pg
 
 
-class ObjInsts(list, ABC):
+class ObjInstNotFoundError(Exception):
+	def __init__(self, class_id:int, inst_id:int)->None: ...
+
+class ObjInsts(ABC):
+	OBJ_CLASS:Final[type]
 	@abstractmethod
 	def __init__(self, iterable:Optional[Iterable['Obj']])->None: ...
 	def add(self, obj:'Obj')->None: ...
-	def __getitem__(self, inst_id:Any)->Any: ...
+	def __getitem__(self, inst_id:int)->'Obj': ...
+	def __delitem__(self, inst_id:int)->'Obj': ...
+	def __iter__(self)->Iterator['Obj']: ...
+	def __str__(self)->str:
 
 class ObjInstsUpdate(ObjInsts):
 	@abstractmethod
@@ -25,8 +35,12 @@ class ObjInstsUpdateCon(ObjInstsUpdate):
 	def __init__(self, iterable:Optional[Iterable['ObjUpdate']])->None: ...
 	def update(self)->None: ...
 
+class ObjInstsDraw(ObjInstsUpdate):
+	@abstractmethod
+	def __init__(self, iterable:Optional[Iterable['ObjDraw']])->None: ...
+	def draw(self, background:pg.Surface)->None: ...
+
 class ObjInstsStaticR(ObjInsts):
-	OBJ_CLASS:Final[type]
 	@abstractmethod
 	def __init__(self, iterable:Optional[Iterable['ObjStaticR']])->None: ...
 	def load(self, inst_id:int)->"ObjStaticR": ...
@@ -38,26 +52,39 @@ class ObjInstsStaticRW(ObjInstsStaticR):
 
 
 class Table(tuple):
-	def __init__(self, iterable:Optional[Iterable[ObjInsts]])->None: ...
+	def __new__(self, iterable:Optional[Iterable[ObjInsts]])->Table: ...
 
 # Variable global para contener las clases de objetos (filas)
 # y sus intancias (columnas) con el fin de que estas se comuniquen.
 TABLE:Final[Table]
 
-class Pipeline(tuple):
-	def __init__(self, iterable:Optional[ObjInstsUpdate]): ...
-	def update(self): ...
+class UpdatingPipeline(tuple):
+	def __new__(self, iterable:Optional[ObjInstsUpdate])->UpdatingPipeline: ...
+	def update(self)->None: ...
 
 # Variable global para contener las clases de objetos actualizables
 # (filas) y sus intancias (columnas) con el fin de actualizarlos en
 # el orden en que se situan en el pipeline.
-PIPILINE:Final[Pipeline]
+UPDT_PL:Final[UpdatingPipeline]
+
+class DrawingPipeline(tuple):
+	def __new__(self, iterable:Optional[ObjInstsUpdate])->DrawingPipeline: ...
+	def draw(self)->None: ...
+
+# Variable global para contener las clases de objetos dibujables
+# (filas) y sus intancias (columnas) con el fin de dibujarlos en
+# el orden en que se situan en el pipeline sobre el fondo.
+DRAW_PL:Final[DrawingPipeline]
+
+def setObjInsts(*objInstsTuple:Tuple[ObjInsts, ...])->None: ...
 
 class Obj(ABC):
 	CLASS_ID:Final[int]
 	INST_ID:Final[int]
+	active:bool
 	@abstractmethod
 	def __init__(self, INST_ID:int)->None: ...
+	def close(self)->None: ...
 	def __eq__(self, value:Any)->bool: ...
 	def __ge__(self, value:Any)->bool: ...
 	def __gt__(self, value:Any)->bool: ...
@@ -66,10 +93,26 @@ class Obj(ABC):
 	def __hash__(self)->int: ...
 
 class ObjUpdate(Obj):
+	UPDT_POS:Final[int]
 	@abstractmethod
 	def __init__(self, INST_ID:int)->None: ...
 	@abstractmethod
 	def update(self): ...
+
+class ObjDraw(ObjUpdate):
+	DRAW_LAYER:Final[int]
+	image:pg.Surface
+	rect:pg.Rect
+	BCKGND:Final[pg.Surface]
+	@abstractmethod
+	def __init__(
+		self,
+		INST_ID:int,
+		image:pg.Surface,
+		rect:pg.Rect,
+		BCKGND:pg.Surface
+	)->None: ...
+	def draw(self)->None: ...
 
 class ObjDynamic(Obj):
 	@abstractmethod

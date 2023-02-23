@@ -1,14 +1,14 @@
 from typing import (
 	Final
 )
-from obj.draw import ObjDraw
+from obj.base import ObjDraw
 import pygame as pg
 from abc import abstractmethod
 
 
 class ObjRelative(ObjDraw):
-	REF_POINT:Final[pg.math.Vector2]
-	pos:pg.math.Vector2
+	REF_POINT:Final[pg.Rect]
+	pos:pg.Rect
 	@abstractmethod
 	def __init__(self, INST_ID:int)->None: ...
 	@abstractmethod

@@ -1,18 +1,8 @@
-from obj.base import ObjUpdate
+from obj.base import ObjDraw
 import pygame as pg
 from pygame.locals import *
 from abc import abstractmethod
 
-
-class ObjDraw(ObjUpdate, pg.sprite.Sprite):
-	@abstractmethod
-	def __init__(self, INST_ID):
-		ObjUpdate.__init__(self, INST_ID)
-		pg.sprite.Sprite.__init__(self)
-
-	@abstractmethod
-	def update(self):
-		pass
 
 class ObjTile(ObjDraw):
 	@abstractmethod
@@ -43,7 +33,7 @@ class Frame:
 		self.FLIP_Y = FLIP_Y
 
 class Animation(tuple):
-	def __new__ (
+	def __new__(
 		cls,
 		FRAMES,
 		LOOP=True

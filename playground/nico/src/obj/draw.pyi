@@ -7,14 +7,7 @@ from typing import (
 )
 import pygame as pg
 from abc import abstractmethod
-from obj.base import ObjUpdate
-
-
-class ObjDraw(ObjUpdate, pg.sprite.Sprite):
-	@abstractmethod
-	def __init__(self, INST_ID:int)->None: ...
-	@abstractmethod
-	def update(self): ...
+from obj.base import ObjDraw
 
 
 class SpriteSheet:
