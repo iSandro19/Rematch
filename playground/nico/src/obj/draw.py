@@ -1,20 +1,31 @@
-from obj.base import ObjDraw
+from obj.base import ObjDraw, ObjUpdate
 import pygame as pg
 from pygame.locals import *
 from abc import abstractmethod
 
 
-class ObjTile(ObjDraw):
-	@abstractmethod
-	def __init__(self, INST_ID):
-		ObjDraw.__init__(self, INST_ID)
+class SpriteSheet:
+	def __init__(self, SHEET, w, h, colorkey=None):
+		self.SHEET = SHEET
+		self.SHEET.set_colorkey(colorkey)
+		self.clip = pg.Rect(0, 0, w, h)
 
-	@abstractmethod
-	def update(self):
-		pass
+	def __getitem__(self, rowXcol)->pg.Surface:
+		self.clip.x = rowXcol[1]*self.clip.w
+		self.clip.y = rowXcol[0]*self.clip.h
 
-	def updateImage(self, row, col):
-		self.image = self.SPRTS[row, col]
+		return self.SHEET.subsurface(self.clip)
+
+class ObjSprite(ObjDraw):
+	@abstractmethod
+	def __init__(self, INST_ID, SPRTS, row, col, x, y):
+		self.SPRTS = SPRTS
+		ObjDraw.__init__(
+			self,
+			INST_ID,
+			SPRTS[row, col],
+			pg.Rect(x, y, SPRTS.clip.w, SPRTS.clip.h)
+		)
 
 
 class Frame:
@@ -47,29 +58,19 @@ class Animation(tuple):
 	):
 		self.LOOP = LOOP
 
-class SpriteSheet:
-	def __init__(self, SHEET, w, h, colorkey=None):
-		self.SHEET = SHEET
-		self.SHEET.set_colorkey(colorkey)
-		self._clip = pg.Rect(0, 0, w, h)
-
-	def __getitem__(self, rowXcol)->pg.Surface:
-		self._clip.x = rowXcol[1]*self._clip.w
-		self._clip.y = rowXcol[0]*self._clip.h
-
-		return self.SHEET.subsurface(self._clip)
-
-class ObjAnim(ObjDraw):
+class ObjAnim(ObjDraw, ObjUpdate):
 	speed = 1.
 	done = False
 
 	@abstractmethod
-	def __init__(self, INST_ID):
-		ObjDraw.__init__(self, INST_ID)
-
-	@abstractmethod
-	def update(self):
-		pass
+	def __init__(self, INST_ID, SPRTS, x, y):
+		self.SPRTS = SPRTS
+		ObjDraw.__init__(
+			self,
+			INST_ID,
+			None,
+			pg.Rect(x, y, SPRTS.clip.w, SPRTS.clip.h)
+		)
 
 	def startAnim(self, anim):
 		self._anim = anim
@@ -78,7 +79,7 @@ class ObjAnim(ObjDraw):
 		self._frame = next(self._frameIt)
 		self.done = False
 
-	def updateImage(self):
+	def update(self):
 		if not self.done:
 			try:
 				if self._steps < self._frame.DUR:
@@ -102,3 +103,22 @@ class ObjAnim(ObjDraw):
 					self._frame.FLIP_X,
 					self._frame.FLIP_Y
 				)
+
+class ObjRelative(ObjDraw, ObjUpdate):
+	@abstractmethod
+	def __init__(self, INST_ID, image, rect):
+		ObjDraw.__init__(self, INST_ID, image, rect)
+
+	def update(self):
+		self.rect.x = self.pos.x - self.REF_POINT.x
+		self.rect.y = self.pos.y - self.REF_POINT.y
+
+class ObjParallax(ObjRelative):
+	@abstractmethod
+	def __init__(self, INST_ID, image, rect, Z_OFFSET):
+		ObjRelative.__init__(self, INST_ID, image, rect)
+		self.Z_OFFSET = Z_OFFSET
+
+	def update(self):
+		self.rect.x = self.pos.x - self.REF_POINT.x*self.Z_OFFSET
+		self.rect.y = self.pos.y - self.REF_POINT.y*self.Z_OFFSET

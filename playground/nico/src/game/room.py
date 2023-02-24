@@ -1,53 +1,85 @@
 import obj
 from game.cam import Cam
 
-class Room(obj.ObjStaticR):
+class Room(obj.ObjStaticRW):
 	CLASS_ID = 2
-	INST_FILE = "game/data/rooms.json"
+	GRP_FILE = "game/data/rooms.json"
 
 	def __init__(self, INST_ID, classXinstIDS):
-		obj.ObjStaticR.__init__(self, INST_ID)
+		obj.ObjStaticRW.__init__(self, INST_ID)
 		self.classXinstIDS = classXinstIDS
 
 		for inst in classXinstIDS:
-			obj.base.TABLE[inst["classID"]].load(inst["instID"])
+			obj.loadR(inst["classID"], inst["instID"])
+
+
+	def save(self):
+		for inst in self.classXinstIDS:
+			try:
+				group = obj.getGroups(inst["classID"])
+				if issubclass(group.OBJS_TYPE, obj.ObjStaticRW):
+					group[inst["instID"]].save()
+
+			except obj.ObjInstNotFoundError:
+				pass
+
+		self._save(classXinstIDS=self.classXinstIDS)
+
 
 	def close(self):
-		obj.ObjStaticR.close(self)
-
 		for inst in self.classXinstIDS:
-			obj.base.TABLE[inst["classID"]][inst["instID"]].close()
-		
-class Rooms(obj.ObjInstsStaticR):
-	OBJ_CLASS = Room
+			try:
+				obj.getGroups(inst["classID"])[inst["instID"]].close()
 
-	def __init__(self, iterable=()):
-		obj.ObjInstsStaticR.__init__(self, iterable)
+			except obj.ObjInstNotFoundError:
+				pass
+
+		obj.ObjStaticRW.close(self)
+
+		
+rooms = obj.Group(Room)
 
 
 class RoomDirector(obj.ObjStaticR, obj.ObjUpdate):
 	CLASS_ID = 3
 	UPDT_POS = 0
-	INST_FILE = "game/data/room_directors.json"
+	GRP_FILE = "game/data/room_directors.json"
 	MAX_ROOMS = 2
 
-	def __init__(self, INST_ID, rooms, camInstID):
+	def __init__(self, INST_ID, rooms, camID):
 		obj.ObjStaticR.__init__(self, INST_ID)
-		self.cam = obj.base.TABLE[Cam.CLASS_ID][camInstID]
-		self.unloalRooms = rooms
+		self.cam = obj.getGroups(Cam.CLASS_ID)[camID]
+		self.unloadRooms = rooms
 		self.loadRooms = []
 
 	def update(self):
+		print("RoomDirector")
 		if self.cam.active:
-			for roomXrect in self.unloalRooms:
-				if cam.colliderect(roomXshape["shape"]):
+			print("Cam activa")
+			for roomXshape in self.unloadRooms:
+				print(roomXshape)
+				if self.cam.colliderect(roomXshape["shape"]):
+					print("cargar")
 					
-					if len(self.unloalRoom) > MAX_ROOMS:
+					if len(self.loadRooms) > self.MAX_ROOMS:
+						print("cola llena")
+						print(self.loadRooms)
 						self.unloalRooms.append(self.loadRooms.pop(0))
-						obj.base.TABLE[Room.CLASS_ID][roomXshape["instID"]].close()
 
-					self.loadRooms.append(roomXrect)
-					self.unloalRooms.remove(roomXrect)
-					obj.base.TABLE[Room.CLASS_ID].load(roomXshape["instID"])
+						closedRoom = obj.getGroups(Room.CLASS_ID)[roomXshape["roomID"]]
+						closedRoom.save()
+						closedRoom.close()
+
+					self.loadRooms.append(roomXshape)
+					self.unloadRooms.remove(roomXshape)
+					obj.loadR(Room.CLASS_ID, roomXshape["roomID"])
 		else:
-			raise ObjInstNotFoundError(self.cam.CLASS_ID, self.cam.INST_ID)
+			raise obj.ObjInstNotFoundError(self.cam.CLASS_ID, self.cam.INST_ID)
+
+	def close(self):
+		for roomXshape in self.loadRooms:
+			closedRoom = obj.getGroups(Room.CLASS_ID)[roomXshape["roomID"]]
+			closedRoom.close()
+
+
+roomDirectors = obj.Group(RoomDirector)

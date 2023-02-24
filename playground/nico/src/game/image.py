@@ -22,29 +22,21 @@ class AbsImage(obj.ObjStaticR):
 
 class Image(AbsImage):
 	CLASS_ID = 0
-	INST_FILE = "game/data/images.json"
+	GRP_FILE = "game/data/images.json"
 
 	def __init__(self, INST_ID, file):
 		AbsImage.__init__(self, INST_ID)
 		self.image = pg.image.load(file)
-		
-class Images(obj.ObjInstsStaticR):
-	OBJ_CLASS = Image
 
-	def __init__(self, iterable=()):
-		obj.ObjInstsStaticR.__init__(self, iterable)
-
+images = obj.Group(Image)
 
 class SpriteSheet(AbsImage, obj.draw.SpriteSheet):
 	CLASS_ID = 1
-	INST_FILE = "game/data/sprite_sheets.json"
+	GRP_FILE = "game/data/sprite_sheets.json"
 
 	def __init__(self, INST_ID, file, w, h, colorkey=None):
 		AbsImage.__init__(self, INST_ID)
 		obj.draw.SpriteSheet.__init__(self, pg.image.load(file), w, h, colorkey)
 
-class SpriteSheets(obj.ObjInstsStaticR):
-	OBJ_CLASS = SpriteSheet
 
-	def __init__(self, iterable=()):
-		obj.ObjInstsStaticR.__init__(self, iterable)
+spriteSheets = obj.Group(SpriteSheet)
