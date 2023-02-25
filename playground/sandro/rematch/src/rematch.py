@@ -3,6 +3,7 @@ from sys import exit
 from random import randint, choice
 
 GROUND_COORDINATE = 365;
+TILE_SIZE = 35;
 
 # Player class
 class Player(pygame.sprite.Sprite):
@@ -49,6 +50,27 @@ class Player(pygame.sprite.Sprite):
         self.apply_gravity()
         self.player_animation()
 
+# Repair
+class Tiles(pygame.sprite.Sprite):
+    def __init__(self, tile_type, x, y):
+        super().__init__()
+        self.image = pygame.image.load(f"../assets/img/{tile_type}.png").convert()
+        self.rect = self.image.get_rect(topleft = (x, y))
+    
+    def update(self):
+        pass
+
+def create_map(map):
+    for row in range(len(map)):
+        for column in range(len(map[row])):
+            if map[row][column] == "W":
+                tiles.add(Tiles("wall", column * TILE_SIZE, row * TILE_SIZE))
+            if map[row][column] == "G":
+                tiles.add(Tiles("ground", column * TILE_SIZE, row * TILE_SIZE))
+            if map[row][column] == "X":
+                tiles.add(Tiles("box", column * TILE_SIZE, row * TILE_SIZE))
+
+
 def display_background():
     screen.fill((192, 232, 236))
 
@@ -65,14 +87,11 @@ pygame.display.set_caption("Rematch")
 start_time = 0
 clock = pygame.time.Clock()
 
-# Background
-sky_surface = pygame.image.load("../assets/img/fondo_jardin.png").convert()
-sky_surface = pygame.transform.scale(sky_surface, (800, 400))
-ground_surface = pygame.image.load("../assets/img/suelo_jardin.png").convert()
-
 # Groups
 player = pygame.sprite.GroupSingle()
 player.add(Player())
+
+tiles = pygame.sprite.GroupSingle()
 
 # Game loop
 while True:
@@ -83,11 +102,9 @@ while True:
             exit()
 
     # Background
-    screen.blit(sky_surface, (0, 0))
-    screen.blit(ground_surface, (0, GROUND_COORDINATE))
-    screen.blit(ground_surface, (200, GROUND_COORDINATE))
-    screen.blit(ground_surface, (400, GROUND_COORDINATE))
-    screen.blit(ground_surface, (600, GROUND_COORDINATE))
+    create_map(JARDIN)
+    tiles.draw(screen)
+    display_background()
 
     # Player
     player.draw(screen)
