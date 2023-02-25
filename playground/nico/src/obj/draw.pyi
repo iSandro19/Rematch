@@ -7,19 +7,12 @@ from typing import (
 )
 import pygame as pg
 from abc import abstractmethod
-from obj.base import ObjUpdate
-
-
-class ObjDraw(ObjUpdate, pg.sprite.Sprite):
-	@abstractmethod
-	def __init__(self, INST_ID:int)->None: ...
-	@abstractmethod
-	def update(self): ...
+from obj.base import ObjDraw, ObjUpdate
 
 
 class SpriteSheet:
 	SHEET:Final[pg.Surface]
-	_clip:pg.Rect
+	clip:pg.Rect
 	def __init__(
 		self,
 		SHEET:pg.Surface,
@@ -29,13 +22,20 @@ class SpriteSheet:
 	)->None: ...
 	def __getitem__(self, rowXcol:Tuple[int, int])->pg.Surface: ...
 
-class ObjTile(ObjDraw):
+class ObjSprite(ObjDraw):
 	SPRTS:Final[SpriteSheet]
+	row:int
+	col:int
 	@abstractmethod
-	def __init__(self, INST_ID:int)->None: ...
-	@abstractmethod
-	def update(self): ...
-	def updateImage(self, row:int, col:int)->None: ...
+	def __init__(
+		self,
+		INST_ID:int,
+		SPRTS:SpriteSheet,
+		row:int,
+		col:int,
+		x:int,
+		y:int
+	)->None: ...
 
 
 class Frame:
@@ -68,7 +68,7 @@ class Animation(tuple):
 		LOOP:Optional[bool]
 	)->None: ...
 
-class ObjAnim(ObjDraw):
+class ObjAnim(ObjDraw, ObjUpdate):
 	SPRTS:Final[SpriteSheet]
 	_anim:Animation
 	_frame:Frame
@@ -77,8 +77,30 @@ class ObjAnim(ObjDraw):
 	speed:float
 	done:bool
 	@abstractmethod
-	def __init__(self, INST_ID:int)->None: ...
-	@abstractmethod
-	def update(self): ...
+	def __init__(self, INST_ID:int, SPRTS:SpriteSheet, x:int, y:int)->None: ...
 	def startAnim(self, anim:Animation)->None: ...
-	def updateImage(self)->None: ...
+	def update(self)->None: ...
+
+class ObjRelative(ObjDraw, ObjUpdate):
+	REF_POINT:Final[pg.Rect]
+	pos:pg.Rect
+	@abstractmethod
+	def __init__(
+		self,
+		INST_ID:int,
+		image:pg.Surface,
+		rect:pg.Rect
+	)->None: ...
+	def update(self)->None: ...
+
+class ObjParallax(ObjRelative):
+	Z_OFFSET:Final[float]
+	@abstractmethod
+	def __init__(
+		self,
+		INST_ID:int,
+		image:pg.Surface,
+		rect:pg.Rect,
+		Z_OFFSET:float
+	)->None: ...
+	def update(self)->None: ...
