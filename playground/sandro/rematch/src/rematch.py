@@ -66,21 +66,8 @@ def levels(name):
     else:
         print("Error: Level not found") 
         exit(0)
-            
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode(SCREEN_SIZE.size)
-    pygame.display.set_caption("Use arrows to move!")
-    timer = pygame.time.Clock()
-    level = levels("jardin")
-    
-    platforms = pygame.sprite.Group()
-    player = Player(platforms, (TILE_SIZE, TILE_SIZE))
-    level_width  = len(level[0])*TILE_SIZE
-    level_height = len(level)*TILE_SIZE
-    entities = CameraAwareLayeredUpdates(player, pygame.Rect(0, 0, level_width, level_height))
-    
-    # build the level
+
+def draw_level(level, platforms, entities):
     x = y = 0
     for row in level:
         for col in row:
@@ -99,8 +86,29 @@ def main():
             x += TILE_SIZE
         y += TILE_SIZE
         x = 0
+
+def update_level(name, player, platforms):
+    level = levels(name)
+    level_width  = len(level[0])*TILE_SIZE
+    level_height = len(level)*TILE_SIZE
+
+    entities = CameraAwareLayeredUpdates(player, pygame.Rect(0, 0, level_width, level_height))
+
+    draw_level(level, platforms, entities)
+
+    return entities
+            
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE.size)
+    timer = pygame.time.Clock()
     
-    while 1:
+    platforms = pygame.sprite.Group()
+    player = Player(platforms, (TILE_SIZE, TILE_SIZE))
+
+    entities = update_level("jardin", player, platforms)
+    
+    while True:
         for e in pygame.event.get():
             if e.type == QUIT: 
                 return
@@ -128,7 +136,7 @@ class Player(Entity):
         self.onGround = False
         self.platforms = platforms
         self.speed = 8
-        self.jump_strength = 10
+        self.jump_strength = 15
         
     def update(self):
         pressed = pygame.key.get_pressed()
@@ -138,7 +146,6 @@ class Player(Entity):
         running = pressed[K_SPACE]
         
         if up:
-            # only jump if on the ground
             if self.onGround: self.vel.y = -self.jump_strength
         if left:
             self.vel.x = -self.speed
@@ -147,29 +154,23 @@ class Player(Entity):
         if running:
             self.vel.x *= 1.5
         if not self.onGround:
-            # only accelerate with gravity if in the air
             self.vel += GRAVITY
-            # max falling speed
             if self.vel.y > 100: self.vel.y = 100
-        print(self.vel.y)
         if not(left or right):
             self.vel.x = 0
-        # increment in x direction
+        
         self.rect.left += self.vel.x
-        # do x-axis collisions
         self.collide(self.vel.x, 0, self.platforms)
-        # increment in y direction
         self.rect.top += self.vel.y
-        # assuming we're in the air
         self.onGround = False;
-        # do y-axis collisions
         self.collide(0, self.vel.y, self.platforms)
 
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
                 if isinstance(p, Door):
-                    pygame.event.post(pygame.event.Event(QUIT))
+                    print("Update to sala")
+                    update_level("sala", self, platforms)
                 if xvel > 0:
                     self.rect.right = p.rect.left
                 if xvel < 0:
