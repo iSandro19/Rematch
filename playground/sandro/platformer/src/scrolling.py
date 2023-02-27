@@ -1,150 +1,192 @@
 import pygame
+import jardin
+from pygame import *
 
-BLACK = (0, 0, 0)
-WHITE = (255, 255, 255)
-RED = (255, 0, 0)
+SCREEN_SIZE = pygame.Rect((0, 0, 800, 640))
+TILE_SIZE = 64 
+GRAVITY = pygame.Vector2((0, 0.3))
 
+class CameraAwareLayeredUpdates(pygame.sprite.LayeredUpdates):
+    def __init__(self, target, world_size):
+        super().__init__()
+        self.target = target
+        self.cam = pygame.Vector2(0, 0)
+        self.world_size = world_size
+        if self.target:
+            self.add(target)
 
-SCREEN_WIDTH = 700
-SCREEN_HEIGHT = 400
+    def update(self, *args):
+        super().update(*args)
+        if self.target:
+            x = -self.target.rect.center[0] + SCREEN_SIZE.width/2
+            y = -self.target.rect.center[1] + SCREEN_SIZE.height/2
+            self.cam += (pygame.Vector2((x, y)) - self.cam) * 0.05
+            self.cam.x = max(-(self.world_size.width-SCREEN_SIZE.width), min(0, self.cam.x))
+            self.cam.y = max(-(self.world_size.height-SCREEN_SIZE.height), min(0, self.cam.y))
 
-HALF_WIDTH = int(SCREEN_WIDTH / 2)
-HALF_HEIGHT = int(SCREEN_HEIGHT / 2)
-
-
+    def draw(self, surface):
+        spritedict = self.spritedict
+        surface_blit = surface.blit
+        dirty = self.lostsprites
+        self.lostsprites = []
+        dirty_append = dirty.append
+        init_rect = self._init_rect
+        for spr in self.sprites():
+            rec = spritedict[spr]
+            newrect = surface_blit(spr.image, spr.rect.move(self.cam))
+            if rec is init_rect:
+                dirty_append(newrect)
+            else:
+                if newrect.colliderect(rec):
+                    dirty_append(newrect.union(rec))
+                else:
+                    dirty_append(newrect)
+                    dirty_append(rec)
+            spritedict[spr] = newrect
+        return dirty            
+            
 def main():
-    screen = pygame.display.set_mode([SCREEN_WIDTH, SCREEN_HEIGHT])
-
-    pygame.display.set_caption("RPG")
-    global cameraX, cameraY
-
-
-
     pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE.size)
+    pygame.display.set_caption("Use arrows to move!")
+    timer = pygame.time.Clock()
+    """
+    level = [
+        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
+        "P                                          P",
+        "P                                          P",
+        "P                                          P",
+        "P                    PPPPPPPPPPP           P",
+        "P                                          P",
+        "P                                          P",
+        "P                                          P",
+        "P    PPPPPPPP                              P",
+        "P                                          P",
+        "P                          PPPPPPP         P",
+        "P                 PPPPPP                   P",
+        "P                                          P",
+        "P         PPPPPPP                          P",
+        "P                                          P",
+        "P                     PPPPPP               P",
+        "P                                          P",
+        "P   PPPPPPPPPPP                            P",
+        "P                                          P",
+        "P                 PPPPPPPPPPP              P",
+        "P                                          P",
+        "P                                          P",
+        "P                                          P",
+        "P                                          P",
+        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
+    """
+    level = jardin.world_data
+    
+    platforms = pygame.sprite.Group()
+    player = Player(platforms, (TILE_SIZE, TILE_SIZE))
+    level_width  = len(level[0])*TILE_SIZE
+    level_height = len(level)*TILE_SIZE
+    entities = CameraAwareLayeredUpdates(player, pygame.Rect(0, 0, level_width, level_height))
+    
+    # build the level
+    x = y = 0
+    for row in level:
+        for col in row:
+            if (col == "W" or col == "G"):
+                Platform((x, y), platforms, entities)
+            if col == "E":
+                ExitBlock((x, y), platforms, entities)
+            x += TILE_SIZE
+        y += TILE_SIZE
+        x = 0
+    
+    while 1:
 
-    #player = pygame.image.load("Textures(Final)\Whoo_For_Testing.bmp").convert()
-    player = pygame.Surface((40,40))
-    player.fill((255,0,0))
+        for e in pygame.event.get():
+            if e.type == QUIT: 
+                return
+            if e.type == KEYDOWN and e.key == K_ESCAPE:
+                return
 
-    playerrect = player.get_rect()
-    player.set_colorkey(WHITE)
+        entities.update()
 
+        screen.fill((0, 0, 0))
+        entities.draw(screen)
+        pygame.display.update()
+        timer.tick(60)
 
-    #grasstile = pygame.image.load("Textures(Final)\Grass_Tile.bmp").convert()
-    #watertile = pygame.image.load("Textures(Final)\Water_Tile.bmp").convert()
-    #waterbeach = pygame.image.load("Textures(Final)\Water_Beach.bmp").convert()
-    grasstile = pygame.Surface((40,40))
-    watertile = pygame.Surface((40,40))
-    waterbeach = pygame.Surface((40,40))
-    grasstile.fill((0,200,0))
-    watertile.fill((0,0,200))
-    waterbeach.fill((200,200,250))
+class Entity(pygame.sprite.Sprite):
+    def __init__(self, color, pos, *groups):
+        super().__init__(*groups)
+        self.image = Surface((TILE_SIZE, TILE_SIZE))
+        self.image.fill(color)
+        self.rect = self.image.get_rect(topleft=pos)
 
-    grassrect = grasstile.get_rect()
-    waterrect = watertile.get_rect()
-    waterb = waterbeach.get_rect()
+class Player(Entity):
+    def __init__(self, platforms, pos, *groups):
+        super().__init__(Color("#0000FF"), pos)
+        self.vel = pygame.Vector2((0, 0))
+        self.onGround = False
+        self.platforms = platforms
+        self.speed = 8
+        self.jump_strength = 10
+        
+    def update(self):
+        pressed = pygame.key.get_pressed()
+        up = pressed[K_UP]
+        left = pressed[K_LEFT]
+        right = pressed[K_RIGHT]
+        running = pressed[K_SPACE]
+        
+        if up:
+            # only jump if on the ground
+            if self.onGround: self.vel.y = -self.jump_strength
+        if left:
+            self.vel.x = -self.speed
+        if right:
+            self.vel.x = self.speed
+        if running:
+            self.vel.x *= 1.5
+        if not self.onGround:
+            # only accelerate with gravity if in the air
+            self.vel += GRAVITY
+            # max falling speed
+            if self.vel.y > 100: self.vel.y = 100
+        print(self.vel.y)
+        if not(left or right):
+            self.vel.x = 0
+        # increment in x direction
+        self.rect.left += self.vel.x
+        # do x-axis collisions
+        self.collide(self.vel.x, 0, self.platforms)
+        # increment in y direction
+        self.rect.top += self.vel.y
+        # assuming we're in the air
+        self.onGround = False;
+        # do y-axis collisions
+        self.collide(0, self.vel.y, self.platforms)
 
-    TILE_WIDTH = 32
-    TILE_HEIGHT = 32
+    def collide(self, xvel, yvel, platforms):
+        for p in platforms:
+            if pygame.sprite.collide_rect(self, p):
+                if isinstance(p, ExitBlock):
+                    pygame.event.post(pygame.event.Event(QUIT))
+                if xvel > 0:
+                    self.rect.right = p.rect.left
+                if xvel < 0:
+                    self.rect.left = p.rect.right
+                if yvel > 0:
+                    self.rect.bottom = p.rect.top
+                    self.onGround = True
+                    self.vel.y = 0
+                if yvel < 0:
+                    self.rect.top = p.rect.bottom
 
-    tilemap = [
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile],
-                [grasstile, grasstile, grasstile, grasstile, waterbeach, watertile, watertile, watertile, watertile]
-            ]
+class Platform(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(Color("#DDDDDD"), pos, *groups)
 
-    total_level_width = len(tilemap[0]) * 32
-    total_level_height = len(tilemap)*32
-
-    camera = Camera(simple_camera ,total_level_width, total_level_height)
-
-
-    map_surface = pygame.Surface(( len(tilemap[0])*TILE_WIDTH, len(tilemap)*TILE_HEIGHT))
-
-    for y,row in enumerate(tilemap):
-        for x,tile_surface in enumerate(row):
-            map_surface.blit(tile_surface,(x*TILE_WIDTH,y*TILE_HEIGHT))
-
-    map_surface = pygame.transform.scale(map_surface, (1200, 800))
-    player = pygame.transform.scale(player, (50, 100))
-
-
-    done = False
-
-    clock = pygame.time.Clock()
-
-    move_speed = 5
-    x, y = 100, 100
-
-    entities = pygame.sprite.Group()
-
-    while not done:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                done = True
-
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_UP]:
-            y -= move_speed
-        elif keys[pygame.K_DOWN]:
-            y += move_speed
-        elif keys[pygame.K_LEFT]:
-            x -= move_speed
-        elif keys[pygame.K_RIGHT]:
-            x += move_speed
-
-        screen.fill(BLACK)
-
-        screen.blit(map_surface, camera.apply(grassrect))
-        screen.blit(player, camera.apply(pygame.Rect(x,y,50,100)))
-
-        camera.update(player.get_rect().move((x,y)))
-
-        clock.tick(20)
-
-        pygame.display.flip()
-
-class Camera(object):
-    def __init__(self, camera_func, width, height):
-        self.camera_func = camera_func
-        self.state = pygame.Rect(0, 0, width, height)
-
-    def apply(self, rect):
-        return rect.move(self.state.topleft)
-
-    def update(self, target_rect):
-        self.state = self.camera_func(self.state, target_rect)
-
-def simple_camera(camera, target_rect):
-    l, t, _, _ = target_rect
-    _, _, w, h = camera
-
-    return pygame.Rect(-l+HALF_WIDTH, -t+HALF_HEIGHT, w, h)
-
-def complex_camera(camera, target_rect):
-    l, t, _, _ = target_rect
-    _, _, w, h = camera
-    l, t, _, _ = -l+HALF_WIDTH, -t+HALF_HEIGHT, w, h
-
-    l = min(0, l)                           # stop scrolling at the left edge
-    l = max(-(camera.width-SCREEN_WIDTH), l)   # stop scrolling at the right edge
-    t = max(-(camera.height-SCREEN_HEIGHT), t) # stop scrolling at the bottom
-    t = min(0, t)                           # stop scrolling at the top
-    return pygame.Rect(l, t, w, h)
+class ExitBlock(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(Color("#0033FF"), pos, *groups)
 
 if __name__ == "__main__":
     main()
-
-
-
-pygame.quit()

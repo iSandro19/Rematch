@@ -1,0 +1,17 @@
+W - pared
+G - suelo
+D - puerta (salida a otro nivel)
+T - mesa
+S - estantería
+G - portalón
+U - puerta unidireccional
+
+
+E - enemigo
+P - jugador
+X - destructible
+A - Easter Egg
+
+0 - tablero
+1 - peón
+2 - alfil

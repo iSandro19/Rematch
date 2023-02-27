@@ -1,143 +1,209 @@
+import sys
 import pygame
-from sys import exit
-from random import randint, choice
+from pygame import *
 
-GROUND_COORDINATE = 365;
-TILE_SIZE = 35;
+sys.path.append("src/levels")
+import jardin, sala, biblioteca, torre, catacumbas, pasillo1, pasillo2
 
-JARDIN = [
-    ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"],
-    ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"],
-    ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"],
-    ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W"],
-    ["W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "D"],
-    ["W", " ", "P", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "D"],
-    ["W", " ", "P", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "D"],
-    ["W", "W", "W", "W", " ", " ", " ", "W", "W", "W", "W", "W", "W", "W", " ", " ", " ", " ", " ", " ", " ", "D"],
-    ["W", "W", "W", "W", " ", " ", "W", "W", "W", "W", "W", "W", "W", "W", "W", " ", " ", " ", " ", " ", "W", "W"],
-    ["W", "W", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W", "W"],
-    ["W", "W", "W", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W", "W", "W"],
-    ["W", "W", "W", "W", "W", " ", " ", " ", " ", " ", " ", " ", "E", " ", " ", " ", " ", "W", "W", "W", "W", "W"],
-    ["W", "W", "W", "W", "W", " ", " ", " ", " ", " ", "W", " ", "E", " ", "W", " ", "W", "W", "W", "W", "W", "W"],
-    ["W", "W", "W", "W", "W", " ", " ", " ", " ", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
-    ["W", "W", "W", "W", "W", " ", " ", " ", " ", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W", "W"],
-    ["W", "W", "W", "W", "W", " ", " ", "W", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W"],
-    ["W", " ", " ", " ", "W", " ", " ", " ", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W"],
-    ["W", " ", " ", " ", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W"],
-    ["W", " ", "X", " ", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W"],
-    ["W", " ", "X", " ", " ", "W", " ", "W", "W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W"],
-    ["W", " ", "X", " ", " ", "W", " ", " ", " ", "W", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W"],
-    ["W", " ", "X", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "W", "W"],
-    ["W", " ", "X", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "X", " ", "W", "W"],
-    ["G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", " ", "X", " ", "G", "G"],
-    ["G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G", "G"],
-]
+SCREEN_SIZE = pygame.Rect((0, 0, 800, 640))
+TILE_SIZE = 64 
+GRAVITY = pygame.Vector2((0, 0.3))
 
-# Player class
-class Player(pygame.sprite.Sprite):
-    def __init__(self):
+class CameraAwareLayeredUpdates(pygame.sprite.LayeredUpdates):
+    def __init__(self, target, world_size):
         super().__init__()
-        walk1 = pygame.image.load("../assets/img/player/player_walk_1.png").convert_alpha()
-        walk2 = pygame.image.load("../assets/img/player/player_walk_2.png").convert_alpha()
-        self.jump = pygame.image.load("../assets/img/player/player_jump.png").convert_alpha()
-        self.player_walk_index = [walk1, walk2]
-        self.player_index = 0
-        self.player_gravity = 0
+        self.target = target
+        self.cam = pygame.Vector2(0, 0)
+        self.world_size = world_size
+        if self.target:
+            self.add(target)
 
-        self.image = self.player_walk_index[self.player_index]
-        self.rect = self.image.get_rect(midbottom = (80, GROUND_COORDINATE))
-        
-    def player_input(self):
-        keys = pygame.key.get_pressed()
-        if keys[pygame.K_SPACE] and self.rect.bottom >= GROUND_COORDINATE or keys[pygame.K_w] and self.rect.bottom >= GROUND_COORDINATE:
-            self.player_gravity = -20
-        if keys[pygame.K_d] and self.rect.right < 800:
-            self.rect.x += 5
-        if keys[pygame.K_a] and self.rect.left > 0:
-            self.rect.x -= 5
+    def update(self, *args):
+        super().update(*args)
+        if self.target:
+            x = -self.target.rect.center[0] + SCREEN_SIZE.width/2
+            y = -self.target.rect.center[1] + SCREEN_SIZE.height/2
+            self.cam += (pygame.Vector2((x, y)) - self.cam) * 0.05
+            self.cam.x = max(-(self.world_size.width-SCREEN_SIZE.width), min(0, self.cam.x))
+            self.cam.y = max(-(self.world_size.height-SCREEN_SIZE.height), min(0, self.cam.y))
 
-    def apply_gravity(self):
-        self.player_gravity += 1
-        self.rect.y += self.player_gravity
-        if self.rect.bottom >= GROUND_COORDINATE:
-            self.rect.bottom = GROUND_COORDINATE
+    def draw(self, surface):
+        spritedict = self.spritedict
+        surface_blit = surface.blit
+        dirty = self.lostsprites
+        self.lostsprites = []
+        dirty_append = dirty.append
+        init_rect = self._init_rect
+        for spr in self.sprites():
+            rec = spritedict[spr]
+            newrect = surface_blit(spr.image, spr.rect.move(self.cam))
+            if rec is init_rect:
+                dirty_append(newrect)
+            else:
+                if newrect.colliderect(rec):
+                    dirty_append(newrect.union(rec))
+                else:
+                    dirty_append(newrect)
+                    dirty_append(rec)
+            spritedict[spr] = newrect
+        return dirty    
 
-    def player_animation(self):
-        if self.rect.bottom < GROUND_COORDINATE:
-            self.image = self.jump
-        else:
-            # Animate only if a or d key is pressed
-            if pygame.key.get_pressed()[pygame.K_d] or pygame.key.get_pressed()[pygame.K_a]:
-                self.player_index += 0.2
-                if self.player_index >= len(self.player_walk_index):
-                    self.player_index = 0
-                self.image = self.player_walk_index[int(self.player_index)]
+def levels(name):
+    if name == "jardin":
+        return jardin.world_data
+    elif name == "sala":
+        return sala.world_data
+    elif name == "biblioteca":
+        return biblioteca.world_data
+    elif name == "torre":
+        return torre.world_data
+    elif name == "catacumbas":
+        return catacumbas.world_data
+    elif name == "pasillo1":
+        return pasillo1.world_data
+    elif name == "pasillo2":
+        return pasillo2.world_data
+    else:
+        print("Error: Level not found") 
+        exit(0)
+            
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode(SCREEN_SIZE.size)
+    pygame.display.set_caption("Use arrows to move!")
+    timer = pygame.time.Clock()
+    level = levels("jardin")
     
-    def update(self):
-        self.player_input()
-        self.apply_gravity()
-        self.player_animation()
-
-# Repair
-class Tiles(pygame.sprite.Sprite):
-    def __init__(self, tile_type, x, y):
-        super().__init__()
-        self.image = pygame.image.load(f"../assets/img/{tile_type}.png").convert()
-        self.rect = self.image.get_rect(topleft = (x, y))
+    platforms = pygame.sprite.Group()
+    player = Player(platforms, (TILE_SIZE, TILE_SIZE))
+    level_width  = len(level[0])*TILE_SIZE
+    level_height = len(level)*TILE_SIZE
+    entities = CameraAwareLayeredUpdates(player, pygame.Rect(0, 0, level_width, level_height))
     
-    def update(self):
-        pass
+    # build the level
+    x = y = 0
+    for row in level:
+        for col in row:
+            if col == "W":
+                Wall((x, y), platforms, entities)
+            if col == "G":
+                Ground((x, y), platforms, entities)
+            if col == "D":
+                Door((x, y), platforms, entities)
+            if col == "E":
+                Enemy((x, y), platforms, entities)
+            if col == "X":
+                Xtroy((x, y), platforms, entities)
+            if col == "A":
+                Alt((x, y), platforms, entities)
+            x += TILE_SIZE
+        y += TILE_SIZE
+        x = 0
+    
+    while 1:
+        for e in pygame.event.get():
+            if e.type == QUIT: 
+                return
+            if e.type == KEYDOWN and e.key == K_ESCAPE:
+                return
 
-def create_map(map):
-    for row in range(len(map)):
-        for column in range(len(map[row])):
-            if map[row][column] == "W":
-                tiles.add(Tiles("wall", column * TILE_SIZE, row * TILE_SIZE))
-            if map[row][column] == "G":
-                tiles.add(Tiles("ground", column * TILE_SIZE, row * TILE_SIZE))
-            if map[row][column] == "X":
-                tiles.add(Tiles("box", column * TILE_SIZE, row * TILE_SIZE))
+        entities.update()
 
+        screen.fill((0, 0, 0))
+        entities.draw(screen)
+        pygame.display.update()
+        timer.tick(60)
 
-def display_background():
-    screen.fill((192, 232, 236))
+class Entity(pygame.sprite.Sprite):
+    def __init__(self, color, pos, *groups):
+        super().__init__(*groups)
+        self.image = Surface((TILE_SIZE, TILE_SIZE))
+        self.image.fill(color)
+        self.rect = self.image.get_rect(topleft=pos)
 
-# Initialize pygame
-pygame.init() 
-
-# Create screen
-screen = pygame.display.set_mode((800, 400))
-icon = pygame.image.load("../assets/ideas/logo/logo10.jpeg")
-pygame.display.set_icon(icon)
-pygame.display.set_caption("Rematch")
-
-# Game variables
-start_time = 0
-clock = pygame.time.Clock()
-
-# Groups
-player = pygame.sprite.GroupSingle()
-player.add(Player())
-
-tiles = pygame.sprite.GroupSingle()
-
-# Game loop
-while True:
-    for event in pygame.event.get():
-        # Check for closing window
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            exit()
-
-    # Background
-    create_map(JARDIN)
-    tiles.draw(screen)
-    display_background()
-
-    # Player
-    player.draw(screen)
-    player.update()
+class Player(Entity):
+    def __init__(self, platforms, pos, *groups):
+        super().__init__(Color("#0000FF"), pos)
+        self.vel = pygame.Vector2((0, 0))
+        self.onGround = False
+        self.platforms = platforms
+        self.speed = 8
+        self.jump_strength = 10
         
-    # Update screen 60fps
-    pygame.display.update()
-    clock.tick(60)
+    def update(self):
+        pressed = pygame.key.get_pressed()
+        up = pressed[K_UP]
+        left = pressed[K_LEFT]
+        right = pressed[K_RIGHT]
+        running = pressed[K_SPACE]
+        
+        if up:
+            # only jump if on the ground
+            if self.onGround: self.vel.y = -self.jump_strength
+        if left:
+            self.vel.x = -self.speed
+        if right:
+            self.vel.x = self.speed
+        if running:
+            self.vel.x *= 1.5
+        if not self.onGround:
+            # only accelerate with gravity if in the air
+            self.vel += GRAVITY
+            # max falling speed
+            if self.vel.y > 100: self.vel.y = 100
+        print(self.vel.y)
+        if not(left or right):
+            self.vel.x = 0
+        # increment in x direction
+        self.rect.left += self.vel.x
+        # do x-axis collisions
+        self.collide(self.vel.x, 0, self.platforms)
+        # increment in y direction
+        self.rect.top += self.vel.y
+        # assuming we're in the air
+        self.onGround = False;
+        # do y-axis collisions
+        self.collide(0, self.vel.y, self.platforms)
+
+    def collide(self, xvel, yvel, platforms):
+        for p in platforms:
+            if pygame.sprite.collide_rect(self, p):
+                if isinstance(p, Door):
+                    pygame.event.post(pygame.event.Event(QUIT))
+                if xvel > 0:
+                    self.rect.right = p.rect.left
+                if xvel < 0:
+                    self.rect.left = p.rect.right
+                if yvel > 0:
+                    self.rect.bottom = p.rect.top
+                    self.onGround = True
+                    self.vel.y = 0
+                if yvel < 0:
+                    self.rect.top = p.rect.bottom
+
+class Wall(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(Color("#b4b1ae"), pos, *groups)
+
+class Ground(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(Color("#95a984"), pos, *groups)
+
+class Door(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(Color("#616667"), pos, *groups)
+
+class Enemy(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(Color("#faa0a0"), pos, *groups)
+
+class Xtroy(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(Color("#766333"), pos, *groups)
+
+class Alt(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(Color("#fffb00"), pos, *groups)
+
+if __name__ == "__main__":
+    main()
