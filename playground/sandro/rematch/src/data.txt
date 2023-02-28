@@ -1,0 +1,33 @@
+ESTRUCTURAS
+    W - pared
+    F - suelo
+    T - mesa
+    S - estantería
+    M - todo
+
+PUERTAS
+    DS - puerta (ir a sala)
+    DJ - puerta (ir a jardín)
+    DP1 - puerta (ir a pasillo1)
+    DP2 - puerta (ir a pasillo2)
+    DB - puerta (ir a biblioteca)
+    DT - puerta (ir a torre)
+    DC - puerta (ir a catacumbas)
+    U - puerta unidireccional
+
+PORTALONES
+    G1 - portalón (alfil)
+    G2 - portalón (torre)
+    G3 - portalón (caballo)
+    GF - portalón (final)
+
+ENTITIES
+    E - enemigo
+    P - jugador
+    X - destructible
+    A - Easter Egg
+
+ITEMS
+    0 - tablero
+    1 - peón
+    2 - alfil
