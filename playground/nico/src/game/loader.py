@@ -26,4 +26,7 @@ class Loader(obj.ObjStaticRW):
 
 		obj.ObjStaticRW.close(self)
 
-obj.addGroup(obj.Group(Loader))
+try:
+	obj.getGroup(Loader)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Loader))

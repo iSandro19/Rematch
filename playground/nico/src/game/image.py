@@ -31,8 +31,10 @@ class Surface(AbsImage):
 	def image(self):
 		return self._image
 	
-
-obj.addGroup(obj.Group(Surface))
+try:
+	obj.getGroup(Surface)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Surface))
 
 
 class SpriteSheet(AbsImage, obj.draw.SpriteSheet):
@@ -42,5 +44,7 @@ class SpriteSheet(AbsImage, obj.draw.SpriteSheet):
 		AbsImage.__init__(self, HASH, FATHR_HASH)
 		obj.draw.SpriteSheet.__init__(self, pg.image.load(file), w, h, colorkey)
 
-
-obj.addGroup(obj.Group(SpriteSheet))
+try:
+	obj.getGroup(SpriteSheet)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(SpriteSheet))

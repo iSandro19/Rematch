@@ -36,7 +36,12 @@ class CSRMat(Generic[T]):
 	null:Optional[T]
 	shape:Final[Tuple[int, int]]
 	asdict:Dict[str, Any]
-	def __init__(self, matrix:Iterable[Iterable[T]], none:Optional[T])->None: ...
+	def __init__(
+		self,
+		matrix:Iterable[Iterable[T]],
+		none:Optional[T],
+		dtype=Optional[np.number]
+	)->None: ...
 	"""
 	@overload
 	def __getitem__(self, indices:int)->Tuple[Node, ...]: ...

@@ -1,8 +1,8 @@
 [
 	{
-		"file": "game/images/CV3.png",
-		"w": 16,
-		"h": 32,
-		"colorkey": [255, 0, 0, 255]
+		"file": "game/images/tiles.png",
+		"w": 8,
+		"h": 8,
+		"colorkey": null
 	}
 ]

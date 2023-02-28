@@ -6,7 +6,7 @@ from abc import abstractmethod
 class FinishedError(Exception):
 	def __init__(self, class_id, inst_id):
 		Exception.__init__(
-			"ObjState with CLASS_ID=%d and INST_ID=%d \
+			"ObjState with CLASS_ID=%d and HASH=%d \
 			is unnitialized and can't be updated"%(
 				class_id, inst_id
 			)
@@ -16,8 +16,8 @@ class ObjState(ObjUpdate):
 	state = 0
 
 	@abstractmethod
-	def __init__(self, INST_ID, FATHR_ID):
-		Obj.__init__(self, INST_ID, FATHR_ID)
+	def __init__(self, HASH, FATHR_HASH):
+		Obj.__init__(self, HASH, FATHR_HASH)
 
 	@classmethod
 	def setSTATES(cls, *STATES):
@@ -41,4 +41,4 @@ class ObjState(ObjUpdate):
 		if self.state != 0:
 			self.STATES[iState](self.state-1)
 		else:
-			raise FinishedError(self.CLASS_ID, self.INST_ID)
+			raise FinishedError(self.CLASS_ID, self.HASH)

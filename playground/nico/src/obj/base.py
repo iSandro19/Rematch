@@ -71,7 +71,7 @@ class DrawingPipeline:
 		self._grps = []
 
 	def add(self, group):
-		self._grps.insert(group.TYPE.UPDT_POS, group)
+		self._grps.insert(group.TYPE.DRAW_LAYER, group)
 
 	def draw(self): 
 		for group in self:
@@ -241,7 +241,6 @@ class ObjStaticRW(ObjStaticR):
 			json.dump(instList, fp)
 
 
-
 class Group:
 	@abstractmethod
 	def __init__(self, TYPE):
@@ -253,7 +252,9 @@ class Group:
 		return self._TYPE
 	
 	def add(self, obj):
-		insort(self._OBJS, obj)
+		if not obj in self._OBJS:
+			insort(self._OBJS, obj)
+
 
 	def __getitem__(self, objHash):
 		if isinstance(objHash, int):

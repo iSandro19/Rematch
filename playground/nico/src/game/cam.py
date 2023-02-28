@@ -12,4 +12,7 @@ class Cam(obj.ObjStaticR, pg.Rect):
 	def move_ip(self, x, y):
 		self.move_ip(x, y)
 
-obj.addGroup(obj.Group(Cam))
+try:
+	obj.getGroup(Cam)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Cam))

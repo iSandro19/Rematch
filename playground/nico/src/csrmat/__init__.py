@@ -63,7 +63,32 @@ class Node(tuple):
 
 
 class CSRMat:
-	def __init__(self, matrix, none=None):
+	def __init__(self, matrix, none=None, dtype=np.uint16):
+		self._none = none
+		self._dtype = dtype
+
+		if isinstance(matrix, dict):
+			try:
+				self._data = tuple(matrix["data"])
+				self._colIndex = np.array(matrix["colIndex"], dtype=dtype)
+				self._rowIndex = np.array(matrix["rowIndex"], dtype=dtype)
+
+				lenRowMax = 0
+				prevCol = 0
+
+				for col in self._rowIndex:
+					lenRow = col-prevCol
+					prevCol = col
+
+					if lenRow > lenRowMax:
+						lenRowMax = lenRow
+
+				self._shape = (lenRowMax+1, len(self._rowIndex))
+				return
+			except Exception:
+				raise ValueError(
+					"expeted dict with 'data', 'colIndex', and 'rowIndex'"
+				)
 		if not isinstance(matrix, (list, tuple)):
 			raise TypeError("matrix is not a list nor a tuple")
 
@@ -71,14 +96,15 @@ class CSRMat:
 		data = []
 		colIndex = []
 		rowIndex = []
-		lenRow = 0
+		lenRowMax = 0
 
 		for row in matrix:
 			x = 0
 			rowIndex.append(rowIndexEnd)
 
-			if len(row) > lenRow:
-				lenRow = len(row)
+			lenRow = len(row)
+			if lenRow > lenRowMax:
+				lenRowMax = lenRow
 
 			for mem in row:
 				if mem != none:
@@ -90,11 +116,12 @@ class CSRMat:
 		rowIndex.append(rowIndexEnd)
 
 
-		self._none = none
-		self._shape = (len(matrix), lenRow)
+		
+		self._shape = (len(matrix), lenRowMax)
 		self._data = tuple(data)
-		self._colIndex = np.array(colIndex, dtype=np.uint16)
-		self._rowIndex = np.array(rowIndex, dtype=np.uint16)
+		self._colIndex = np.array(colIndex, dtype=dtype)
+		self._rowIndex = np.array(rowIndex, dtype=dtype)
+
 
 	@property
 	def asdict(self):
@@ -103,17 +130,6 @@ class CSRMat:
 			"colIndex":	list(self._colIndex),
 			"rowIndex":	list(self._rowIndex),
 		}
-
-	@asdict.setter
-	def asdict(self, value):
-		try:
-			self._data = tuple(value["data"])
-			self._colIndex = np.array(value["colIndex"], dtype=np.uint16)
-			self._rowIndex = np.array(value["rowIndex"], dtype=np.uint16)
-		except Exception:
-			raise ValueError(
-				"expeted dict with 'data', 'colIndex', and 'rowIndex'"
-			)
 
 	@property
 	def none(self):
@@ -144,7 +160,7 @@ class CSRMat:
 
 				if isinstance(rows, slice):
 					start = rows.start if rows.start else 0
-					stop = rows.stop if rows.stop else self._shape[1]
+					stop = rows.stop if rows.stop else self._shape[0]
 					step = rows.step if rows.step else 1
 
 					rows = range(start, stop, step)

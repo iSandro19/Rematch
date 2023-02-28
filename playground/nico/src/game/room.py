@@ -37,4 +37,7 @@ class RoomDirector(obj.ObjStaticR, obj.ObjUpdate):
 			closedRoom.close()
 
 
-obj.addGroup(obj.Group(RoomDirector))
+try:
+	obj.getGroup(RoomDirector)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(RoomDirector))
