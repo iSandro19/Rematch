@@ -7,7 +7,7 @@ from typing import (
 )
 import pygame as pg
 from abc import abstractmethod
-from obj.base import ObjDraw, ObjUpdate
+from obj.base import ObjDraw
 
 
 class SpriteSheet:
@@ -22,22 +22,6 @@ class SpriteSheet:
 	)->None: ...
 	def __getitem__(self, rowXcol:Tuple[int, int])->pg.Surface: ...
 
-class ObjSprite(ObjDraw):
-	SPRTS:Final[SpriteSheet]
-	row:int
-	col:int
-	@abstractmethod
-	def __init__(
-		self,
-		INST_ID:int,
-		SPRTS:SpriteSheet,
-		row:int,
-		col:int,
-		x:int,
-		y:int
-	)->None: ...
-
-
 class Frame:
 	COL:Final[int]
 	ROW:Final[int]
@@ -48,10 +32,23 @@ class Frame:
 		self,
 		COL:int,
 		ROW:int,
-		DUR:Optional[float],
 		FLIP_X:Optional[bool],
-		FLIP_Y:Optional[bool]
+		FLIP_Y:Optional[bool],
+		DUR:Optional[float]
 	)->None: ...
+
+class ObjSprite(ObjDraw):
+	SPRTS:Final[SpriteSheet]
+	@abstractmethod
+	def __init__(
+		self,
+		HASH:int,
+		FATHR_HASH:int,
+		SPRTS:SpriteSheet,
+		x:int,
+		y:int
+	)->None: ...
+	def setFrame(self, frame:Frame)->None: ...
 
 class Animation(tuple):
 	LOOP:Final[bool]
@@ -68,7 +65,7 @@ class Animation(tuple):
 		LOOP:Optional[bool]
 	)->None: ...
 
-class ObjAnim(ObjDraw, ObjUpdate):
+class ObjAnim(ObjDraw):
 	SPRTS:Final[SpriteSheet]
 	_anim:Animation
 	_frame:Frame
@@ -77,30 +74,13 @@ class ObjAnim(ObjDraw, ObjUpdate):
 	speed:float
 	done:bool
 	@abstractmethod
-	def __init__(self, INST_ID:int, SPRTS:SpriteSheet, x:int, y:int)->None: ...
-	def startAnim(self, anim:Animation)->None: ...
-	def update(self)->None: ...
-
-class ObjRelative(ObjDraw, ObjUpdate):
-	REF_POINT:Final[pg.Rect]
-	pos:pg.Rect
-	@abstractmethod
 	def __init__(
 		self,
-		INST_ID:int,
-		image:pg.Surface,
-		rect:pg.Rect
+		HASH:int,
+		FATHR_HASH:int,
+		SPRTS:SpriteSheet,
+		x:int,
+		y:int
 	)->None: ...
-	def update(self)->None: ...
-
-class ObjParallax(ObjRelative):
-	Z_OFFSET:Final[float]
-	@abstractmethod
-	def __init__(
-		self,
-		INST_ID:int,
-		image:pg.Surface,
-		rect:pg.Rect,
-		Z_OFFSET:float
-	)->None: ...
-	def update(self)->None: ...
+	def setAnim(self, anim:Animation)->None: ...
+	def draw(self)->None: ...

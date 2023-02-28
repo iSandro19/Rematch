@@ -4,40 +4,37 @@ from typing import (
 	Iterable,
 	Optional,
 	Final,
-	Any
+	Any,
+	Tuple,
+	Union
 )
 from obj.base import ObjUpdate
 from csrmat import CSRMat
 from abc import abstractmethod
 
-class ParamError(Exception):
-	def __init__(self, msg:Optional[str])->None: ...
+
+Act = Callable[['ObjState', Any], Any]
+State = Callable[['ObjState'], None]
+
 
 class FinishedError(Exception):
-	def __init__(self, msg:Optional[str])->None: ...
+	def __init__(self, class_id:int, inst_id:int)->None: ...
 
 class ObjState(ObjUpdate):
-	_STATES:Final[tuple]
-	_ARCS:Final[CSRMat]
+	STATES:Final[Tuple[State]]#classattr
+	ARCS:Final[CSRMat[Tuple[Act, ...]]]#classattr
 	state:int
 	@abstractmethod
-	def __init__(self, INST_ID:int)->None: ...
-	def setStates(
-		states:Iterable[
-			Callable[['ObjState'], None]
+	def __init__(self, HASH:int, FATHR_HASH:int)->None: ...
+	@classmethod
+	def setSTATES(cls, *STATES:State)->None: ...
+	@classmethod
+	def setARCS(
+		cls,
+		*ARCS:Union[
+			Iterable[Iterable[State]],
+			Iterable[Iterable[Iterable[State]]]
 		]
 	)->None: ...
-	def setArcs(
-		arcs:Iterable[
-			Iterable[
-				Iterable[
-					Callable[['ObjState', Any, Any], Any]
-				]
-			]
-		]
-	)->None: ...
-	def next(
-		self,
-		act:Callable[['ObjState', Any, Any], Any]
-	)->None: ...
+	def next(self, act:Act)->None: ...
 	def update(self)->None: ...

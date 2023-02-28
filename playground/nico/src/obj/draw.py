@@ -16,32 +16,45 @@ class SpriteSheet:
 
 		return self.SHEET.subsurface(self.clip)
 
-class ObjSprite(ObjDraw):
-	@abstractmethod
-	def __init__(self, INST_ID, SPRTS, row, col, x, y):
-		self.SPRTS = SPRTS
-		ObjDraw.__init__(
-			self,
-			INST_ID,
-			SPRTS[row, col],
-			pg.Rect(x, y, SPRTS.clip.w, SPRTS.clip.h)
-		)
-
 
 class Frame:
 	def __init__(
 		self,
 		COL,
 		ROW, 
-		DUR = 0.,
 		FLIP_X = False,
-		FLIP_Y = False
+		FLIP_Y = False,
+		DUR = 0.
 	):
 		self.COL = COL
 		self.ROW = ROW
 		self.DUR = DUR
 		self.FLIP_X = FLIP_X
 		self.FLIP_Y = FLIP_Y
+
+class ObjSprite(ObjDraw):
+	@abstractmethod
+	def __init__(self, HASH, FATHR_HASH, SPRTS, x, y):
+		self.SPRTS = SPRTS
+		
+		ObjDraw.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			None,
+			pg.Rect(x, y, SPRTS.clip.w, SPRTS.clip.h)
+		)
+
+	def setFrame(self, frame):
+		self.image = self.SPRTS[frm.ROW, frm.COL]
+
+		if frame.FLIP_X or frame.FLIP_Y:
+			self.image = pg.transform.flip(
+				self.image,
+				frame.FLIP_X,
+				frame.FLIP_Y
+			)
+
 
 class Animation(tuple):
 	def __new__(
@@ -58,28 +71,29 @@ class Animation(tuple):
 	):
 		self.LOOP = LOOP
 
-class ObjAnim(ObjDraw, ObjUpdate):
+class ObjAnim(ObjDraw):
 	speed = 1.
 	done = False
 
 	@abstractmethod
-	def __init__(self, INST_ID, SPRTS, x, y):
+	def __init__(self, HASH, FATHR_HASH, SPRTS, x, y):
 		self.SPRTS = SPRTS
 		ObjDraw.__init__(
 			self,
-			INST_ID,
+			HASH,
+			FATHR_HASH,
 			None,
 			pg.Rect(x, y, SPRTS.clip.w, SPRTS.clip.h)
 		)
 
-	def startAnim(self, anim):
+	def setAnim(self, anim):
 		self._anim = anim
 		self._frameIt = iter(anim)
 		self._steps = 0.
 		self._frame = next(self._frameIt)
 		self.done = False
 
-	def update(self):
+	def draw(self):
 		if not self.done:
 			try:
 				if self._steps < self._frame.DUR:
@@ -104,21 +118,4 @@ class ObjAnim(ObjDraw, ObjUpdate):
 					self._frame.FLIP_Y
 				)
 
-class ObjRelative(ObjDraw, ObjUpdate):
-	@abstractmethod
-	def __init__(self, INST_ID, image, rect):
-		ObjDraw.__init__(self, INST_ID, image, rect)
-
-	def update(self):
-		self.rect.x = self.pos.x - self.REF_POINT.x
-		self.rect.y = self.pos.y - self.REF_POINT.y
-
-class ObjParallax(ObjRelative):
-	@abstractmethod
-	def __init__(self, INST_ID, image, rect, Z_OFFSET):
-		ObjRelative.__init__(self, INST_ID, image, rect)
-		self.Z_OFFSET = Z_OFFSET
-
-	def update(self):
-		self.rect.x = self.pos.x - self.REF_POINT.x*self.Z_OFFSET
-		self.rect.y = self.pos.y - self.REF_POINT.y*self.Z_OFFSET
+		ObjDraw.draw(self)

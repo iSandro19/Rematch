@@ -1,27 +1,18 @@
 from typing import (
-	Tuple,
+	List,
 	Dict,
-	Callable,
-	Iterable,
-	Optional,
 	Final,
 	Any
 )
 import pygame as pg
+from game.cam import Cam
 
-
-class Room(obj.ObjStaticR, obj.ObjUpdate):
-	SHAPE:Final[pg.Rect]
-	OBJ_IDS:Final[Tuple[int]]
-	CAM:Final[pg.Rect]
-	def __init__(
-		self,
-		INST_ID:int,
-		SHAPE:pg.Rect,
-		OBJ_IDS:Iterable[int],
-		CAM_INST_ID:int
-	)->None: ...
-	def update(self)->None: ...
 
 class RoomDirector(obj.ObjStaticR, obj.ObjUpdate):
-	ROOM_IDS:Final[Tuple[int]]
+	MAX_ROOMS:Final[int]
+	CAM:Final[Cam]
+	unloadRooms:List[Dict[str, Any]]
+	loadRooms:List[Dict[str, Any]]
+	def __init__(self, HASH:int, FATHR_HASH:int, rooms:int, camID:int)->None: ...
+	def update(self)->None: ...
+	def close(self)->None: ...

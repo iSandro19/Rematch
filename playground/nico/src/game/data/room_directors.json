@@ -2,8 +2,8 @@
 	{
 		"rooms":[
 		 	{
-				"shape": [0,0,16,16],
-				"roomID": 0
+				"shape": [0,0,128,72],
+				"loaderHash": 0
 			}
 		],
 		"camID": 0

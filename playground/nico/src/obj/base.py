@@ -7,86 +7,222 @@ import pygame as pg
 from functools import cmp_to_key
 
 
+class GroupNotFoundError(ValueError):
+	def __init__(self, objType):
+		ValueError.__init__(
+			self,
+			"Group with TYPE=%s not found"%objType.__qualname__
+		)
+
+class GroupsTable:
+	def __init__(self):
+		self._grps = {}
+
+	def add(self, group):
+		self._grps[group.TYPE.__qualname__] = group
+
+	def __getitem__(self, objType):
+		if isinstance(objType, str):
+			key = objType
+		elif isinstance(objType, type):
+			key = objType.__qualname__
+		else:
+			raise ValueError("only 'type' and 'str' are valid keys")
+
+		try:
+			return self._grps[key]
+		except KeyError:
+			raise GroupNotFoundError(objType)
+
+	def __str__(self):
+		return "{}({})".format(
+			type(self).__qualname__,
+			self._grps
+		)
+
+	def __repr__(self):
+		return "<"+str(self)+">"
+
+
+class UpdatingPipeline:
+	def __init__(self):
+		self._grps = []
+
+	def add(self, group):
+		self._grps.insert(group.TYPE.UPDT_POS, group)
+
+	def update(self): 
+		for group in self._grps:
+			for obj in group:
+				obj.update()
+
+	def __str__(self):
+		return "{}({})".format(
+			type(self).__qualname__,
+			self._grps
+		)
+
+	def __repr__(self):
+		return "<"+str(self)+">"
+
+
+class DrawingPipeline:
+	def __init__(self):
+		self._grps = []
+
+	def add(self, group):
+		self._grps.insert(group.TYPE.UPDT_POS, group)
+
+	def draw(self): 
+		for group in self:
+			for obj in group:
+				obj.draw()
+
+	def __str__(self):
+		return "{}({})".format(
+			type(self).__qualname__,
+			self._grps
+		)
+
+	def __repr__(self):
+		return "<"+str(self)+">"
+
+
+class SavingGroups:
+	def __init__(self):
+		self._grps = []
+
+	def add(self, group):
+		self._grps.append(group)
+
+	def save(self): 
+		for group in self:
+			for obj in group:
+				obj.save()
+
+	def __str__(self):
+		return "{}({})".format(
+			type(self).__qualname__,
+			self._grps
+		)
+
+	def __repr__(self):
+		return "<"+str(self)+">"
+
+
+
+class ObjNotFoundError(ValueError):
+	def __init__(self, objType, objHash):
+		ValueError.__init__(
+			self,
+			"Obj with type={} hash={} not found".format(objType, objHash)
+		)
+
 class Obj(ABC):
+	GRPS_TABLE = GroupsTable()
+
 	@abstractmethod
-	def __init__(self, INST_ID):
-		self.INST_ID = INST_ID
-		GRPS_TABLE[self.CLASS_ID].add(self)
+	def __init__(self, HASH, FATHR_HASH):
+		self._HASH = HASH
+		self._FATHR_HASH = FATHR_HASH
+		self.GRPS_TABLE[type(self)].add(self)
 		self.active = True
 
+	@property
+	def TYPE(self):
+		return self.__class__
+
+	@property
+	def HASH(self):
+		return self._HASH
+
+	@property
+	def FATHR_HASH(self):
+		return self._FATHR_HASH
+	
 	def close(self):
-		del GRPS_TABLE[self.CLASS_ID][self.INST_ID]
+		del self.GRPS_TABLE[type(self)][self._HASH]
 		self.active = False
 
 	def __eq__(self, value):
-		return self.INST_ID == value.INST_ID
+		return self._HASH == value._HASH
 
 	def __ge__(self, value):
-		return self.INST_ID >= value.INST_ID
+		return self._HASH >= value._HASH
 
 	def __gt__(self, value):
-		return self.INST_ID > value.INST_ID
+		return self._HASH > value._HASH
 
 	def __le__(self, value):
-		return self.INST_ID <= value.INST_ID
+		return self._HASH <= value._HASH
 
 	def __lt__(self, value):
-		return self.INST_ID < value.INST_ID
+		return self._HASH < value._HASH
 
 	def __hash__(self):
-		return self.INST_ID
+		return self._HASH
 
 class ObjUpdate(Obj):
+	UPDT_PL = UpdatingPipeline()
+
+	@classmethod
+	def setUPDT_POS(cls, DRAW_LAYER):
+		cls.DRAW_LAYER = DRAW_LAYER
+
 	@abstractmethod
-	def __init__(self, INST_ID):
-		Obj.__init__(self, INST_ID)
+	def __init__(self, HASH, FATHR_HASH):
+		Obj.__init__(self, HASH, FATHR_HASH)
 
 	@abstractmethod
 	def update(self):
 		pass
 
 class ObjDraw(Obj):
+	DRAW_PL = DrawingPipeline()
+
+	@classmethod
+	def setDRAW_LAYER(cls, DRAW_LAYER):
+		cls.DRAW_LAYER = DRAW_LAYER
+
 	@abstractmethod
-	def __init__(self, INST_ID, image, rect):
-		Obj.__init__(self, INST_ID)
+	def __init__(self, HASH, FATHR_HASH, image, rect):
+		Obj.__init__(self, HASH, FATHR_HASH)
 		self.image = image
 		self.rect = rect
-		self.BCKGND = pg.display.get_surface()
+		self._BCKGND = pg.display.get_surface()
 
 	def draw(self):
-		BCKGND.blit(self.image, self.rect)
+		self._BCKGND.blit(self.image, self.rect)
 
 class ObjDynamic(Obj):
 	@abstractmethod
-	def __init__(self):
-		Obj.__init__(self, object.__hash__(self))
+	def __init__(self, FATHR_HASH):
+		Obj.__init__(self, object.__hash__(self), FATHR_HASH)
 
 class ObjStaticR(Obj):
 	@abstractmethod
-	def __init__(self, INST_ID):
-		Obj.__init__(self, INST_ID)
+	def __init__(self, HASH, FATHR_HASH):
+		Obj.__init__(self, HASH, FATHR_HASH)
 
-	def load(cls, INST_ID):
+	@classmethod
+	def load(cls, HASH, FATHR_HASH):
 		with open(cls.GRP_FILE, "r") as fp:
 			i = 0
 			for obj in ijson.items(fp, "item"):
-				if i < INST_ID:
+				if i < HASH:
 					i += 1
 				else:
-					return cls(INST_ID, **obj)
+					return cls(HASH, FATHR_HASH, **obj)
 
-			raise ValueError(
-				"object with CLASS_ID={} and INST_ID={} not found".format(
-					cls.CLASS_ID,
-					INST_ID
-				)
-			)
+			raise ObjNotFoundError(self.TYPE, HASH)
 
 
 class ObjStaticRW(ObjStaticR):
+	SAVE_GRPS = SavingGroups()
+
 	@abstractmethod
-	def __init__(self, INST_ID):
-		ObjStaticR.__init__(self, INST_ID)
+	def __init__(self, HASH, FATHR_HASH):
+		ObjStaticR.__init__(self, HASH, FATHR_HASH)
 
 	@abstractmethod
 	def save(self):
@@ -96,154 +232,121 @@ class ObjStaticRW(ObjStaticR):
 		with open(self.GRP_FILE, "r") as fp:
 			instList = json.load(fp)
 
-		if self.INST_ID < len(instList):
-			instList[self.INST_ID] = obj
+		if self.HASH < len(instList):
+			instList[self.HASH] = obj
 		else:
-			raise ValueError(
-				"object with CLASS_ID={} and INST_ID={} not found".format(
-					cls.CLASS_ID,
-					inst_id
-				)
-			)
+			raise ObjNotFoundError(self.TYPE, self.HASH)
 
 		with open(self.GRP_FILE, "w") as fp:
 			json.dump(instList, fp)
 
 
 
-
-class ObjInstNotFoundError(Exception):
-	def __init__(self, class_id, inst_id):
-		Exception.__init__(
-			self,
-			"object with CLASS_ID=%d INST_ID=%d not found"%(class_id, inst_id)
-		)
-
 class Group:
 	@abstractmethod
-	def __init__(self, OBJS_TYPE):
-		self.OBJS_TYPE = OBJS_TYPE
-		self.INSTS = []
+	def __init__(self, TYPE):
+		self._OBJS = []
+		self._TYPE = TYPE
 
+	@property
+	def TYPE(self):
+		return self._TYPE
+	
 	def add(self, obj):
-		insort(self.INSTS, obj)
+		insort(self._OBJS, obj)
 
-	def __getitem__(self, inst_id):
-		for obj in self:
-			if obj.INST_ID == inst_id:
-				return obj
-			elif obj.INST_ID > inst_id:
-				break
-		raise ObjInstNotFoundError(self.OBJS_TYPE.CLASS_ID, inst_id)
+	def __getitem__(self, objHash):
+		if isinstance(objHash, int):
+			for obj in self._OBJS:
+				if obj.HASH == objHash:
+					return obj
+				elif obj.HASH > objHash:
+					break
+			raise ObjNotFoundError(self._TYPE, objHash)
 
-	def __delitem__(self, inst_id):
-		i = 0
-		for obj in self:
-			if obj.INST_ID == inst_id:
-				del self.INSTS[i]
-				return
-			elif obj.INST_ID > inst_id:
-				break
-			i += 1
+		elif isinstance(objHash, slice):
+			subGroup = Group(self._TYPE)
+			i = 0
 
-		raise ObjInstNotFoundError(self.OBJS_TYPE.CLASS_ID, inst_id)
+			for obj in self._OBJS:
+				if obj.HASH >= objHash.start and not i%objHash.step:
+					subGroup._OBJS.append(obj)
+				elif obj.HASH == objHash.stop:
+					break
+				i += 1
+			return subGroup
+
+		else:
+			raise TypeError(
+				"%s indices must be integers or slices, \
+				not str"%self.__class__.__qualname__
+			)
+
+	def __delitem__(self, objHash):
+		if isinstance(objHash, int):
+			i = 0
+			for obj in self._OBJS:
+				if obj.HASH == objHash:
+					del self._OBJS[i]
+					return
+				elif obj.HASH > objHash:
+					break
+				i += 1
+
+			raise ObjNotFoundError(self._TYPE, objHash)
+
+		elif isinstance(objHash, slice):
+			i = 0
+
+			for obj in self:
+				if obj.HASH >= objHash.start and not i%objHash.step:
+					del self._OBJS[i]
+				elif obj.HASH == objHash.stop:
+					break
+				i += 1
+		else:
+			raise TypeError(
+				"%s indices must be integers or slices, \
+				not str"%self.__class__.__qualname__
+			)
+
+		raise ObjNotFoundError(self._TYPE, objHash)
 
 	def __iter__(self):
-		return iter(self.INSTS)
+		return iter(self._OBJS)
 
 	def __str__(self):
-		return "<{}[{}]({})>".format(
-			self.__class__.__qualname__,
-			self.OBJS_TYPE.__qualname__,
-			self.INSTS
+		return "{}({}, TYPE={})".format(
+			type(self).__qualname__,
+			self._OBJS,
+			self._TYPE.__qualname__
 		)
 
 	def __repr__(self):
-		return str(self)
+		return "<"+str(self)+">"
 
 
-class GroupsTable(tuple):
-	def __new__(cls, iterable=()):
-		return tuple.__new__(cls, tuple(iterable))
 
-_cmp_class_id = cmp_to_key(
-	lambda o0, o1: (
-		1 if o0.OBJS_TYPE.CLASS_ID > o1.OBJS_TYPE.CLASS_ID else
-		0 if o0.OBJS_TYPE.CLASS_ID == o1.OBJS_TYPE.CLASS_ID else
-		-1
-	)
-)
+def addGroup(group):	
+	Obj.GRPS_TABLE.add(group)
+	if issubclass(group.TYPE, ObjUpdate):
+		ObjUpdate.UPDT_PL.add(group)
+	if issubclass(group.TYPE, ObjDraw):
+		ObjDraw.DRAW_PL.add(group)
+	if issubclass(group.TYPE, ObjStaticRW):
+		ObjStaticRW.SAVE_GRPS.add(group)
 
-class UpdatingPipeline(tuple):
-	def __new__(cls, iterable=()):
-		return tuple.__new__(cls, tuple(iterable))
-
-	def update(self): 
-		for group in self:
-			map(group.OBJS_TYPE.update, group)
-
-_cmp_updt_pos = cmp_to_key(
-	lambda o0, o1: (
-		1 if o0.OBJS_TYPE.UPDT_POS > o1.OBJS_TYPE.UPDT_POS else
-		0 if o0.OBJS_TYPE.UPDT_POS == o1.OBJS_TYPE.UPDT_POS else
-		-1
-	)
-) 
-
-class DrawingPipeline(tuple):
-	def __new__(cls, iterable=()):
-		return tuple.__new__(cls, tuple(iterable))
-
-	def draw(self): 
-		for group in self:
-			map(group.OBJS_TYPE.draw, group)
-
-_cmp_draw_layer = cmp_to_key(
-	lambda o0, o1: (
-		1 if o0.OBJS_TYPE.DRAW_LAYER > o1.OBJS_TYPE.DRAW_LAYER else
-		0 if o0.OBJS_TYPE.DRAW_LAYER == o1.OBJS_TYPE.DRAW_LAYER else
-		-1
-	)
-)
-
-
-def setGroups(*groups):
-	global GRPS_TABLE
-	global UPDT_PL
-	global DRAW_PL
-
-	GRPS_TABLE = tuple(sorted(groups, key=_cmp_class_id))
-
-	updtGrps = [
-		group
-		for group in groups
-		if issubclass(group.OBJS_TYPE, ObjUpdate)
-	]
-	updtGrps.sort(key=_cmp_updt_pos)
-
-	UPDT_PL = UpdatingPipeline(updtGrps)
-
-	drawGrps = [
-		group
-		for group in groups
-		if issubclass(group.OBJS_TYPE, ObjDraw)
-	]
-	drawGrps.sort(key=_cmp_draw_layer)
-
-	DRAW_PL = DrawingPipeline(drawGrps)
-
-def getGroups(class_ids):
-	return GRPS_TABLE[class_ids]
+def getGroup(objType):
+	return Obj.GRPS_TABLE[objType]
 
 def update():
-	UPDT_PL.update()
+	ObjUpdate.UPDT_PL.update()
 
 def draw():
-	DRAW_PL.draw()
+	ObjDraw.DRAW_PL.draw()
 
-def loadR(class_id:int, inst_id:int):
-	groupType = GRPS_TABLE[class_id].OBJS_TYPE
-	return groupType.load(groupType, inst_id)
+def load(objType, objHash, fathrHash):
+	return Obj.GRPS_TABLE[objType].TYPE.load(objHash, fathrHash)
 
-def loadRW(class_id:int, inst_id:int)->ObjStaticRW:
-	return loadR(class_id, inst_id)
+def save():
+	ObjStaticRW.SAVE_GRPS.save()

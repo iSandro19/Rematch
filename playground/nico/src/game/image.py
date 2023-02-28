@@ -6,8 +6,8 @@ from abc import abstractmethod
 
 class AbsImage(obj.ObjStaticR):
 	@abstractmethod
-	def __init__(self, INST_ID):
-		obj.ObjStaticR.__init__(self, INST_ID)
+	def __init__(self, HASH, FATHR_HASH):
+		obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)
 		self.watchers = 1
 
 	def watch(self):
@@ -20,23 +20,27 @@ class AbsImage(obj.ObjStaticR):
 			self.close()
 
 
-class Image(AbsImage):
-	CLASS_ID = 0
-	GRP_FILE = "game/data/images.json"
+class Surface(AbsImage):
+	GRP_FILE = "game/data/surfaces.json"
 
-	def __init__(self, INST_ID, file):
-		AbsImage.__init__(self, INST_ID)
-		self.image = pg.image.load(file)
+	def __init__(self, HASH, FATHR_HASH, file):
+		AbsImage.__init__(self, HASH, FATHR_HASH)
+		self._image = pg.image.load(file)
 
-images = obj.Group(Image)
+	@property
+	def image(self):
+		return self._image
+	
+
+obj.addGroup(obj.Group(Surface))
+
 
 class SpriteSheet(AbsImage, obj.draw.SpriteSheet):
-	CLASS_ID = 1
 	GRP_FILE = "game/data/sprite_sheets.json"
 
-	def __init__(self, INST_ID, file, w, h, colorkey=None):
-		AbsImage.__init__(self, INST_ID)
+	def __init__(self, HASH, FATHR_HASH, file, w, h, colorkey=None):
+		AbsImage.__init__(self, HASH, FATHR_HASH)
 		obj.draw.SpriteSheet.__init__(self, pg.image.load(file), w, h, colorkey)
 
 
-spriteSheets = obj.Group(SpriteSheet)
+obj.addGroup(obj.Group(SpriteSheet))
