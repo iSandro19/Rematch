@@ -1,0 +1,9 @@
+[
+	{
+		"tile_w": 8,
+		"tile_h": 8,
+		"rowOffset": 0,
+		"colOffset": 0,
+		"csrMat": {"data": [1, 1, 1, 1, 1, 1, 1, 1, 1], "colIndex": [0, 1, 2, 3, 0, 3, 0, 1, 3], "rowIndex": [0, 4, 6, 9]}
+	}
+]

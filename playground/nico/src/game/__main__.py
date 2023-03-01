@@ -11,8 +11,6 @@ WIND_SIZE = 128, 72
 FPS = 60
 
 
-
-
 def main():
 	pg.display.init()
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
@@ -24,8 +22,9 @@ def main():
 
 	assert pg.image.get_extended()
 
-	obj.load('Cam', 0, 0)
+	cam = obj.load('Cam', 0, 0)
 	obj.load('TileMap', 0, 0)
+	tc = obj.load('TileCollision', 0, 0)
 	game.player.Test(0)
 
 	while notExit:
@@ -38,6 +37,12 @@ def main():
 		obj.update()
 
 		obj.draw()
+
+		tl = tc[cam.y, cam.x]
+		tl.rect.move_ip(-cam.x, -cam.y)
+
+		if tl.form == game.tile.RECT:
+			pg.draw.rect(wind, (255, 0,0, 128), tl.rect)
 
 		pg.display.flip()
 		clock.tick(FPS)
