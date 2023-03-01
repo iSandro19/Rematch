@@ -74,7 +74,7 @@ class DrawingPipeline:
 		self._grps.insert(group.TYPE.DRAW_LAYER, group)
 
 	def draw(self): 
-		for group in self:
+		for group in self._grps:
 			for obj in group:
 				obj.draw()
 
@@ -96,7 +96,7 @@ class SavingGroups:
 		self._grps.append(group)
 
 	def save(self): 
-		for group in self:
+		for group in self._grps:
 			for obj in group:
 				obj.save()
 

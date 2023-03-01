@@ -2,25 +2,29 @@ import pygame as pg
 from pygame.locals import *
 from typing import List, Dict, Tuple, Union, Callable
 import obj
-import obj.draw
+import game.tile
+import game.cam
 
 
-WIND_SIZE:Tuple[int, int] = 128, 128
-FPS:int = 60
+WIND_SIZE = 128, 72
+FPS = 10
 
 
 
 
-def main() -> int:
+def main():
 	pg.display.init()
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
 
-	notExit:bool = True
-	clock:pg.time.Clock = pg.time.Clock()
-	wind:pg.Surface = pg.display.get_surface()
+	notExit = True
+	clock = pg.time.Clock()
+	wind = pg.display.get_surface()
+	rect = pg.Rect(0,0,128,72)
 
 	assert pg.image.get_extended()
 
+	obj.load('Cam', 0, 0)
+	obj.load('TileMap', 0, 0)
 
 	while notExit:
 		for event in pg.event.get():
@@ -28,6 +32,8 @@ def main() -> int:
 
 
 		wind.fill((128, 128, 128))
+
+		obj.draw()
 
 		pg.display.flip()
 		clock.tick(FPS)

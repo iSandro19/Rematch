@@ -74,16 +74,20 @@ class CSRMat:
 				self._rowIndex = np.array(matrix["rowIndex"], dtype=dtype)
 
 				lenRowMax = 0
-				prevCol = 0
+				i = iter(self._rowIndex)
 
-				for col in self._rowIndex:
-					lenRow = col-prevCol
-					prevCol = col
+				next(i)
+				
+				try:
+					while True:
+						lenRow = self._colIndex[next(i)-1]
 
-					if lenRow > lenRowMax:
-						lenRowMax = lenRow
+						if lenRow > lenRowMax:
+							lenRowMax = lenRow
+				except StopIteration:
+					pass
 
-				self._shape = (lenRowMax+1, len(self._rowIndex))
+				self._shape = (len(self._rowIndex)-1, lenRowMax+1)
 				return
 			except Exception:
 				raise ValueError(

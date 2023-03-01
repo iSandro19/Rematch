@@ -37,12 +37,12 @@ except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Surface))
 
 
-class SpriteSheet(AbsImage, obj.draw.SpriteSheet):
+class SpriteSheet(AbsImage, obj.sprite.SpriteSheet):
 	GRP_FILE = "game/data/sprite_sheets.json"
 
 	def __init__(self, HASH, FATHR_HASH, file, w, h, colorkey=None):
 		AbsImage.__init__(self, HASH, FATHR_HASH)
-		obj.draw.SpriteSheet.__init__(self, pg.image.load(file), w, h, colorkey)
+		obj.sprite.SpriteSheet.__init__(self, pg.image.load(file), w, h, colorkey)
 
 try:
 	obj.getGroup(SpriteSheet)

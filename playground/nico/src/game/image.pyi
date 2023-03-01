@@ -20,7 +20,7 @@ class Surface(obj.ObjStaticR, pg.Surface):
 	def __init__(self, HASH:int, FATHR_HASH:int, file:str)->None: ...
 
 
-class SpriteSheet(obj.ObjStaticR, obj.draw.SpriteSheet):
+class SpriteSheet(obj.ObjStaticR, obj.sprite.SpriteSheet):
 	def __init__(
 		self,
 		HASH:int,
