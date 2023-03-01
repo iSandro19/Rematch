@@ -351,3 +351,8 @@ def load(objType, objHash, fathrHash):
 
 def save():
 	ObjStaticRW.SAVE_GRPS.save()
+
+def close():
+	for group in Obj.GRPS_TABLE:
+		for obj in group:
+			obj.close()
