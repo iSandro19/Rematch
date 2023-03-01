@@ -39,6 +39,7 @@ def main():
 		clock.tick(FPS)
 	
 
+	obj.close()
 	pg.display.quit()
 
 	return 0

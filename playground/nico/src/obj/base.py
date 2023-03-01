@@ -21,6 +21,11 @@ class GroupsTable:
 	def add(self, group):
 		self._grps[group.TYPE.__qualname__] = group
 
+	def close(self):
+		for group in self._grps.values():
+			for obj in group:
+				obj.close()
+
 	def __getitem__(self, objType):
 		if isinstance(objType, str):
 			key = objType
@@ -353,6 +358,4 @@ def save():
 	ObjStaticRW.SAVE_GRPS.save()
 
 def close():
-	for group in Obj.GRPS_TABLE:
-		for obj in group:
-			obj.close()
+	Obj.GRPS_TABLE.close()
