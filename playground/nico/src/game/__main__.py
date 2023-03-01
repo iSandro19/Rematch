@@ -4,10 +4,11 @@ from typing import List, Dict, Tuple, Union, Callable
 import obj
 import game.tile
 import game.cam
+import game.player
 
 
 WIND_SIZE = 128, 72
-FPS = 10
+FPS = 60
 
 
 
@@ -25,6 +26,7 @@ def main():
 
 	obj.load('Cam', 0, 0)
 	obj.load('TileMap', 0, 0)
+	game.player.Test(0)
 
 	while notExit:
 		for event in pg.event.get():
@@ -32,6 +34,8 @@ def main():
 
 
 		wind.fill((128, 128, 128))
+
+		obj.update()
 
 		obj.draw()
 

@@ -1,6 +1,9 @@
 import obj
+import pygame as pg
+from game.cam import Cam
 
 
+"""
 ANIMS = {
 	"standRight": obj.draw.Animation(
 		(
@@ -84,3 +87,30 @@ class Player(obj.ObjState, obj.ObjPhysic):
 	def _standing(self): ...
 
 	def _walking(self): ...
+
+"""
+
+class Test(obj.ObjDynamic, obj.ObjUpdate):
+	UPDT_POS=0
+	def __init__(self, FATHR_HASH):
+		obj.ObjDynamic.__init__(self, FATHR_HASH)
+		self._cam = obj.getGroup(Cam)[0]
+
+	def update(self):
+		if(pg.key.get_pressed()[pg.K_a]):
+			self._cam.move_ip(-1,0)
+
+		if(pg.key.get_pressed()[pg.K_d]):
+			self._cam.move_ip(1,0)
+
+		if(pg.key.get_pressed()[pg.K_w]):
+			self._cam.move_ip(0,-1)
+
+		if(pg.key.get_pressed()[pg.K_s]):
+			self._cam.move_ip(0,1)
+
+try:
+	obj.getGroup(Test)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Test))
+
