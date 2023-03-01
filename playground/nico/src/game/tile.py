@@ -83,6 +83,10 @@ class TileMap(obj.ObjStaticR, obj.physic.ObjRelative):
 						self.image = self._sprtSht[tile]
 						obj.physic.ObjRelative.draw(self)
 
+	def close(self):
+		self._sprtSht.watch()
+		obj.ObjStaticR.close(self)
+
 
 try:
 	obj.getGroup(TileMap)
