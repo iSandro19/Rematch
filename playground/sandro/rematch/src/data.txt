@@ -16,12 +16,6 @@ PUERTAS
     U - puerta unidireccional
     Q - puerta botón
 
-PORTALONES
-    G1 - portalón (alfil)
-    G2 - portalón (torre)
-    G3 - portalón (caballo)
-    GF - portalón (final)
-
 ENTITIES
     E - enemigo
     P - jugador
@@ -35,3 +29,5 @@ ITEMS
     0 - tablero
     1 - peón
     2 - alfil
+    3 - torre
+    4 - caballo
