@@ -43,10 +43,10 @@ def main(lvl):
     
     while True:
         for e in pygame.event.get():
-            if e.type == QUIT: 
-                return
+            if e.type == QUIT:
+                exit(0)
             if e.type == KEYDOWN and e.key == K_ESCAPE:
-                return
+                exit(0)
 
         entities.update()
 
@@ -95,8 +95,8 @@ def draw_level(level, platforms, entities):
         DT - puerta (ir a torre)
         DC - puerta (ir a catacumbas)
     
-    Q - puerta botón
-    U - puerta unidireccional
+        Q - puerta botón
+        U - puerta unidireccional
 
     ENTITIES
         E - enemigo
@@ -292,31 +292,51 @@ class Enemy(Entity):
 class Player(Entity):
     def __init__(self, platforms, pos, *groups):
         super().__init__(player_image, pos)
+        
+        # Atributos
         self.vel = pygame.Vector2((0, 0))
-        self.onGround = False
         self.platforms = platforms
-        self.speed = 8
+        self.onGround = False
         self.jump_strength = 14
+        self.speed = 8
+
+
+        # Habilidades
+        self.jump = False
+        self.double_jump = False
+        self.dash = False
+        self.bounce = False
+        self.pawn_atk = False
+        self.bishop_atk = False
+        self.rook_atk = False
+        self.knight_atk = False
         
     def update(self):
         pressed = pygame.key.get_pressed()
         up = pressed[K_UP]
+        space = pressed[K_SPACE]
+        w = pressed[K_w]
+
         left = pressed[K_LEFT]
+        a = pressed[K_a]
+
         right = pressed[K_RIGHT]
-        running = pressed[K_SPACE]
+        d = pressed[K_d]
+
+        shift = pressed[K_LSHIFT]
         
-        if up:
+        if (up or space or w) and self.jump:
             if self.onGround: self.vel.y = -self.jump_strength
-        if left:
+        if left or a:
             self.vel.x = -self.speed
-        if right:
+        if right or d:
             self.vel.x = self.speed
-        if running:
+        if shift:
             self.vel.x *= 1.5
         if not self.onGround:
             self.vel += GRAVITY
             if self.vel.y > 100: self.vel.y = 100
-        if not(left or right):
+        if not(left or right or a or d):
             self.vel.x = 0
         
         self.rect.left += self.vel.x
@@ -349,7 +369,12 @@ class Player(Entity):
                     main(5)
                 if isinstance(p, DoorCorridor2):
                     print("Go to corridor2")
-                    main(6)             
+                    main(6)    
+
+                if isinstance(p, Pawn):
+                    print("Pawn")
+                    self.pawn_atk = True
+                    self.jump = True
                 
                 # Physics
                 if xvel > 0:
