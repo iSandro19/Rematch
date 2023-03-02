@@ -11,7 +11,6 @@ GRAVITY = pygame.Vector2((0, 0.5))
 TILE_SIZE = 64
 
 bishop_image = pygame.image.load("assets/sprites/bishop.png")
-background_image = pygame.image.load("assets/sprites/background.png")
 board_image = pygame.image.load("assets/sprites/board.png")
 button_door_image = pygame.image.load("assets/sprites/button_door.png")
 button_image = pygame.image.load("assets/sprites/button.png")
@@ -117,50 +116,50 @@ def draw_level(level, platforms, entities):
     """
     for row in level:
         for col in row:
-            if "W" in col:
+            if col.startswith("W"):
                 Wall((x, y), platforms, entities)
-            if "F" in col:
+            if col.startswith("F"):
                 Floor((x, y), platforms, entities)
-            if "T" in col:
+            if col.startswith("T"):
                 Table((x, y), platforms, entities)
-            if "S" in col:
+            if col.startswith("S"):
                 Shelving((x, y), platforms, entities)
             if "D" in col:
-                if "DJ" in col:
+                if col == "DJ":
                     DoorGarden((x, y), platforms, entities)
-                if "DS" in col:
+                if col == "DS":
                     DoorHall((x, y), platforms, entities)
-                if "DP1" in col:
+                if col == "DP1":
                     DoorCorridor1((x, y), platforms, entities)
-                if "DP2" in col:
+                if col == "DP2":
                     DoorCorridor2((x, y), platforms, entities)
-                if "DB" in col:
+                if col == "DB":
                     DoorLibrary((x, y), platforms, entities)
-                if "DT" in col:
+                if col == "DT":
                     DoorTower((x, y), platforms, entities)
-                if "DC" in col:
+                if col == "DC":
                     DoorCatacombs((x, y), platforms, entities)
-            if "Q" in col:
+            if col.startswith("Q"):
                 ButtonDoor((x, y), platforms, entities)
-            if "U" in col:
+            if col.startswith("U"):
                 OneWayDoor((x, y), platforms, entities)
-            if "E" in col:
+            if col.startswith("E"):
                 Enemy((x, y), platforms, entities)
-            if "X" in col:
+            if col.startswith("X"):
                 Destroy((x, y), platforms, entities)
-            if "A" in col:
+            if col.startswith("A"):
                 Easter((x, y), platforms, entities)
-            if "B" in col:
+            if col.startswith("B"):
                 Button((x, y), platforms, entities)
-            if "0" in col:
+            if col.startswith("0"):
                 Board((x, y), platforms, entities)
-            if "1" in col:
+            if col.startswith("1"):
                 Pawn((x, y), platforms, entities)
-            if "2" in col:
+            if col.startswith("2"):
                 Bishop((x, y), platforms, entities)
-            if "3" in col:
+            if col.startswith("3"):
                 Rook((x, y), platforms, entities)
-            if "4" in col:
+            if col.startswith("4"):
                 Knight((x, y), platforms, entities)
             x += TILE_SIZE
         y += TILE_SIZE
@@ -182,15 +181,6 @@ def player_pos(lvl):
     y = PLAYER_TILE[lvl][1]
 
     return x, y
-
-def resource_path(relative_path):
-    try:
-    # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
 
 ###############################################################################
 
