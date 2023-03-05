@@ -9,6 +9,16 @@ class SpriteSheet:
 		self.SHEET = SHEET
 		self.SHEET.set_colorkey(colorkey)
 		self.clip = pg.Rect(0, 0, w, h)
+		self._w = SHEET.get_width()//self.clip.w
+		self._h = SHEET.get_height()//self.clip.w
+
+	@property
+	def w(self):
+		return self._w
+
+	@property
+	def h(self):
+		return self._h
 
 	def __getitem__(self, rowXcol)->pg.Surface:
 		self.clip.x = rowXcol[1]*self.clip.w
@@ -36,7 +46,8 @@ class ObjSprite(ObjDraw):
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH, SPRTS, x, y):
 		self.SPRTS = SPRTS
-		
+		self._frame = None
+
 		ObjDraw.__init__(
 			self,
 			HASH,
@@ -45,8 +56,15 @@ class ObjSprite(ObjDraw):
 			pg.Rect(x, y, SPRTS.clip.w, SPRTS.clip.h)
 		)
 
-	def setFrame(self, frame):
-		self.image = self.SPRTS[frm.ROW, frm.COL]
+	@property
+	def frame(self):
+		return self._frame
+	
+	@frame.setter
+	def frame(self, frame):
+		self._frame = frame
+
+		self.image = self.SPRTS[frame.ROW, frame.COL]
 
 		if frame.FLIP_X or frame.FLIP_Y:
 			self.image = pg.transform.flip(
@@ -78,6 +96,8 @@ class ObjAnim(ObjDraw):
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH, SPRTS, x, y):
 		self.SPRTS = SPRTS
+		self._anim = None
+
 		ObjDraw.__init__(
 			self,
 			HASH,
@@ -86,7 +106,12 @@ class ObjAnim(ObjDraw):
 			pg.Rect(x, y, SPRTS.clip.w, SPRTS.clip.h)
 		)
 
-	def setAnim(self, anim):
+	@property
+	def anim(self):
+		return self._anim
+	
+	@anim.setter
+	def anim(self, anim):
 		self._anim = anim
 		self._frameIt = iter(anim)
 		self._steps = 0.
@@ -118,4 +143,3 @@ class ObjAnim(ObjDraw):
 					self._frame.FLIP_Y
 				)
 
-		ObjDraw.draw(self)

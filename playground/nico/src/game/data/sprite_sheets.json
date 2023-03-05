@@ -4,5 +4,11 @@
 		"w": 8,
 		"h": 8,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/magnus.bmp",
+		"w": 16,
+		"h": 16,
+		"colorkey": [255,0,0]
 	}
 ]

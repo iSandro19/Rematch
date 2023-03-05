@@ -1,94 +1,428 @@
 import obj
 import pygame as pg
 from game.cam import Cam
+from game.image import SpriteSheet
+from game.control import Control
+from game.tile import TileCollision, RECT
 
 
-"""
 ANIMS = {
-	"standRight": obj.draw.Animation(
+	"standRight": obj.sprite.Animation(
 		(
-			obj.draw.Frame(0,0,False,True),
+			obj.sprite.Frame(0,0,DUR=128),
+			obj.sprite.Frame(1,0,DUR=4),
+			obj.sprite.Frame(2,0,DUR=4),
+			obj.sprite.Frame(3,0,DUR=4),
+			obj.sprite.Frame(4,0,DUR=4),
+			obj.sprite.Frame(5,0,DUR=4),
+			obj.sprite.Frame(6,0,DUR=4),
+			obj.sprite.Frame(7,0,DUR=4),
+			obj.sprite.Frame(8,0,DUR=4),
+			obj.sprite.Frame(9,0,DUR=4),
+			obj.sprite.Frame(10,0,DUR=4),
+			obj.sprite.Frame(11,0,DUR=4),
+			obj.sprite.Frame(10,0,DUR=4),
+			obj.sprite.Frame(9,0,DUR=4),
+			obj.sprite.Frame(8,0,DUR=4),
+			obj.sprite.Frame(7,0,DUR=4),
+			obj.sprite.Frame(8,0,DUR=4),
+			obj.sprite.Frame(9,0,DUR=4),
+			obj.sprite.Frame(10,0,DUR=4),
+			obj.sprite.Frame(11,0,DUR=4),
+			obj.sprite.Frame(10,0,DUR=4),
+			obj.sprite.Frame(9,0,DUR=4),
+			obj.sprite.Frame(8,0,DUR=4),
+			obj.sprite.Frame(7,0,DUR=4),
+			obj.sprite.Frame(8,0,DUR=4),
+			obj.sprite.Frame(9,0,DUR=4),
+			obj.sprite.Frame(10,0,DUR=4),
+			obj.sprite.Frame(11,0,DUR=4),
+			obj.sprite.Frame(10,0,DUR=4),
+			obj.sprite.Frame(9,0,DUR=4),
+			obj.sprite.Frame(8,0,DUR=4),
+			obj.sprite.Frame(7,0,DUR=4),
+			obj.sprite.Frame(6,0,DUR=4),
+			obj.sprite.Frame(5,0,DUR=4),
+			obj.sprite.Frame(4,0,DUR=4),
+			obj.sprite.Frame(3,0,DUR=4),
+			obj.sprite.Frame(2,0,DUR=4),
+			obj.sprite.Frame(1,0,DUR=4),
 		),
-		False
 	),
-	"standLeft": obj.draw.Animation(
+	"standLeft": obj.sprite.Animation(
 		(
-			obj.draw.Frame(0,0),
-		),
-		False
-	),
-	"runRight": obj.draw.Animation(
-		(
-			obj.draw.Frame(0,0,False,True,8),
-			obj.draw.Frame(1,0,False,True,8),
-			obj.draw.Frame(2,0,False,True,8),
-			obj.draw.Frame(1,0,False,True,8),
+			obj.sprite.Frame(0,0,True,DUR=128),
+			obj.sprite.Frame(1,0,True,DUR=4),
+			obj.sprite.Frame(2,0,True,DUR=4),
+			obj.sprite.Frame(3,0,True,DUR=4),
+			obj.sprite.Frame(4,0,True,DUR=4),
+			obj.sprite.Frame(5,0,True,DUR=4),
+			obj.sprite.Frame(6,0,True,DUR=4),
+			obj.sprite.Frame(7,0,True,DUR=4),
+			obj.sprite.Frame(8,0,True,DUR=4),
+			obj.sprite.Frame(9,0,True,DUR=4),
+			obj.sprite.Frame(10,0,True,DUR=4),
+			obj.sprite.Frame(11,0,True,DUR=4),
+			obj.sprite.Frame(10,0,True,DUR=4),
+			obj.sprite.Frame(9,0,True,DUR=4),
+			obj.sprite.Frame(8,0,True,DUR=4),
+			obj.sprite.Frame(7,0,True,DUR=4),
+			obj.sprite.Frame(8,0,True,DUR=4),
+			obj.sprite.Frame(9,0,True,DUR=4),
+			obj.sprite.Frame(10,0,True,DUR=4),
+			obj.sprite.Frame(11,0,True,DUR=4),
+			obj.sprite.Frame(10,0,True,DUR=4),
+			obj.sprite.Frame(9,0,True,DUR=4),
+			obj.sprite.Frame(8,0,True,DUR=4),
+			obj.sprite.Frame(7,0,True,DUR=4),
+			obj.sprite.Frame(8,0,True,DUR=4),
+			obj.sprite.Frame(9,0,True,DUR=4),
+			obj.sprite.Frame(10,0,True,DUR=4),
+			obj.sprite.Frame(11,0,True,DUR=4),
+			obj.sprite.Frame(10,0,True,DUR=4),
+			obj.sprite.Frame(9,0,True,DUR=4),
+			obj.sprite.Frame(8,0,True,DUR=4),
+			obj.sprite.Frame(7,0,True,DUR=4),
+			obj.sprite.Frame(6,0,True,DUR=4),
+			obj.sprite.Frame(5,0,True,DUR=4),
+			obj.sprite.Frame(4,0,True,DUR=4),
+			obj.sprite.Frame(3,0,True,DUR=4),
+			obj.sprite.Frame(2,0,True,DUR=4),
+			obj.sprite.Frame(1,0,True,DUR=4),
 		)
 	),
-	"runLeft": obj.draw.Animation(
+	"runRight": obj.sprite.Animation(
 		(
-			obj.draw.Frame(0,0,DUR=8),
-			obj.draw.Frame(1,0,DUR=8),
-			obj.draw.Frame(2,0,DUR=8),
-			obj.draw.Frame(1,0,DUR=8),
+			obj.sprite.Frame(0,1,DUR=4),
+			obj.sprite.Frame(1,1,DUR=4),
+			obj.sprite.Frame(2,1,DUR=4),
+			obj.sprite.Frame(3,1,DUR=4),
+			obj.sprite.Frame(4,1,DUR=4),
+			obj.sprite.Frame(5,1,DUR=4),
+			obj.sprite.Frame(6,1,DUR=4),
+			obj.sprite.Frame(7,1,DUR=4),
 		)
 	),
-	"jumpRight": obj.draw.Animation(
+	"runLeft": obj.sprite.Animation(
 		(
-			obj.draw.Frame(3,0,False,True),
+			obj.sprite.Frame(0,1,True,DUR=4),
+			obj.sprite.Frame(1,1,True,DUR=4),
+			obj.sprite.Frame(2,1,True,DUR=4),
+			obj.sprite.Frame(3,1,True,DUR=4),
+			obj.sprite.Frame(4,1,True,DUR=4),
+			obj.sprite.Frame(5,1,True,DUR=4),
+			obj.sprite.Frame(6,1,True,DUR=4),
+			obj.sprite.Frame(7,1,True,DUR=4),
+		)
+	),
+	"jumpRight": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(4,1),
 		),
 		False
 	),
-	"jumpLeft": obj.draw.Animation(
+	"jumpLeft": obj.sprite.Animation(
 		(
-			obj.draw.Frame(3,0),
+			obj.sprite.Frame(4,1,True),
 		),
 		False
 	)
 }
 
-TestAnim.SPRTS = obj.draw.SpriteSheet(
-	pg.image.load("game/images/CV3.png"),
-	16,
-	32,
-	(255,0,0)
-)
+C_BOX_W = 8
+C_BOX_H = 16
 
-HITBOX_W = 16
-HITBOX_H = 32
+C_BOX_W_OFFSET = 4
+C_BOX_H_OFFSET = 0
 
 IMG_W = 16
-IMG_H = 32
+IMG_H = 16
 
-class Player(obj.ObjState, obj.ObjPhysic):
+MAX_H_VEL = 2
+MAX_V_VEL = 2
 
-	# Actions
+H_ACC = 0.2
+V_ACC = 0.2
 
-	def __init__(self, INST_ID, x, y):
-		pos = pg.Rect(x, y, HITBOX_W, HITBOX_H)
-		rect = pg.Rect()
-		obj.ObjState.__init__(self, INST_ID)
-		obj.ObjPhysic.__init__(self, INST_ID, None, rect, REF_POINT, pos, acc, vel)
-		self.image = pg.Surface("standing.bmp")
-		self.rect = self.image.get_rect()
+JUMP_VEL = 3
+
+class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim): 
+	GRP_FILE = "game/data/players.json"
+	UPDT_POS = 1
+	DRAW_LAYER = 10
+
+	def __init__(
+		self,
+		HASH,
+		FATHR_HASH,
+		controlHash,
+		sprtShtHash,
+		camHash,
+		x,
+		y
+	):
+		self._control = obj.getGroup(Control)[controlHash]
+
+		try:
+			self._sprtSht = obj.getGroup(SpriteSheet)[sprtShtHash]
+			self._sprtSht.watch()
+		except obj.ObjNotFoundError:
+			self._sprtSht = obj.load(SpriteSheet, sprtShtHash, HASH)
+
+		self._cam = obj.getGroup(Cam)[camHash]
+
+		obj.state.ObjState.__init__(self, HASH, FATHR_HASH)
+		obj.physic.ObjPhysic.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			None,
+			IMG_W,
+			IMG_H,
+			self._cam,
+			pg.math.Vector2(x, y),
+			C_BOX_W_OFFSET,
+			C_BOX_H_OFFSET,
+			C_BOX_W,
+			C_BOX_H,
+			pg.math.Vector2(0, 0),
+			pg.math.Vector2(0, 0)
+		)
+		obj.sprite.ObjAnim.__init__(self, HASH, FATHR_HASH, self._sprtSht, x, y)
+		obj.ObjStaticRW.__init__(self, HASH, FATHR_HASH)
+
+		self.anim = ANIMS["standRight"]
+		self._inGround = True
+		self._facingRight = True
 
 
-	def goRight(self): ...
+	def update(self):
+		keys = pg.key.get_pressed()
 
-	def goLeft(self): ...
+		prevVel = self.vel.copy()
+		prevAcc = self.acc.copy()
+		prevPos = self.pos.copy()
 
-	def stop(self): ...
+
+		if self._inGround:		
+			if keys[self._control["jump"]]:
+				self._inGround = False
+				self.acc.y = V_ACC
+				self.vel.y = -JUMP_VEL
+
+		else:
+			if prevVel.y < 0:
+				if not keys[self._control["jump"]]:
+					self.vel.y = 0
+
+				elif prevVel.y > MAX_V_VEL:
+					self.vel.y = MAX_V_VEL
 
 
-	# States
+		if prevVel.x == 0:
+			if prevAcc.x == 0:
+				if keys[self._control["right"]] and not keys[self._control["left"]]:
+					self.acc.x = H_ACC
+					
+					self._facingRight = True
 
-	def _jumping
+				elif keys[self._control["left"]] and not keys[self._control["right"]]:
+					self.acc.x = -H_ACC
+					self.acc.y = V_ACC
+					self._facingRight = False
 
-	def _standing(self): ...
+			else:
+				self.acc.x = 0
 
-	def _walking(self): ...
+		elif prevVel.x > 0:
+			self._inGround = False
+			self.acc.y = V_ACC
+			if not keys[self._control["right"]] or keys[self._control["left"]]:
+				if prevVel.x - H_ACC < 0:
+					self.vel.x = 0
+					self.acc.x = 0
+				else:
+					self.acc.x = -H_ACC
 
-"""
+			else:
+				if prevAcc.x > 0 and prevVel.x > MAX_H_VEL:
+					self.acc.x = 0
+					self.vel.x = MAX_H_VEL
+
+				elif prevAcc.x < 0:
+					self.acc.x = H_ACC
+
+		else:
+			self._inGround = False
+			self.acc.y = V_ACC
+			if not keys[self._control["left"]] or keys[self._control["right"]]:
+				if prevVel.x + H_ACC > 0:
+					self.vel.x = 0
+					self.acc.x = 0
+				else:
+					self.acc.x = H_ACC
+
+			else:
+				if prevAcc.x < 0 and prevVel.x < -MAX_H_VEL:
+					self.acc.x = 0
+					self.vel.x = -MAX_H_VEL
+
+				elif prevAcc.x > 0:
+					self.acc.x = -H_ACC
+
+
+		obj.physic.ObjPhysic.update(self)
+		pg.draw.rect(self._BCKGND, (0,255,0), self.cBox.move(-self._cam.x,-self._cam.y), 1)
+
+
+
+		if (
+			self.vel.x != 0 or self.acc.x == H_ACC or self.acc.x == -H_ACC or
+			self.vel.y != 0 or self.acc.y == V_ACC or self.acc.y == -V_ACC
+		):
+			for tls in obj.getGroup(TileCollision):
+				if self.vel.x > 0 or (self._facingRight and self.acc.x == H_ACC):
+					x, y = self.cBox.topright
+					tl = tls[y+MAX_V_VEL+1,x]
+					pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-self._cam.y+MAX_V_VEL+1,1,1))
+
+					if tl.form == RECT:
+						self.cBox.right = tl.rect.left
+						self.pos.x = self.cBox.x - self._cBoxOffsetH
+						self.vel.x = 0
+						self.acc.x = 0
+
+					else:
+						x, y = self.cBox.bottomright
+						tl = tls[y-1-MAX_V_VEL-1,x]
+						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-1-self._cam.y-MAX_V_VEL-1,1,1))
+
+						if tl.form == RECT:
+							self.cBox.right = tl.rect.left
+							self.pos.x = self.cBox.x - self._cBoxOffsetH
+							self.vel.x = 0
+							self.acc.x = 0
+
+				if self.vel.x < 0 or (not self._facingRight and self.acc.x == -H_ACC):
+					x, y = self.cBox.topleft
+					tl = tls[y+MAX_V_VEL+1,x-1]
+					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-self._cam.y+MAX_V_VEL+1,1,1))
+
+					if tl.form == RECT:
+						self.cBox.left = tl.rect.right
+						self.pos.x = self.cBox.x - self._cBoxOffsetH
+						self.vel.x = 0
+						self.acc.x = 0
+
+					else:
+						x, y = self.cBox.bottomleft
+						tl = tls[y-1-MAX_V_VEL-1,x-1]
+						pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-1-self._cam.y-MAX_V_VEL-1,1,1))
+
+						if tl.form == RECT:
+							self.cBox.left = tl.rect.right
+							self.pos.x = self.cBox.x - self._cBoxOffsetH
+							self.vel.x = 0
+							self.acc.x = 0
+
+				if self.vel.y > 0:
+					x, y = self.cBox.bottomright
+					tl = tls[y,x-1]
+					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-self._cam.y,1,1))
+
+					if tl.form == RECT:
+						self.cBox.bottom = tl.rect.top
+						self.pos.y = self.cBox.y - self._cBoxOffsetV
+						self.vel.y = 0
+						self.acc.y = 0
+						self._inGround = True
+
+					else:
+						x, y = self.cBox.bottomleft
+						tl = tls[y,x]
+						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-self._cam.y,1,1))
+
+						if tl.form == RECT:
+							self.cBox.bottom = tl.rect.top
+							self.pos.y = self.cBox.y - self._cBoxOffsetV
+							self.vel.y = 0
+							self.acc.y = 0
+							self._inGround = True
+
+
+				elif self.vel.y < 0:
+					x, y = self.cBox.topright
+					tl = tls[y-1,x-1]
+					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-1-self._cam.y,1,1))
+
+					if tl.form == RECT:
+						self.cBox.top = tl.rect.bottom
+						self.pos.y = self.cBox.y - self._cBoxOffsetV
+						self.vel.y = 0
+
+					else:
+						x, y = self.cBox.topleft
+						tl = tls[y-1,x]
+						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-1-self._cam.y,1,1))
+
+						if tl.form == RECT:
+							self.cBox.top = tl.rect.bottom
+							self.pos.y = self.cBox.y - self._cBoxOffsetV
+							self.vel.y = 0
+
+		self._cam.center = self.cBox.center
+
+		if self._inGround:
+			if self._facingRight:
+				if self.vel.x == 0 and self.acc.x == 0:
+					if self.anim != ANIMS["standRight"]:
+						self.anim = ANIMS["standRight"]
+				else:
+					if self.anim != ANIMS["runRight"]:
+						self.anim = ANIMS["runRight"]
+			else:
+				if self.vel.x == 0 and self.acc.x == 0:
+					if self.anim != ANIMS["standLeft"]:
+						self.anim = ANIMS["standLeft"]
+				else:
+					if self.anim != ANIMS["runLeft"]:
+						self.anim = ANIMS["runLeft"]
+
+		elif self.vel.y != 0 or self.acc.y == V_ACC or self.acc.y == -V_ACC: 
+			if self._facingRight:
+				if self.anim != ANIMS["jumpRight"]:
+					self.anim = ANIMS["jumpRight"]
+			else:
+				if self.anim != ANIMS["jumpLeft"]:
+					self.anim = ANIMS["jumpLeft"]
+
+
+	def draw(self):
+		obj.sprite.ObjAnim.draw(self)
+		obj.physic.ObjPhysic.draw(self)
+		obj.ObjDraw.draw(self)		
+
+
+	def save(self):
+		self._save(
+			controlHash=hash(self._control),
+			sprtShtHash=hash(self._sprtSht),
+			camHash=hash(self._cam),
+			x=self.cBox.y,
+			y=self.cBox.y
+		)
+
+	def close(self):
+		self._sprtSht.leave()
+
+
+try:
+	obj.getGroup(Player)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Player))
+
+
+
 
 class Test(obj.ObjDynamic, obj.ObjUpdate):
 	UPDT_POS=0

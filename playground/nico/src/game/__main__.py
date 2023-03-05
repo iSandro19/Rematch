@@ -5,10 +5,11 @@ import obj
 import game.tile
 import game.cam
 import game.player
+import game.control
 
 
 WIND_SIZE = 128, 72
-FPS = 60
+FPS = 10
 
 
 def main():
@@ -22,10 +23,11 @@ def main():
 
 	assert pg.image.get_extended()
 
-	cam = obj.load('Cam', 0, 0)
+	obj.load('Cam', 0, 0)
 	obj.load('TileMap', 0, 0)
-	tc = obj.load('TileCollision', 0, 0)
-	game.player.Test(0)
+	obj.load('TileCollision', 0, 0)
+	obj.load('Control', 0, 0)
+	obj.load('Player', 0, 0)
 
 	while notExit:
 		for event in pg.event.get():
@@ -37,12 +39,6 @@ def main():
 		obj.update()
 
 		obj.draw()
-
-		tl = tc[cam.y, cam.x]
-		tl.rect.move_ip(-cam.x, -cam.y)
-
-		if tl.form == game.tile.RECT:
-			pg.draw.rect(wind, (255, 0,0, 128), tl.rect)
 
 		pg.display.flip()
 		clock.tick(FPS)

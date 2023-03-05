@@ -17,7 +17,7 @@ class ObjRelative(ObjDraw):
 		image:pg.Surface,
 		rect:pg.Rect,
 		REF_POINT:pg.Rect,
-		pos:pg.Rect
+		pos:pg.math.Vector2
 	)->None: ...
 	def draw(self)->None: ...
 
@@ -31,7 +31,7 @@ class ObjParallax(ObjRelative):
 		image:pg.Surface,
 		rect:pg.Rect,
 		REF_POINT:pg.Rect,
-		pos:pg.Rect,
+		pos:pg.math.Vector2,
 		Z_OFFSET:float
 	)->None: ...
 	def draw(self)->None: ...
@@ -47,7 +47,11 @@ class ObjPhysic(ObjRelative, ObjUpdate):
 		image:pg.Surface,
 		rect:pg.Rect,
 		REF_POINT:pg.Rect,
-		pos:pg.Rect,
+		pos:pg.math.Vector2,
+		cBoxOffsetH:int,
+		cBoxOffsetV:int,
+		cBoxW:int,
+		cBoxH:int,
 		acc:pg.math.Vector2,
 		vel:pg.math.Vector2
 	)->None: ...

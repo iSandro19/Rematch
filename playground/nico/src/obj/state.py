@@ -4,11 +4,11 @@ from abc import abstractmethod
 
 
 class FinishedError(Exception):
-	def __init__(self, class_id, inst_id):
+	def __init__(self, type, hash):
 		Exception.__init__(
-			"ObjState with CLASS_ID=%d and HASH=%d \
+			"ObjState with type=%d and hash=%d \
 			is unnitialized and can't be updated"%(
-				class_id, inst_id
+				type, hash
 			)
 		)
 
@@ -17,7 +17,7 @@ class ObjState(ObjUpdate):
 
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH):
-		Obj.__init__(self, HASH, FATHR_HASH)
+		ObjUpdate.__init__(self, HASH, FATHR_HASH)
 
 	@classmethod
 	def setSTATES(cls, *STATES):

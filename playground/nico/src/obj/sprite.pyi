@@ -13,6 +13,8 @@ from obj.base import ObjDraw
 class SpriteSheet:
 	SHEET:Final[pg.Surface]
 	clip:pg.Rect
+	w:Final[int]
+	h:Final[int]
 	def __init__(
 		self,
 		SHEET:pg.Surface,
@@ -39,6 +41,7 @@ class Frame:
 
 class ObjSprite(ObjDraw):
 	SPRTS:Final[SpriteSheet]
+	frame:Frame
 	@abstractmethod
 	def __init__(
 		self,
@@ -48,7 +51,6 @@ class ObjSprite(ObjDraw):
 		x:int,
 		y:int
 	)->None: ...
-	def setFrame(self, frame:Frame)->None: ...
 
 class Animation(tuple):
 	LOOP:Final[bool]
@@ -67,7 +69,7 @@ class Animation(tuple):
 
 class ObjAnim(ObjDraw):
 	SPRTS:Final[SpriteSheet]
-	_anim:Animation
+	anim:Animation
 	_frame:Frame
 	_frameIt:Iterator[Frame]
 	_steps:float
@@ -82,5 +84,4 @@ class ObjAnim(ObjDraw):
 		x:int,
 		y:int
 	)->None: ...
-	def setAnim(self, anim:Animation)->None: ...
 	def draw(self)->None: ...
