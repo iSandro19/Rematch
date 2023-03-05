@@ -271,20 +271,16 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					self.acc.x = -H_ACC
 
 
-		obj.physic.ObjPhysic.update(self)
+		obj.physic.ObjPhysic.updateX(self)
+
 		pg.draw.rect(self._BCKGND, (0,255,0), self.cBox.move(-self._cam.x,-self._cam.y), 1)
 
-
-
-		if (
-			self.vel.x != 0 or self.acc.x == H_ACC or self.acc.x == -H_ACC or
-			self.vel.y != 0 or self.acc.y == V_ACC or self.acc.y == -V_ACC
-		):
+		if self.vel.x != 0 or self.acc.x == H_ACC or self.acc.x == -H_ACC:
 			for tls in obj.getGroup(TileCollision):
 				if self.vel.x > 0 or (self._facingRight and self.acc.x == H_ACC):
 					x, y = self.cBox.topright
-					tl = tls[y+MAX_V_VEL+1,x]
-					pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-self._cam.y+MAX_V_VEL+1,1,1))
+					tl = tls[y,x]
+					pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-self._cam.y,1,1))
 
 					if tl.form == RECT:
 						self.cBox.right = tl.rect.left
@@ -294,8 +290,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 					else:
 						x, y = self.cBox.bottomright
-						tl = tls[y-1-MAX_V_VEL-1,x]
-						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-1-self._cam.y-MAX_V_VEL-1,1,1))
+						tl = tls[y-1,x]
+						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-1-self._cam.y,1,1))
 
 						if tl.form == RECT:
 							self.cBox.right = tl.rect.left
@@ -305,8 +301,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 				if self.vel.x < 0 or (not self._facingRight and self.acc.x == -H_ACC):
 					x, y = self.cBox.topleft
-					tl = tls[y+MAX_V_VEL+1,x-1]
-					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-self._cam.y+MAX_V_VEL+1,1,1))
+					tl = tls[y,x-1]
+					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-self._cam.y,1,1))
 
 					if tl.form == RECT:
 						self.cBox.left = tl.rect.right
@@ -316,8 +312,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 					else:
 						x, y = self.cBox.bottomleft
-						tl = tls[y-1-MAX_V_VEL-1,x-1]
-						pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-1-self._cam.y-MAX_V_VEL-1,1,1))
+						tl = tls[y-1,x-1]
+						pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-1-self._cam.y,1,1))
 
 						if tl.form == RECT:
 							self.cBox.left = tl.rect.right
@@ -325,6 +321,13 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 							self.vel.x = 0
 							self.acc.x = 0
 
+
+		obj.physic.ObjPhysic.updateY(self)
+
+		pg.draw.rect(self._BCKGND, (0,0,255), self.cBox.move(-self._cam.x,-self._cam.y), 1)
+
+		if self.vel.y != 0 or self.acc.y == V_ACC or self.acc.y == -V_ACC:
+			for tls in obj.getGroup(TileCollision):
 				if self.vel.y > 0:
 					x, y = self.cBox.bottomright
 					tl = tls[y,x-1]
@@ -349,7 +352,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 							self.acc.y = 0
 							self._inGround = True
 
-
 				elif self.vel.y < 0:
 					x, y = self.cBox.topright
 					tl = tls[y-1,x-1]
@@ -369,6 +371,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 							self.cBox.top = tl.rect.bottom
 							self.pos.y = self.cBox.y - self._cBoxOffsetV
 							self.vel.y = 0
+
 
 		self._cam.center = self.cBox.center
 

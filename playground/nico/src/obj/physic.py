@@ -52,9 +52,18 @@ class ObjPhysic(ObjRelative, ObjUpdate):
 		self.acc = acc
 		self.vel = vel
 
-	def update(self):
-		self.vel += self.acc
-		self.pos += self.vel
+	def updateX(self):
+		self.vel.x += self.acc.x
+		self.pos.x += self.vel.x
 		self.cBox.x = round(self.pos.x+self._cBoxOffsetH)
+
+	def updateY(self):
+		self.vel.y += self.acc.y
+		self.pos.y += self.vel.y
 		self.cBox.y = round(self.pos.y+self._cBoxOffsetV)
+
+	def update(self):
+		self.updateX()
+		self.updateY()
+		
 		

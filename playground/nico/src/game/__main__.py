@@ -9,7 +9,7 @@ import game.control
 
 
 WIND_SIZE = 128, 72
-FPS = 10
+FPS = 60
 
 
 def main():
