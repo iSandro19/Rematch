@@ -48,8 +48,8 @@ Magnus Carlsen, uno de los mejores ajedrecistas de todos los tiempos, tras 10 a�
 
 ## Instalación y ejecución
 
-1. Instalar Python 3.9.7 (https://www.python.org/downloads/release/python-397/)
-2. Instalar Pygame (https://www.pygame.org/wiki/GettingStarted)
+1. Instalar Python 3.9.7 (<https://www.python.org/downloads/release/python-397/>)
+2. Instalar Pygame (<https://www.pygame.org/wiki/GettingStarted>)
 3. Clonar el repositorio: `git clone
 
 Para ejecutarlo...

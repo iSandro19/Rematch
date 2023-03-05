@@ -14,12 +14,7 @@ PUERTAS
     DT - puerta (ir a torre)
     DC - puerta (ir a catacumbas)
     U - puerta unidireccional
-
-PORTALONES
-    G1 - portalón (alfil)
-    G2 - portalón (torre)
-    G3 - portalón (caballo)
-    GF - portalón (final)
+    Q - puerta botón
 
 ENTITIES
     E - enemigo
@@ -27,7 +22,12 @@ ENTITIES
     X - destructible
     A - Easter Egg
 
+BOTONES
+    B - boton
+
 ITEMS
     0 - tablero
     1 - peón
     2 - alfil
+    3 - torre
+    4 - caballo

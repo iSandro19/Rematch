@@ -1,17 +1,32 @@
-import sys
-import pygame
+import sys, os, pygame
 from pygame import *
 
 sys.path.append("src/levels")
 import jardin, sala, biblioteca, torre, catacumbas, pasillo1, pasillo2
 
 LEVEL_NAMES = ["jardin", "sala", "biblioteca", "torre", "catacumbas", "pasillo1", "pasillo2"]
-PLAYER_TILE = [[2, 6], [1, 18], [2, 6], [2, 6], [2, 6], [2, 6], [2, 6]]
+PLAYER_TILE = [[6, 6], [4, 18], [4, 20], [18, 42], [8, 4], [2, 6], [2, 6]]
 SCREEN_SIZE = pygame.Rect((0, 0, 1280, 720))
 GRAVITY = pygame.Vector2((0, 0.5))
 TILE_SIZE = 64
 
-lvl = 0
+bishop_image = pygame.image.load("assets/sprites/bishop.png")
+board_image = pygame.image.load("assets/sprites/board.png")
+button_door_image = pygame.image.load("assets/sprites/button_door.png")
+button_image = pygame.image.load("assets/sprites/button.png")
+knight_image = pygame.image.load("assets/sprites/knight.png")
+destroy_image = pygame.image.load("assets/sprites/destroy.png")
+door_image = pygame.image.load("assets/sprites/door.png")
+easter_image = pygame.image.load("assets/sprites/easter.png")
+enemy_image = pygame.image.load("assets/sprites/enemy.png")
+floor_image = pygame.image.load("assets/sprites/floor.png")
+pawn_image = pygame.image.load("assets/sprites/pawn.png")
+player_image = pygame.image.load("assets/sprites/player.png")
+shelving_image = pygame.image.load("assets/sprites/shelving.png")
+table_image = pygame.image.load("assets/sprites/table.png")
+rook_image = pygame.image.load("assets/sprites/rook.png")
+wall_image = pygame.image.load("assets/sprites/wall.png")
+oneway_door_image = pygame.image.load("assets/sprites/oneway_door.png")
 
 ###############################################################################
 
@@ -28,10 +43,10 @@ def main(lvl):
     
     while True:
         for e in pygame.event.get():
-            if e.type == QUIT: 
-                return
+            if e.type == QUIT:
+                exit(0)
             if e.type == KEYDOWN and e.key == K_ESCAPE:
-                return
+                exit(0)
 
         entities.update()
 
@@ -64,23 +79,52 @@ def levels(name):
 
 def draw_level(level, platforms, entities):
     x = y = 0
+    """
+    ESTRUCTURAS
+        W - pared
+        F - suelo
+        T - mesa
+        S - estantería
+
+    PUERTAS
+        DS - puerta (ir a sala)
+        DJ - puerta (ir a jardín)
+        DP1 - puerta (ir a pasillo1)
+        DP2 - puerta (ir a pasillo2)
+        DB - puerta (ir a biblioteca)
+        DT - puerta (ir a torre)
+        DC - puerta (ir a catacumbas)
+    
+        Q - puerta botón
+        U - puerta unidireccional
+
+    ENTITIES
+        E - enemigo
+        P - jugador
+        X - destructible
+        A - Easter Egg
+
+    BOTONES
+        B - boton
+
+    ITEMS
+        0 - tablero
+        1 - peón
+        2 - alfil
+        3 - torre
+        4 - caballo
+    """
     for row in level:
         for col in row:
-            if col == "W":
+            if col.startswith("W"):
                 Wall((x, y), platforms, entities)
-            if col == "F":
-                Ground((x, y), platforms, entities)
+            if col.startswith("F"):
+                Floor((x, y), platforms, entities)
+            if col.startswith("T"):
+                Table((x, y), platforms, entities)
+            if col.startswith("S"):
+                Shelving((x, y), platforms, entities)
             if "D" in col:
-                """
-                DS - puerta (ir a sala)
-                DJ - puerta (ir a jardín)
-                DP1 - puerta (ir a pasillo1)
-                DP2 - puerta (ir a pasillo2)
-                DB - puerta (ir a biblioteca)
-                DT - puerta (ir a torre)
-                DC - puerta (ir a catacumbas)
-                U - puerta unidireccional
-                """
                 if col == "DJ":
                     DoorGarden((x, y), platforms, entities)
                 if col == "DS":
@@ -95,14 +139,28 @@ def draw_level(level, platforms, entities):
                     DoorTower((x, y), platforms, entities)
                 if col == "DC":
                     DoorCatacombs((x, y), platforms, entities)
-                if col == "U":
-                    DoorUnidirectional((x, y), platforms, entities)
-            if col == "E":
+            if col.startswith("Q"):
+                ButtonDoor((x, y), platforms, entities)
+            if col.startswith("U"):
+                OneWayDoor((x, y), platforms, entities)
+            if col.startswith("E"):
                 Enemy((x, y), platforms, entities)
-            if col == "X":
+            if col.startswith("X"):
                 Destroy((x, y), platforms, entities)
-            if col == "A":
+            if col.startswith("A"):
                 Easter((x, y), platforms, entities)
+            if col.startswith("B"):
+                Button((x, y), platforms, entities)
+            if col.startswith("0"):
+                Board((x, y), platforms, entities)
+            if col.startswith("1"):
+                Pawn((x, y), platforms, entities)
+            if col.startswith("2"):
+                Bishop((x, y), platforms, entities)
+            if col.startswith("3"):
+                Rook((x, y), platforms, entities)
+            if col.startswith("4"):
+                Knight((x, y), platforms, entities)
             x += TILE_SIZE
         y += TILE_SIZE
         x = 0
@@ -167,95 +225,118 @@ class CameraAwareLayeredUpdates(pygame.sprite.LayeredUpdates):
         return dirty
         
 class Entity(pygame.sprite.Sprite):
-    def __init__(self, color, pos, *groups):
+    def __init__(self, image, pos, *groups):
         super().__init__(*groups)
-        self.image = Surface((TILE_SIZE, TILE_SIZE))
-        self.image.fill(color)
+        self.image = image
         self.rect = self.image.get_rect(topleft=pos)
 
 # Estructures  ################################################################
 class Wall(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#b4b1ae"), pos, *groups)
+        super().__init__(wall_image, pos, *groups)
 
-class Ground(Entity):
+class Floor(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#95a984"), pos, *groups)
+        super().__init__(floor_image, pos, *groups)
 
 class Table(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#b4b1ae"), pos, *groups)
+        super().__init__(table_image, pos, *groups)
 
 class Shelving(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#b4b1ae"), pos, *groups)
+        super().__init__(shelving_image, pos, *groups)
 
 # Doors #######################################################################
 class DoorGarden(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#616667"), pos, *groups)
+        super().__init__(door_image, pos, *groups)
 
 class DoorHall(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#616667"), pos, *groups)
+        super().__init__(door_image, pos, *groups)
 
 class DoorLibrary(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#616667"), pos, *groups)
+        super().__init__(door_image, pos, *groups)
 
 class DoorTower(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#616667"), pos, *groups)
+        super().__init__(door_image, pos, *groups)
 
 class DoorCatacombs(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#616667"), pos, *groups)
+        super().__init__(door_image, pos, *groups)
 
 class DoorCorridor1(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#616667"), pos, *groups)
+        super().__init__(door_image, pos, *groups)
 
 class DoorCorridor2(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#616667"), pos, *groups)
+        super().__init__(door_image, pos, *groups)
 
-class DoorUnidirectional(Entity):
+class ButtonDoor(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#616667"), pos, *groups)
+        super().__init__(button_door_image, pos, *groups)
+
+class OneWayDoor(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(oneway_door_image, pos, *groups)
 
 # Entities ####################################################################
 class Enemy(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#faa0a0"), pos, *groups)
+        super().__init__(enemy_image, pos, *groups)
 
 class Player(Entity):
     def __init__(self, platforms, pos, *groups):
-        super().__init__(Color("#0000FF"), pos)
+        super().__init__(player_image, pos)
+        
+        # Atributos
         self.vel = pygame.Vector2((0, 0))
-        self.onGround = False
         self.platforms = platforms
-        self.speed = 8
+        self.onGround = False
         self.jump_strength = 14
+        self.speed = 8
+
+
+        # Habilidades
+        self.jump = False
+        self.double_jump = False
+        self.dash = False
+        self.bounce = False
+        self.pawn_atk = False
+        self.bishop_atk = False
+        self.rook_atk = False
+        self.knight_atk = False
         
     def update(self):
         pressed = pygame.key.get_pressed()
         up = pressed[K_UP]
+        space = pressed[K_SPACE]
+        w = pressed[K_w]
+
         left = pressed[K_LEFT]
+        a = pressed[K_a]
+
         right = pressed[K_RIGHT]
-        running = pressed[K_SPACE]
+        d = pressed[K_d]
+
+        shift = pressed[K_LSHIFT]
         
-        if up:
+        if (up or space or w) and self.jump:
             if self.onGround: self.vel.y = -self.jump_strength
-        if left:
+        if left or a:
             self.vel.x = -self.speed
-        if right:
+        if right or d:
             self.vel.x = self.speed
-        if running:
+        if shift:
             self.vel.x *= 1.5
         if not self.onGround:
             self.vel += GRAVITY
             if self.vel.y > 100: self.vel.y = 100
-        if not(left or right):
+        if not(left or right or a or d):
             self.vel.x = 0
         
         self.rect.left += self.vel.x
@@ -267,8 +348,35 @@ class Player(Entity):
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
             if pygame.sprite.collide_rect(self, p):
+                # Doors
+                if isinstance(p, DoorGarden):
+                    print("Go to garden")
+                    main(0)
                 if isinstance(p, DoorHall):
-                    main(lvl+1)
+                    print("Go to hall")
+                    main(1)
+                if isinstance(p, DoorLibrary):
+                    print("Go to library")
+                    main(2)
+                if isinstance(p, DoorTower):
+                    print("Go to tower")
+                    main(3)
+                if isinstance(p, DoorCatacombs):
+                    print("Go to catacombs")
+                    main(4)
+                if isinstance(p, DoorCorridor1):
+                    print("Go to corridor1")
+                    main(5)
+                if isinstance(p, DoorCorridor2):
+                    print("Go to corridor2")
+                    main(6)    
+
+                if isinstance(p, Pawn):
+                    print("Pawn")
+                    self.pawn_atk = True
+                    self.jump = True
+                
+                # Physics
                 if xvel > 0:
                     self.rect.right = p.rect.left
                 if xvel < 0:
@@ -282,32 +390,40 @@ class Player(Entity):
 
 class Destroy(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#766333"), pos, *groups)
+        super().__init__(destroy_image, pos, *groups)
 
 class Easter(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#fffb00"), pos, *groups)
+        super().__init__(easter_image, pos, *groups)
+
+class Button(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(button_image, pos, *groups)
 
 # Items
+class Board(Entity):
+    def __init__(self, pos, *groups):
+        super().__init__(board_image, pos, *groups)
+
 class Pawn(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#f0f0f0"), pos, *groups)
+        super().__init__(pawn_image, pos, *groups)
 
 class Bishop(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#f0f0f0"), pos, *groups)
+        super().__init__(bishop_image, pos, *groups)
 
 class Rook(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#f0f0f0"), pos, *groups)
+        super().__init__(rook_image, pos, *groups)
 
 class Knight(Entity):
     def __init__(self, pos, *groups):
-        super().__init__(Color("#f0f0f0"), pos, *groups)
+        super().__init__(knight_image, pos, *groups)
 
 ###############################################################################
 
 # Start #######################################################################
 if __name__ == "__main__":
     pygame.init()
-    main(lvl)
+    main(0)
