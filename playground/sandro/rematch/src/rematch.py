@@ -299,7 +299,8 @@ class Player(Entity):
         self.onGround = False
         self.jump_strength = 14
         self.speed = 8
-
+        self.max_jumps = 10
+        self.jumps_left = self.max_jumps
 
         # Habilidades
         self.jump = False
@@ -325,8 +326,13 @@ class Player(Entity):
 
         shift = pressed[K_LSHIFT]
         
-        if (up or space or w) and self.jump:
-            if self.onGround: self.vel.y = -self.jump_strength
+        if (up or space or w):
+            if self.jumps_left > 0:
+                if not self.onGround:
+                    self.vel.y = 0
+                self.vel.y -= self.jump_strength
+                self.jumps_left -= 1
+                print("JUMP")
         if left or a:
             self.vel.x = -self.speed
         if right or d:
@@ -385,6 +391,7 @@ class Player(Entity):
                     self.rect.bottom = p.rect.top
                     self.onGround = True
                     self.vel.y = 0
+                    self.jumps_left = self.max_jumps
                 if yvel < 0:
                     self.rect.top = p.rect.bottom
 
