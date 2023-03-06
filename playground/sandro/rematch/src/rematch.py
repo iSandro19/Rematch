@@ -385,8 +385,14 @@ class Player(Entity):
                 # Physics
                 if xvel > 0:
                     self.rect.right = p.rect.left
+                    self.vel.x = 0
+                    if not self.onGround:
+                        self.jumps_left = self.max_jumps
                 if xvel < 0:
                     self.rect.left = p.rect.right
+                    self.vel.x = 0
+                    if not self.onGround:
+                        self.jumps_left = self.max_jumps
                 if yvel > 0:
                     self.rect.bottom = p.rect.top
                     self.onGround = True
