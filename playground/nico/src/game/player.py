@@ -141,6 +141,9 @@ IMG_H = 16
 MAX_H_VEL = 2
 MAX_V_VEL = 2
 
+MAX_H_WJ_VEL = 1
+MAX_V_WJ_VEL = 2
+
 H_ACC = 0.2
 V_ACC = 0.2
 
@@ -149,7 +152,7 @@ JUMP_VEL = 3
 class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim): 
 	GRP_FILE = "game/data/players.json"
 	UPDT_POS = 1
-	DRAW_LAYER = 10
+	DRAW_LAYER = 0
 
 	def __init__(
 		self,
@@ -204,13 +207,33 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		prevPos = self.pos.copy()
 
 
+		if keys[self._control["jump"]] and not self._inGround:
+			for tls in obj.getGroup(TileCollision):
+				if self._facingRight and keys[self._control["right"]] or not keys[self._control["left"]]:
+					x, y = self.cBox.bottomright
+					tl = tls[y-1,round(x+self.vel.x)]
+
+					if tl.form == RECT:
+						self._facingRight = False
+						self.vel.x = -MAX_H_WJ_VEL
+						self.vel.y = -MAX_V_WJ_VEL
+
+				elif not self._facingRight and keys[self._control["left"]] or not keys[self._control["right"]]:
+					x, y = self.cBox.bottomleft
+					tl = tls[y-1,round(x-1-self.vel.x)]
+
+					if tl.form == RECT:
+						self._facingRight = True
+						self.vel.x = MAX_H_WJ_VEL
+						self.vel.y = -MAX_V_WJ_VEL
+
 		if self._inGround:		
 			if keys[self._control["jump"]]:
 				self._inGround = False
-				self.acc.y = V_ACC
 				self.vel.y = -JUMP_VEL
 
 		else:
+			self.acc.y = V_ACC
 			if prevVel.y < 0:
 				if not keys[self._control["jump"]]:
 					self.vel.y = 0
@@ -279,8 +302,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 			for tls in obj.getGroup(TileCollision):
 				if self.vel.x > 0 or (self._facingRight and self.acc.x == H_ACC):
 					x, y = self.cBox.topright
-					tl = tls[y,x]
-					pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-self._cam.y,1,1))
+					tl = tls[y+4,x]
+					pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y+4-self._cam.y,1,1))
 
 					if tl.form == RECT:
 						self.cBox.right = tl.rect.left
@@ -290,8 +313,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 					else:
 						x, y = self.cBox.bottomright
-						tl = tls[y-1,x]
-						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-1-self._cam.y,1,1))
+						tl = tls[y-1-4,x]
+						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-1-4-self._cam.y,1,1))
 
 						if tl.form == RECT:
 							self.cBox.right = tl.rect.left
@@ -299,10 +322,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 							self.vel.x = 0
 							self.acc.x = 0
 
-				if self.vel.x < 0 or (not self._facingRight and self.acc.x == -H_ACC):
+				elif self.vel.x < 0 or (not self._facingRight and self.acc.x == -H_ACC):
 					x, y = self.cBox.topleft
-					tl = tls[y,x-1]
-					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-self._cam.y,1,1))
+					tl = tls[y+4,x-1]
+					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y+4-self._cam.y,1,1))
 
 					if tl.form == RECT:
 						self.cBox.left = tl.rect.right
@@ -312,8 +335,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 					else:
 						x, y = self.cBox.bottomleft
-						tl = tls[y-1,x-1]
-						pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-1-self._cam.y,1,1))
+						tl = tls[y-1-4,x-1]
+						pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-1-4-self._cam.y,1,1))
 
 						if tl.form == RECT:
 							self.cBox.left = tl.rect.right
@@ -370,7 +393,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 						if tl.form == RECT:
 							self.cBox.top = tl.rect.bottom
 							self.pos.y = self.cBox.y - self._cBoxOffsetV
-							self.vel.y = 0
+							self.vel.y = 0			
 
 
 		self._cam.center = self.cBox.center
@@ -411,11 +434,12 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 			controlHash=hash(self._control),
 			sprtShtHash=hash(self._sprtSht),
 			camHash=hash(self._cam),
-			x=self.cBox.y,
+			x=self.cBox.x,
 			y=self.cBox.y
 		)
 
 	def close(self):
+		self.save()
 		self._sprtSht.leave()
 
 

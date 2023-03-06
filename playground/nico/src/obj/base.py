@@ -8,25 +8,47 @@ from functools import cmp_to_key
 
 
 class GroupNotFoundError(ValueError):
+	"""
+	Excepcion usada para detectar cuando no se existe un grupo de un tipo de objetos
+	"""
 	def __init__(self, objType):
+		"""
+		objType: clase del objeto solicitado
+		"""
 		ValueError.__init__(
 			self,
 			"Group with TYPE=%s not found"%objType.__qualname__
 		)
 
 class GroupsTable:
+	"""
+	Tabla que contiene todos los grupos de objetos como un diccionario
+	"""
 	def __init__(self):
+		"""
+		El diccionario de grupos comienza vacio
+		"""
 		self._grps = {}
 
 	def add(self, group):
+		"""
+		Se anade el grupo 'group' al diccionario de grupos
+		"""
 		self._grps[group.TYPE.__qualname__] = group
 
 	def close(self):
+		"""
+		Se cierran todo los objetos de todos los grupos del diccionario
+		"""
 		for group in self._grps.values():
 			for obj in group:
 				obj.close()
 
 	def __getitem__(self, objType):
+		"""
+		Se obtiene el grupo con objetos de tipo 'objType' si existe,
+		si no, se lanza la excepcion GroupNotFoundError
+		"""
 		if isinstance(objType, str):
 			key = objType
 		elif isinstance(objType, type):
@@ -40,98 +62,200 @@ class GroupsTable:
 			raise GroupNotFoundError(objType)
 
 	def __str__(self):
+		"""
+		Representacion de la tabla con un string
+		"""
 		return "{}({})".format(
 			type(self).__qualname__,
 			self._grps
 		)
 
 	def __repr__(self):
+		"""
+		Representacion de la tabla con un string en el interprete interacctivo
+		"""
 		return "<"+str(self)+">"
 
 
 class UpdatingPipeline:
+	"""
+	Lista ordenada de los grupos a actualizarse derivados de 'ObjUpdate'
+	"""
 	def __init__(self):
+		"""
+		La lista de grupos comienza vacia
+		"""
 		self._grps = []
 
 	def add(self, group):
+		"""
+		Se anade el grupo 'group' a la lista en la posicion determinada por el atributo
+		'UPDT_POS' definido en la clase de los objetos que contiene el grupo
+		"""
 		self._grps.insert(group.TYPE.UPDT_POS, group)
 
 	def update(self): 
+		"""
+		Los objetos de un mismo grupo se actualizan antes que los de otro
+		si su atributo 'UPDT_POS' es inferior
+		"""
 		for group in self._grps:
 			for obj in group:
-				obj.update()
+				if obj._active:
+					obj.update()
 
 	def __str__(self):
+		"""
+		Representacion de la lista con un string
+		"""
 		return "{}({})".format(
 			type(self).__qualname__,
 			self._grps
 		)
 
 	def __repr__(self):
+		"""
+		Representacion de la lista con un string en el interprete interacctivo
+		"""
 		return "<"+str(self)+">"
 
 
 class DrawingPipeline:
+	"""
+	Lista ordenada de los grupos a dibujarse derivados de 'ObjDraw'
+	"""
 	def __init__(self):
+		"""
+		La lista de grupos comienza vacia
+		"""
 		self._grps = []
 
 	def add(self, group):
+		"""
+		Se anade el grupo 'group' a la lista en la posicion determinada por el atributo
+		'DRAW_LAYER' definido en la clase de los objetos que contiene el grupo
+		"""
 		self._grps.insert(group.TYPE.DRAW_LAYER, group)
 
 	def draw(self): 
+		"""
+		Los objetos de un mismo grupo se dibujan en una capa mas proxima a la
+		camara que otros si su atributo 'DRAW_LAYER' es inferior
+		"""
 		for group in self._grps:
 			for obj in group:
-				obj.draw()
+				if obj._active:
+					obj.draw()
 
 	def __str__(self):
+		"""
+		Representacion de la lista con un string
+		"""
 		return "{}({})".format(
 			type(self).__qualname__,
 			self._grps
 		)
 
 	def __repr__(self):
+		"""
+		Representacion de la lista con un string en el interprete interacctivo
+		"""
 		return "<"+str(self)+">"
 
 
 class SavingGroups:
+	"""
+	Lista de los grupos a guardarse derivados de 'ObjStaticRW'
+	"""
 	def __init__(self):
+		"""
+		La lista de grupos comienza vacia
+		"""
 		self._grps = []
 
 	def add(self, group):
+		"""
+		Se anade el grupo 'group' a la lista
+		"""
 		self._grps.append(group)
 
-	def save(self): 
+	def save(self):
+		"""
+		Se guardan todos los objetos de cada grupo
+		"""
 		for group in self._grps:
 			for obj in group:
 				obj.save()
 
 	def __str__(self):
+		"""
+		Representacion de la lista con un string
+		"""
 		return "{}({})".format(
 			type(self).__qualname__,
 			self._grps
 		)
 
 	def __repr__(self):
+		"""
+		Representacion de la lista con un string en el interprete interacctivo
+		"""
 		return "<"+str(self)+">"
 
 
 
 class ObjNotFoundError(ValueError):
+	"""
+	Excepcion usada para detectar cuando no se existe un grupo de un tipo de objetos
+	"""
 	def __init__(self, objType, objHash):
+		"""
+		objType: clase del objeto solicitado
+		objHash: hash del objeto solicitado
+		"""
 		ValueError.__init__(
 			self,
 			"Obj with type={} hash={} not found".format(objType, objHash)
 		)
 
 class Obj(ABC):
+	"""
+	Clase abstracta base para derivar en objetos mas especializados
+	Concentra la informacion y comportamientos comunes a todos los objetos del juego
+
+	Los atributos son:
+	- GRPS_TABLE, atributo estatico final que comparten todos los objetos y contiene
+		la tabla con todos los grupos de objetos, para que estos puedan acceder a los
+		grupos de otros objetos
+
+	- TYPE, atributo final que mantine el tipo del objeto. Su valor es siempre el mismo que
+		usando la funcion built-in 'type'
+
+	- HASH, atributo final unico para cada instancia usado para identificarla.
+		tambien se puede usar la funcion built-in 'hash' para obtenerlo
+
+	- FATHR_HASH, atributo final usado para guardar la instancia que ha creado el 
+		objeto.
+
+	- active, atributo booleano que indica cuando el objeto esta activo, es decir,
+		que se puede acceder a su informacion, que se actualiza, y que se dibuja.
+		Poner el atributo a False hara que no ocurra todo lo anterior y que se encuentre pausado,
+		pudiendo reanudarlo poniendolo a True
+	"""
 	GRPS_TABLE = GroupsTable()
 
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH):
+		"""
+		Inicilizador por defecto que se debe redefinir en una subclase para poder
+		instanciarla. A mayores, es necesario llamar a Obj.__init__(self, HASH, FATHR_HASH)
+		desde el metodo redefinido para poder darle un hash y fathr_hash, anadir la
+		instancia al grupo de ese tipo de objetos y activarla
+		"""
 		self._HASH = HASH
 		self._FATHR_HASH = FATHR_HASH
 		self.GRPS_TABLE[type(self)].add(self)
-		self.active = True
+		self._active = True
 
 	@property
 	def TYPE(self):
@@ -144,10 +268,23 @@ class Obj(ABC):
 	@property
 	def FATHR_HASH(self):
 		return self._FATHR_HASH
+
+	@property
+	def active(self):
+		self._active = True
+
+	@active.setter
+	def active(self, value):
+		self._active = value
 	
 	def close(self):
+		"""
+		Finalizador por defecto que sera llamado por el mismo objeto o desde otro para
+		eliminarlo del grupo al que pertenece, y a mayores desactivarlo por si algun objeto tiene
+		guardada una referencia a este y pueda saber que no existe
+		"""
 		del self.GRPS_TABLE[type(self)][self._HASH]
-		self.active = False
+		self._active = False
 
 	def __eq__(self, value):
 		return self._HASH == value._HASH
