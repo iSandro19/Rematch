@@ -301,16 +301,18 @@ class Player(Entity):
         self.speed = 8
         self.max_jumps = 10
         self.jumps_left = self.max_jumps
+        self.dash = False
+        self.dash_timer = 0
 
         # Habilidades
-        self.jump = False
-        self.double_jump = False
-        self.dash = False
-        self.bounce = False
-        self.pawn_atk = False
-        self.bishop_atk = False
-        self.rook_atk = False
-        self.knight_atk = False
+        self.jump_ability = False
+        self.double_jump_ability = False
+        self.dash_ability = False
+        self.bounce_ability = False
+        self.pawn_atk_ability = False
+        self.bishop_atk_ability = False
+        self.rook_atk_ability = False
+        self.knight_atk_ability = False
         
     def update(self):
         pressed = pygame.key.get_pressed()
@@ -337,13 +339,21 @@ class Player(Entity):
             self.vel.x = -self.speed
         if right or d:
             self.vel.x = self.speed
-        if shift:
-            self.vel.x *= 1.5
+        if shift and not self.dash:
+            self.vel.x *= 10
+            self.dash = True
         if not self.onGround:
             self.vel += GRAVITY
             if self.vel.y > 100: self.vel.y = 100
         if not(left or right or a or d):
             self.vel.x = 0
+
+        if self.dash:
+            self.dash_timer += 1
+            if self.dash_timer > 100:
+                self.vel.x /= 5
+                self.dash = False
+                self.dash_timer = 0
         
         self.rect.left += self.vel.x
         self.collide(self.vel.x, 0, self.platforms)
