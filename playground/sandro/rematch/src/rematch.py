@@ -37,7 +37,7 @@ def main(lvl):
     
     platforms = pygame.sprite.Group()
     x, y = player_pos(lvl)
-    player = Player(platforms, (x*TILE_SIZE, y*TILE_SIZE))
+    player = Player(screen, platforms, (x*TILE_SIZE, y*TILE_SIZE))
 
     entities = update_level(LEVEL_NAMES[lvl], player, platforms)
     
@@ -290,29 +290,39 @@ class Enemy(Entity):
         super().__init__(enemy_image, pos, *groups)
 
 class Player(Entity):
-    def __init__(self, platforms, pos, *groups):
+    def __init__(self, screen, platforms, pos, *groups):
         super().__init__(player_image, pos)
         
         # Atributos
         self.vel = pygame.Vector2((0, 0))
         self.platforms = platforms
+        self.screen = screen
+
         self.onGround = False
         self.jump_strength = 14
         self.speed = 8
+
         self.max_jumps = 10
         self.jumps_left = self.max_jumps
+
         self.dash = False
         self.dash_timer = 0
+
+        self.basic_attack = False
+        self.long_attack = False
+        self.strong_attack = False
+        self.circle_attack = False
 
         # Habilidades
         self.jump_ability = False
         self.double_jump_ability = False
         self.dash_ability = False
         self.bounce_ability = False
-        self.pawn_atk_ability = False
-        self.bishop_atk_ability = False
-        self.rook_atk_ability = False
-        self.knight_atk_ability = False
+
+        self.basic_attack_ability = False
+        self.long_attack_ability = False
+        self.strong_attack_ability = False
+        self.circle_attack_ability = False
         
     def update(self):
         pressed = pygame.key.get_pressed()
@@ -327,6 +337,11 @@ class Player(Entity):
         d = pressed[K_d]
 
         shift = pressed[K_LSHIFT]
+
+        one = pressed[K_1]
+        two = pressed[K_2]
+        three = pressed[K_3]
+        four = pressed[K_4]
         
         if (up or space or w):
             if self.jumps_left > 0:
@@ -355,6 +370,28 @@ class Player(Entity):
                 self.dash = False
                 self.dash_timer = 0
         
+        if one:
+            # Dibujar el ataque básico (ataque corto hacia delante)
+            pygame.draw.rect(self.screen, (255, 0, 0), (self.rect.x + self.rect.width, self.rect.y, 100, 20))
+            pygame.display.update()
+            print("BASIC_ATTACK")
+        elif two:
+            # Dibujar el ataque largo (ataque mas largo hacia delante)
+            pygame.draw.rect(self.screen, (0, 255, 0), (self.rect.x + self.rect.width, self.rect.y, 200, 20))
+            pygame.display.update()
+            print("LONG_ATTACK")
+        elif three:
+            # Dibujar el ataque fuerte (ataque corto hacia delante)
+            pygame.draw.rect(self.screen, (0, 0, 255), (self.rect.x + self.rect.width, self.rect.y, 100, 20))
+            pygame.display.update()
+            print("STRONG_ATTACK")
+        elif four:
+            # Dibujar el ataque en círculo (ataque corto hacia delante y hacia atrás)
+            pygame.draw.rect(self.screen, (255, 0, 0), (self.rect.x + self.rect.width, self.rect.y, 100, 20))
+            pygame.draw.rect(self.screen, (255, 0, 0), (self.rect.x - self.rect.width, self.rect.y, 100, 20))
+            pygame.display.update()
+            print("CIRCLE_ATTACK")
+    
         self.rect.left += self.vel.x
         self.collide(self.vel.x, 0, self.platforms)
         self.rect.top += self.vel.y
