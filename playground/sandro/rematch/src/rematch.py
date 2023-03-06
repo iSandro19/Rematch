@@ -388,7 +388,7 @@ class Player(Entity):
         elif four:
             # Dibujar el ataque en círculo (ataque corto hacia delante y hacia atrás)
             pygame.draw.rect(self.screen, (255, 0, 0), (self.rect.x + self.rect.width, self.rect.y, 100, 20))
-            pygame.draw.rect(self.screen, (255, 0, 0), (self.rect.x - self.rect.width, self.rect.y, 100, 20))
+            pygame.draw.rect(self.screen, (255, 0, 0), (self.rect.x - 100, self.rect.y, 100, 20))
             pygame.display.update()
             print("CIRCLE_ATTACK")
     
