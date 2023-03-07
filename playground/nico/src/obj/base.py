@@ -9,7 +9,8 @@ from functools import cmp_to_key
 
 class GroupNotFoundError(ValueError):
 	"""
-	Excepcion usada para detectar cuando no se existe un grupo de un tipo de objetos
+	Excepcion usada para detectar cuando no se existe un grupo de un tipo de
+	objetos
 	"""
 	def __init__(self, objType):
 		"""
@@ -47,7 +48,9 @@ class GroupsTable:
 	def __getitem__(self, objType):
 		"""
 		Se obtiene el grupo con objetos de tipo 'objType' si existe,
-		si no, se lanza la excepcion GroupNotFoundError
+		si no, se lanza la excepcion GroupNotFoundError.
+		'objType' puede ser un string con el nombre de la clase o la propia
+		clase
 		"""
 		if isinstance(objType, str):
 			key = objType
@@ -89,15 +92,17 @@ class UpdatingPipeline:
 
 	def add(self, group):
 		"""
-		Se anade el grupo 'group' a la lista en la posicion determinada por el atributo
-		'UPDT_POS' definido en la clase de los objetos que contiene el grupo
+		Se anade el grupo 'group' a la lista en la posicion determinada por el
+		atributo 'UPDT_POS' definido en la clase de los objetos que contiene el
+		grupo
 		"""
 		self._grps.insert(group.TYPE.UPDT_POS, group)
 
 	def update(self): 
 		"""
 		Los objetos de un mismo grupo se actualizan antes que los de otro
-		si su atributo 'UPDT_POS' es inferior
+		si su atributo 'UPDT_POS' es inferior.
+		Solo se actualizan los objetos activos.
 		"""
 		for group in self._grps:
 			for obj in group:
@@ -132,15 +137,17 @@ class DrawingPipeline:
 
 	def add(self, group):
 		"""
-		Se anade el grupo 'group' a la lista en la posicion determinada por el atributo
-		'DRAW_LAYER' definido en la clase de los objetos que contiene el grupo
+		Se anade el grupo 'group' a la lista en la posicion determinada por el
+		atributo 'DRAW_LAYER' definido en la clase de los objetos que contiene
+		el grupo
 		"""
 		self._grps.insert(group.TYPE.DRAW_LAYER, group)
 
 	def draw(self): 
 		"""
 		Los objetos de un mismo grupo se dibujan en una capa mas proxima a la
-		camara que otros si su atributo 'DRAW_LAYER' es inferior
+		camara que otros si su atributo 'DRAW_LAYER' es inferior.
+		Solo se dibujan los objetos activos.
 		"""
 		for group in self._grps:
 			for obj in group:
@@ -206,7 +213,8 @@ class SavingGroups:
 
 class ObjNotFoundError(ValueError):
 	"""
-	Excepcion usada para detectar cuando no se existe un grupo de un tipo de objetos
+	Excepcion usada para detectar cuando no se existe un grupo de un tipo de
+	objetos
 	"""
 	def __init__(self, objType, objHash):
 		"""
@@ -221,36 +229,39 @@ class ObjNotFoundError(ValueError):
 class Obj(ABC):
 	"""
 	Clase abstracta base para derivar en objetos mas especializados
-	Concentra la informacion y comportamientos comunes a todos los objetos del juego
+	Concentra la informacion y comportamientos comunes a todos los objetos del
+	juego
 
 	Los atributos son:
-	- GRPS_TABLE, atributo estatico final que comparten todos los objetos y contiene
-		la tabla con todos los grupos de objetos, para que estos puedan acceder a los
-		grupos de otros objetos
+	- GRPS_TABLE, atributo estatico final de la clase base que comparten todos
+		los objetos y contiene la tabla con todos los grupos de objetos, para
+		que estos puedan acceder a los grupos de otros objetos
 
-	- TYPE, atributo final que mantine el tipo del objeto. Su valor es siempre el mismo que
-		usando la funcion built-in 'type'
+	- TYPE, atributo final que mantine el tipo del objeto. Su valor es siempre
+		el mismo que usando la funcion built-in 'type'
 
 	- HASH, atributo final unico para cada instancia usado para identificarla.
 		tambien se puede usar la funcion built-in 'hash' para obtenerlo
 
-	- FATHR_HASH, atributo final usado para guardar la instancia que ha creado el 
-		objeto.
+	- FATHR_HASH, atributo final usado para guardar la instancia que ha creado
+		el objeto.
 
-	- active, atributo booleano que indica cuando el objeto esta activo, es decir,
-		que se puede acceder a su informacion, que se actualiza, y que se dibuja.
-		Poner el atributo a False hara que no ocurra todo lo anterior y que se encuentre pausado,
-		pudiendo reanudarlo poniendolo a True
+	- active, atributo booleano que indica cuando el objeto esta activo, es
+		decir, que se puede acceder a su informacion, que se actualiza, y que
+		se dibuja. Poner el atributo a False hara que no ocurra todo lo
+		anterior y que se encuentre pausado, pudiendo reanudarlo poniendolo a
+		True
 	"""
 	GRPS_TABLE = GroupsTable()
 
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH):
 		"""
-		Inicilizador por defecto que se debe redefinir en una subclase para poder
-		instanciarla. A mayores, es necesario llamar a Obj.__init__(self, HASH, FATHR_HASH)
-		desde el metodo redefinido para poder darle un hash y fathr_hash, anadir la
-		instancia al grupo de ese tipo de objetos y activarla
+		Inicilizador por defecto que se debe redefinir en una subclase para
+		poder instanciarla. A mayores, es necesario llamar a
+		Obj.__init__(self, HASH, FATHR_HASH) desde el metodo redefinido para
+		poder darle un hash y fathr_hash, anadir la instancia al grupo de ese
+		tipo de objetos y activarla
 		"""
 		self._HASH = HASH
 		self._FATHR_HASH = FATHR_HASH
@@ -279,9 +290,10 @@ class Obj(ABC):
 	
 	def close(self):
 		"""
-		Finalizador por defecto que sera llamado por el mismo objeto o desde otro para
-		eliminarlo del grupo al que pertenece, y a mayores desactivarlo por si algun objeto tiene
-		guardada una referencia a este y pueda saber que no existe
+		Finalizador por defecto que sera llamado por el mismo objeto o desde
+		otro para eliminarlo del grupo al que pertenece, y a mayores
+		desactivarlo por si algun objeto tiene guardada una referencia a este y
+		pueda saber que no existe
 		"""
 		del self.GRPS_TABLE[type(self)][self._HASH]
 		self._active = False
@@ -305,49 +317,147 @@ class Obj(ABC):
 		return self._HASH
 
 class ObjUpdate(Obj):
+	"""
+	Clase abstracta para que los objetos actualizables la deriven y
+	definan como se actualiza con el metodo 'update'.
+
+	Los atributos son:
+	- UPDT_PL, atributo estatico final de la clase base que concentra todos los
+		grupos de objetos actualizables. Sirve para actualizar todos los
+		objetos con un foreach en 'obj.update()'.
+	- UPDT_POS, atributo estatico final de la clase derivada que determina la
+		preferencia para actualizarse antes que otros. Todas las instancias de
+		la misma clase y del mismo grupo tienen la misma preferencia. 
+	"""
 	UPDT_PL = UpdatingPipeline()
 
 	@classmethod
-	def setUPDT_POS(cls, DRAW_LAYER):
-		cls.DRAW_LAYER = DRAW_LAYER
+	def setUPDT_POS(cls, UPDT_POS):
+		"""
+		Setter del atributo de preferencia 'UPDT_POS'.
+		Cuanto menor sea su valor, antes se actualizan los objetos de ese tipo.
+		Tambien se puede inicializar en el cuerpo de la clase.
+		"""
+		cls.UPDT_POS = UPDT_POS
 
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH):
+		"""
+		Inicializador por defecto de los objetos actualizables.
+		Si se sobre-escribe, igualmente se debe inicializar la clase base con
+		'ObjUpdate.__init__(self, HASH, FATHR_HASH)'.
+		"""
 		Obj.__init__(self, HASH, FATHR_HASH)
 
 	@abstractmethod
 	def update(self):
+		"""
+		Metodo actualizador del objeto, sera llamado en cada frame por la
+		funcion 'obj.update()' segun el orden determinado por 'UPDT_POS'.
+		Solo se actualiza si esta activo.
+		"""
 		pass
 
 class ObjDraw(Obj):
+	"""
+	Clase abstracta para que los objetos dibujables la deriven y
+	definan como se dibuja con el metodo 'draw'.
+
+	Los atributos son:
+	- DRAW_PL, atributo estatico final de la clase base que concentra todos los
+		grupos de objetos dibujables. Sirve para dibujar todos los
+		objetos con un foreach en 'obj.draw()'.
+	- DRAW_LAYER, atributo estatico final de la clase derivada que determina la
+		preferencia para dibujarse antes que otros, o la capa en la que se
+		situa. Todas las instancias de la misma clase y del mismo grupo tienen
+		la misma preferencia. 
+	- image, atributo que contiene la pygame.Surface a mostrar por el objeto.
+	- rect, atributo que contiene el pygame.Rect que determina la ubicacion de
+		de 'image' en la pantalla.
+	"""
 	DRAW_PL = DrawingPipeline()
 
 	@classmethod
 	def setDRAW_LAYER(cls, DRAW_LAYER):
+		"""
+		Setter del atributo de preferencia 'DRAW_LAYER'.
+		Cuanto menor sea su valor, antes se dibujaran los objetos de ese tipo.
+		Tambien se puede inicializar en el cuerpo de la clase.
+		"""
 		cls.DRAW_LAYER = DRAW_LAYER
 
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH, image, rect):
+		"""
+		Inicializador por defecto de los objetos actualizables.
+		Si se sobre-escribe, igualmente se debe inicializar la clase base con
+		'ObjDraw.__init__(self, HASH, FATHR_HASH, image, rect)'.
+		"""
 		Obj.__init__(self, HASH, FATHR_HASH)
 		self.image = image
 		self.rect = rect
 		self._BCKGND = pg.display.get_surface()
 
 	def draw(self):
+		"""
+		Metodo dibujador del objeto, sera llamado en cada frame por la
+		funcion 'obj.draw()' segun el orden determinado por 'DRAW_LAYER'.
+		Puede ser sobre-escrito para extender su funcionabilidad y seguir
+		usandolo con 'ObjDraw.draw(self)'.
+		Solo se dibuja si esta activo.
+		"""
 		self._BCKGND.blit(self.image, self.rect)
 
 class ObjDynamic(Obj):
+	"""
+	Clase abstracta para que los objetos creados en tiempo de ejecucion la
+	deriven.
+	"""
 	@abstractmethod
 	def __init__(self, FATHR_HASH):
+		"""
+		Inicializador por defecto de los objetos dinamicamente creados.
+		Por lo que no sera necesario asignarle un hash unico, se usa la
+		direccion de memoria como identificador.
+		Si se sobre-escribe, igualmente se debe inicializar la clase base con
+		'ObjDynamic.__init__(self, FATHR_HASH)'.
+		"""
 		Obj.__init__(self, object.__hash__(self), FATHR_HASH)
 
 class ObjStaticR(Obj):
+	"""
+	Clase abstracta para que los objetos cargables de disco la deriven.
+
+	Los atributos son:
+	- GRP_FILE, atributo estatico final de la clase derivada que contiene la 
+		direccion del fichero json que contiene una lista con todas
+		las instancias de la clase derivada ordenadas por su hash.
+		Se usa para cargar las instancias con el metodo estatico de la clase
+		derivada 'load'.
+	"""
+	@classmethod
+	def setGRP_FILE(cls, GRP_FILE):
+		"""
+		Setter del atributo 'GRP_FILE'.
+		Tambien se puede inicializar en el cuerpo de la clase.
+		"""
+		self.GRP_FILE = GRP_FILE
+
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH):
+		"""
+		Inicializador por defecto de los objetos cargables de disco.
+		Si se sobre-escribe, igualmente se debe inicializar la clase base con
+		'ObjStaticR.__init__(self, HASH, FATHR_HASH)'.
+		"""
 		Obj.__init__(self, HASH, FATHR_HASH)
 
 	@classmethod
 	def load(cls, HASH, FATHR_HASH):
+		"""
+		Metodo estatico de la clase derivada que crea e inicializa una nueva
+		instancia con los argumentos guardados en el json 'GRP_FILE'. 
+		"""
 		with open(cls.GRP_FILE, "r") as fp:
 			i = 0
 			for obj in ijson.items(fp, "item"):
@@ -360,17 +470,43 @@ class ObjStaticR(Obj):
 
 
 class ObjStaticRW(ObjStaticR):
+	"""
+	Clase abstracta para que los objetos cargables y guardables en disco la
+	deriven.
+
+	Los atributos son:
+	- SAVE_GRPS, atributo estatico final de la clase base que concentra todos
+		los grupos de objetos guardables. Sirve para guardar todos los
+		objetos con un foreach en 'obj.save()'.
+	"""
 	SAVE_GRPS = SavingGroups()
 
 	@abstractmethod
 	def __init__(self, HASH, FATHR_HASH):
+		"""
+		Inicializador por defecto de los objetos cargables y guardables en
+		disco.
+		Si se sobre-escribe, igualmente se debe inicializar la clase base con
+		'ObjStaticRW.__init__(self, HASH, FATHR_HASH)'.
+		"""
 		ObjStaticR.__init__(self, HASH, FATHR_HASH)
 
 	@abstractmethod
 	def save(self):
+		"""
+		Metodo abstracto que se llamara cuando un objeto quiera guardar a otro
+		o al llamar a la funcion del modulo 'obj.save'.
+		Normalmente, en la definicion de la clase derivada, se llamara al
+		metodo privado self._save() entregandole como parametro al metodo los
+		atributos a guardar en el json, p.e. self._save(x=self.x, y=self.y).
+		"""
 		pass
 
 	def _save(self, **obj):
+		"""
+		Metodo privado para guardar los atributos del propio objeto en el json
+		especificado en 'GRP_FILE'.
+		"""
 		with open(self.GRP_FILE, "r") as fp:
 			instList = json.load(fp)
 
@@ -384,8 +520,17 @@ class ObjStaticRW(ObjStaticR):
 
 
 class Group:
+	"""
+	Contenedor de instancias de la misma clase.
+
+	Los atributos son:
+	- TYPE, atributo final que contiene la clase de las instancias que contiene.
+	"""
 	@abstractmethod
 	def __init__(self, TYPE):
+		"""
+		El contenedor comienza vacio.
+		"""
 		self._OBJS = []
 		self._TYPE = TYPE
 
@@ -394,11 +539,19 @@ class Group:
 		return self._TYPE
 	
 	def add(self, obj):
+		"""
+		Se anade el objeto 'obj' al contenedor.
+		"""
 		if not obj in self._OBJS:
 			insort(self._OBJS, obj)
 
 
 	def __getitem__(self, objHash):
+		"""
+		Se obtiene el objeto con hash 'objHash' del contenedor si existe,
+		si no, se lanza la excepcion ObjNotFoundError.
+		Se puede obtener un subgrupo de instancias con group[n:n].
+		"""
 		if isinstance(objHash, int):
 			for obj in self._OBJS:
 				if obj.HASH == objHash:
@@ -426,6 +579,11 @@ class Group:
 			)
 
 	def __delitem__(self, objHash):
+		"""
+		Se elimina el objeto con hash 'objHash' del contenedor si existe,
+		si no, se lanza la excepcion ObjNotFoundError.
+		Se puede eliminar un subgrupo de instancias con group[n:n].
+		"""
 		if isinstance(objHash, int):
 			i = 0
 			for obj in self._OBJS:
@@ -471,6 +629,12 @@ class Group:
 
 
 def addGroup(group):	
+	"""
+	Se anade el grupo a la tabla de objetos, si es un objeto actualizable,
+	tambien al pipeline de objetos actualizables, si es dibujable,
+	tambien al pipeline de objetos dibujables, y si es guardable,
+	tambien a la lista de objetos guradables.
+	"""
 	Obj.GRPS_TABLE.add(group)
 	if issubclass(group.TYPE, ObjUpdate):
 		ObjUpdate.UPDT_PL.add(group)
@@ -480,19 +644,41 @@ def addGroup(group):
 		ObjStaticRW.SAVE_GRPS.add(group)
 
 def getGroup(objType):
+	"""
+	Se obtiene el grupo con objetos de tipo 'objType' si existe,
+	si no, se lanza la excepcion GroupNotFoundError.
+	'objType' puede ser un string con el nombre de la clase o la propia
+	clase
+	"""
 	return Obj.GRPS_TABLE[objType]
 
 def update():
+	"""
+	Se actualizan todos los objetos actualizables.
+	"""
 	ObjUpdate.UPDT_PL.update()
 
 def draw():
+	"""
+	Se dibujan todos los objetos dibujables.
+	"""
 	ObjDraw.DRAW_PL.draw()
 
 def load(objType, objHash, fathrHash):
+	"""
+	Se carga el objeto de la clase 'objType' con hash 'objHash' y se le entrega
+	el hash del objeto creador.
+	"""
 	return Obj.GRPS_TABLE[objType].TYPE.load(objHash, fathrHash)
 
 def save():
+	"""
+	Se guardan todos los objetos guardables.
+	"""
 	ObjStaticRW.SAVE_GRPS.save()
 
 def close():
+	"""
+	Se cierran todos los objetos.
+	"""
 	Obj.GRPS_TABLE.close()
