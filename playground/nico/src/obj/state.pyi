@@ -3,7 +3,6 @@ from typing import (
 	Callable,
 	Iterable,
 	Optional,
-	Final,
 	Any,
 	Tuple,
 	Union
@@ -21,8 +20,8 @@ class FinishedError(Exception):
 	def __init__(self, class_id:int, inst_id:int)->None: ...
 
 class ObjState(ObjUpdate):
-	STATES:Final[Tuple[State]]#classattr
-	ARCS:Final[CSRMat[Tuple[Act, ...]]]#classattr
+	STATES:Tuple[State]#classattr
+	ARCS:CSRMat[Tuple[Act, ...]]#classattr
 	state:int
 	@abstractmethod
 	def __init__(self, HASH:int, FATHR_HASH:int)->None: ...

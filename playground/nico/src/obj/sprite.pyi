@@ -54,8 +54,6 @@ class ObjSprite(ObjDraw):
 
 class Animation(tuple):
 	LOOP:Final[bool]
-	FLIP_X:Final[bool]
-	FLIP_Y:Final[bool]
 	def __new__ (
 		cls,
 		FRAMES:Iterable[Frame],

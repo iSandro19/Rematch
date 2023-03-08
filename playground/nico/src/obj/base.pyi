@@ -29,8 +29,8 @@ class ObjNotFoundError(ValueError):
 class Obj(ABC):
 	GRPS_TABLE:Final[GroupsTable]#staticattr
 	TYPE:Final[Type["Obj"]]
-	HASH:Final[int]
-	FATHR_HASH:Final[int]
+	HASH:int
+	FATHR_HASH:int
 	active:bool
 	@abstractmethod
 	def __init__(self, HASH:int, FATHR_HASH:int)->None: ...
@@ -44,7 +44,7 @@ class Obj(ABC):
 
 class ObjUpdate(Obj):
 	UPDT_PL:Final[UpdatingPipeline]#staticattr
-	UPDT_POS:Final[int]#classattr
+	UPDT_POS:int#classattr
 	@classmethod
 	def setUPDT_POS(cls, DRAW_LAYER:int)->None: ...
 	@abstractmethod
@@ -75,7 +75,7 @@ class ObjDynamic(Obj):
 	def __init__(self, FATHR_HASH:int)->None: ...
 
 class ObjStaticR(Obj):
-	GRP_FILE:Final[str]#classattr
+	GRP_FILE:str#classattr
 	@classmethod
 	def setGRP_FILE(cls, GRP_FILE:str)->None: ...
 	@abstractmethod
@@ -108,7 +108,7 @@ class Group(Generic[T]):
 	@overload
 	def __getitem__(self, objHash:slice)->List[T]: ...
 	def __delitem__(self, objHash:Union[SupportsIndex, slice])->None: ...
-	def __iter__(self)->Iterator[T]:
+	def __iter__(self)->Iterator[T]: ...
 	def __str__(self)->str: ...
 	def __repr__(self)->str: ...
 
