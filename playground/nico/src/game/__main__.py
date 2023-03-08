@@ -10,13 +10,36 @@ import game.control
 
 WIND_SIZE = 128, 72
 FPS = 60
+WAIT_TIME = 200		# Tiempo a partir del cual se detecta Pulsado Largo en una tecla
+
+
+# Función para determinar si una tecla es pulsada de forma larga o corta
+def tiempoPulsacion(key):
+	key_pressed = pg.key.get_pressed()
+	start_time = pg.time.get_ticks()
+	while key_pressed[key]:
+		# Detecta el tiempo que se mantiene pulsada la tecla
+		elapsed_time = pg.time.get_ticks() - start_time
+
+		# Actualiza la tecla pulsada
+		key_pressed = pg.key.get_pressed()
+	
+	# Pulsación larga
+	if elapsed_time >= WAIT_TIME: return True
+	
+	# Pulsación corta
+	return False
 
 
 def main():
 	pg.display.init()
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
 
-	notExit = True
+	# Variables para control
+	notExit = True	# Bucle de eventos
+	gameScreen = 0 	# Si estamos en el menú (0), en gameplay (1) o pausados (2)
+
+
 	clock = pg.time.Clock()
 	wind = pg.display.get_surface()
 	rect = pg.Rect(0,0,128,72)
@@ -29,10 +52,51 @@ def main():
 	obj.load('Control', 0, 0)
 	obj.load('Player', 0, 0)
 
-	while notExit:
-		for event in pg.event.get():
-			notExit = event.type != pg.QUIT
+	# Instanciar player para poder llamar las funciones
 
+	while notExit:
+
+		# Faltan los inputs que dependen de objetos en la pantalla (menú y pantalla de pausa)
+		# Los a=1 son solo para evitar que de error el if, al tener las funciones hechas quitarlo
+		for event in pg.event.get():
+			if event.type == pg.QUIT:
+				notExit = False
+			
+			if gameScreen == 0:
+				gameScreen = 1
+				#Etc
+			elif gameScreen == 1:
+				if event.key == KEYDOWN:
+					if event.key == K_SPACE:
+						a = 1
+						#jump and double jump
+					elif event.key == K_LSHIFT:
+						a = 1
+						# dash
+					elif event.key == K_e:
+						
+						if tiempoPulsacion(event.key):
+							a = 1
+							#ataque1
+						else: #ataque2
+							a = 1
+					
+					elif event.key == K_q:
+
+						if tiempoPulsacion(event.key):
+							a = 1
+							#ataque3
+						else: #ataque4
+							a = 1
+					
+					elif event.key == K_ESCAPE:
+						gameScreen = 2
+
+			elif gameScreen == 2:
+				if event.type == KEYDOWN:
+					if event.key == K_ESCAPE:
+						gameScreen = 1
+	
 
 		wind.fill((128, 128, 128))
 
