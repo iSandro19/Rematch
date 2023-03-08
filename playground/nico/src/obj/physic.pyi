@@ -39,6 +39,7 @@ class ObjParallax(ObjRelative):
 class ObjPhysic(ObjRelative, ObjUpdate):
 	vel:pg.math.Vector2
 	acc:pg.math.Vector2
+	cBox:pg.Rect
 	@abstractmethod
 	def __init__(
 		self,
