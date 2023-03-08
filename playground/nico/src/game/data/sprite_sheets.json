@@ -10,5 +10,11 @@
 		"w": 16,
 		"h": 16,
 		"colorkey": [255,0,0]
+	},
+	{
+		"file": "game/images/bosque.png",
+		"w": 16,
+		"h": 16,
+		"colorkey": null
 	}
 ]

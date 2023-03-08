@@ -122,7 +122,7 @@ class ObjPhysic(ObjRelative, ObjUpdate):
 			HASH,
 			FATHR_HASH,
 			img,
-			imgW,i
+			imgW,
 			mgH,
 			REF_POINT,
 			pos
@@ -148,7 +148,7 @@ class ObjPhysic(ObjRelative, ObjUpdate):
 		)
 
 	@cBox.setter
-	def cBox(self, rect)
+	def cBox(self, rect):
 		"""
 		Se mantiene el offset con la collide box
 		"""

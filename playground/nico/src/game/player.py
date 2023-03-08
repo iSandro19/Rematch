@@ -294,109 +294,113 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					self.acc.x = -H_ACC
 
 
+		cBox = self.cBox
+
 		obj.physic.ObjPhysic.updateX(self)
 
-		pg.draw.rect(self._BCKGND, (0,255,0), self.cBox.move(-self._cam.x,-self._cam.y), 1)
+		pg.draw.rect(self._BCKGND, (0,255,0), cBox.move(-self._cam.x,-self._cam.y), 1)
 
 		if self.vel.x != 0 or self.acc.x == H_ACC or self.acc.x == -H_ACC:
 			for tls in obj.getGroup(TileCollision):
 				if self.vel.x > 0 or (self._facingRight and self.acc.x == H_ACC):
-					x, y = self.cBox.topright
+					x, y = cBox.topright
 					tl = tls[y+4,x]
 					pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y+4-self._cam.y,1,1))
 
 					if tl.form == RECT:
-						self.cBox.right = tl.rect.left
-						self.pos.x = self.cBox.x - self._cBoxOffsetH
+						cBox.right = tl.rect.left
+						self.pos.x = cBox.x - self._cBoxOffsetH
 						self.vel.x = 0
 						self.acc.x = 0
 
 					else:
-						x, y = self.cBox.bottomright
+						x, y = cBox.bottomright
 						tl = tls[y-1-4,x]
 						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-1-4-self._cam.y,1,1))
 
 						if tl.form == RECT:
-							self.cBox.right = tl.rect.left
-							self.pos.x = self.cBox.x - self._cBoxOffsetH
+							cBox.right = tl.rect.left
+							self.pos.x = cBox.x - self._cBoxOffsetH
 							self.vel.x = 0
 							self.acc.x = 0
 
 				elif self.vel.x < 0 or (not self._facingRight and self.acc.x == -H_ACC):
-					x, y = self.cBox.topleft
+					x, y = cBox.topleft
 					tl = tls[y+4,x-1]
 					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y+4-self._cam.y,1,1))
 
 					if tl.form == RECT:
-						self.cBox.left = tl.rect.right
-						self.pos.x = self.cBox.x - self._cBoxOffsetH
+						cBox.left = tl.rect.right
+						self.pos.x = cBox.x - self._cBoxOffsetH
 						self.vel.x = 0
 						self.acc.x = 0
 
 					else:
-						x, y = self.cBox.bottomleft
+						x, y = cBox.bottomleft
 						tl = tls[y-1-4,x-1]
 						pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-1-4-self._cam.y,1,1))
 
 						if tl.form == RECT:
-							self.cBox.left = tl.rect.right
-							self.pos.x = self.cBox.x - self._cBoxOffsetH
+							cBox.left = tl.rect.right
+							self.pos.x = cBox.x - self._cBoxOffsetH
 							self.vel.x = 0
 							self.acc.x = 0
 
 
 		obj.physic.ObjPhysic.updateY(self)
 
-		pg.draw.rect(self._BCKGND, (0,0,255), self.cBox.move(-self._cam.x,-self._cam.y), 1)
+		pg.draw.rect(self._BCKGND, (0,0,255), cBox.move(-self._cam.x,-self._cam.y), 1)
 
 		if self.vel.y != 0 or self.acc.y == V_ACC or self.acc.y == -V_ACC:
 			for tls in obj.getGroup(TileCollision):
 				if self.vel.y > 0:
-					x, y = self.cBox.bottomright
+					x, y = cBox.bottomright
 					tl = tls[y,x-1]
 					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-self._cam.y,1,1))
 
 					if tl.form == RECT:
-						self.cBox.bottom = tl.rect.top
-						self.pos.y = self.cBox.y - self._cBoxOffsetV
+						cBox.bottom = tl.rect.top
+						self.pos.y = cBox.y - self._cBoxOffsetV
 						self.vel.y = 0
 						self.acc.y = 0
 						self._inGround = True
 
 					else:
-						x, y = self.cBox.bottomleft
+						x, y = cBox.bottomleft
 						tl = tls[y,x]
 						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-self._cam.y,1,1))
 
 						if tl.form == RECT:
-							self.cBox.bottom = tl.rect.top
-							self.pos.y = self.cBox.y - self._cBoxOffsetV
+							cBox.bottom = tl.rect.top
+							self.pos.y = cBox.y - self._cBoxOffsetV
 							self.vel.y = 0
 							self.acc.y = 0
 							self._inGround = True
 
 				elif self.vel.y < 0:
-					x, y = self.cBox.topright
+					x, y = cBox.topright
 					tl = tls[y-1,x-1]
 					pg.draw.rect(self._BCKGND, (255,0,0), (x-1-self._cam.x,y-1-self._cam.y,1,1))
 
 					if tl.form == RECT:
-						self.cBox.top = tl.rect.bottom
-						self.pos.y = self.cBox.y - self._cBoxOffsetV
+						cBox.top = tl.rect.bottom
+						self.pos.y = cBox.y - self._cBoxOffsetV
 						self.vel.y = 0
 
 					else:
-						x, y = self.cBox.topleft
+						x, y = cBox.topleft
 						tl = tls[y-1,x]
 						pg.draw.rect(self._BCKGND, (255,0,0), (x-self._cam.x,y-1-self._cam.y,1,1))
 
 						if tl.form == RECT:
-							self.cBox.top = tl.rect.bottom
-							self.pos.y = self.cBox.y - self._cBoxOffsetV
+							cBox.top = tl.rect.bottom
+							self.pos.y = cBox.y - self._cBoxOffsetV
 							self.vel.y = 0			
 
 
-		self._cam.center = self.cBox.center
+		self._cam.center = cBox.center
+
+		self.cBox = cBox
 
 		if self._inGround:
 			if self._facingRight:
