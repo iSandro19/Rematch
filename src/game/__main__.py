@@ -8,7 +8,7 @@ import game.player
 import game.control
 
 
-WIND_SIZE = 128, 72
+WIND_SIZE = 256,144
 FPS = 60
 WAIT_TIME = 200		# Tiempo a partir del cual se detecta Pulsado Largo en una tecla
 
@@ -133,8 +133,6 @@ def main():
 		pg.display.flip()
 		clock.tick(FPS)
 	
-
-	obj.close()
 	pg.display.quit()
 
 	return 0

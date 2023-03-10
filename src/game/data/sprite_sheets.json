@@ -6,9 +6,9 @@
 		"colorkey": null
 	},
 	{
-		"file": "game/images/magnus.bmp",
-		"w": 16,
-		"h": 16,
+		"file": "game/images/magnus.png",
+		"w": 40,
+		"h": 40,
 		"colorkey": [255,0,0]
 	},
 	{

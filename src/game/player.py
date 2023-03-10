@@ -9,86 +9,16 @@ from game.tile import TileCollision, RECT
 ANIMS = {
 	"standRight": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,0,DUR=128),
-			obj.sprite.Frame(1,0,DUR=4),
-			obj.sprite.Frame(2,0,DUR=4),
-			obj.sprite.Frame(3,0,DUR=4),
-			obj.sprite.Frame(4,0,DUR=4),
-			obj.sprite.Frame(5,0,DUR=4),
-			obj.sprite.Frame(6,0,DUR=4),
-			obj.sprite.Frame(7,0,DUR=4),
-			obj.sprite.Frame(8,0,DUR=4),
-			obj.sprite.Frame(9,0,DUR=4),
-			obj.sprite.Frame(10,0,DUR=4),
-			obj.sprite.Frame(11,0,DUR=4),
-			obj.sprite.Frame(10,0,DUR=4),
-			obj.sprite.Frame(9,0,DUR=4),
-			obj.sprite.Frame(8,0,DUR=4),
-			obj.sprite.Frame(7,0,DUR=4),
-			obj.sprite.Frame(8,0,DUR=4),
-			obj.sprite.Frame(9,0,DUR=4),
-			obj.sprite.Frame(10,0,DUR=4),
-			obj.sprite.Frame(11,0,DUR=4),
-			obj.sprite.Frame(10,0,DUR=4),
-			obj.sprite.Frame(9,0,DUR=4),
-			obj.sprite.Frame(8,0,DUR=4),
-			obj.sprite.Frame(7,0,DUR=4),
-			obj.sprite.Frame(8,0,DUR=4),
-			obj.sprite.Frame(9,0,DUR=4),
-			obj.sprite.Frame(10,0,DUR=4),
-			obj.sprite.Frame(11,0,DUR=4),
-			obj.sprite.Frame(10,0,DUR=4),
-			obj.sprite.Frame(9,0,DUR=4),
-			obj.sprite.Frame(8,0,DUR=4),
-			obj.sprite.Frame(7,0,DUR=4),
-			obj.sprite.Frame(6,0,DUR=4),
-			obj.sprite.Frame(5,0,DUR=4),
-			obj.sprite.Frame(4,0,DUR=4),
-			obj.sprite.Frame(3,0,DUR=4),
-			obj.sprite.Frame(2,0,DUR=4),
-			obj.sprite.Frame(1,0,DUR=4),
+			obj.sprite.Frame(0,0,DUR=16),
+			obj.sprite.Frame(1,0,DUR=16),
+			obj.sprite.Frame(2,0,DUR=16),
 		),
 	),
 	"standLeft": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,0,True,DUR=128),
-			obj.sprite.Frame(1,0,True,DUR=4),
-			obj.sprite.Frame(2,0,True,DUR=4),
-			obj.sprite.Frame(3,0,True,DUR=4),
-			obj.sprite.Frame(4,0,True,DUR=4),
-			obj.sprite.Frame(5,0,True,DUR=4),
-			obj.sprite.Frame(6,0,True,DUR=4),
-			obj.sprite.Frame(7,0,True,DUR=4),
-			obj.sprite.Frame(8,0,True,DUR=4),
-			obj.sprite.Frame(9,0,True,DUR=4),
-			obj.sprite.Frame(10,0,True,DUR=4),
-			obj.sprite.Frame(11,0,True,DUR=4),
-			obj.sprite.Frame(10,0,True,DUR=4),
-			obj.sprite.Frame(9,0,True,DUR=4),
-			obj.sprite.Frame(8,0,True,DUR=4),
-			obj.sprite.Frame(7,0,True,DUR=4),
-			obj.sprite.Frame(8,0,True,DUR=4),
-			obj.sprite.Frame(9,0,True,DUR=4),
-			obj.sprite.Frame(10,0,True,DUR=4),
-			obj.sprite.Frame(11,0,True,DUR=4),
-			obj.sprite.Frame(10,0,True,DUR=4),
-			obj.sprite.Frame(9,0,True,DUR=4),
-			obj.sprite.Frame(8,0,True,DUR=4),
-			obj.sprite.Frame(7,0,True,DUR=4),
-			obj.sprite.Frame(8,0,True,DUR=4),
-			obj.sprite.Frame(9,0,True,DUR=4),
-			obj.sprite.Frame(10,0,True,DUR=4),
-			obj.sprite.Frame(11,0,True,DUR=4),
-			obj.sprite.Frame(10,0,True,DUR=4),
-			obj.sprite.Frame(9,0,True,DUR=4),
-			obj.sprite.Frame(8,0,True,DUR=4),
-			obj.sprite.Frame(7,0,True,DUR=4),
-			obj.sprite.Frame(6,0,True,DUR=4),
-			obj.sprite.Frame(5,0,True,DUR=4),
-			obj.sprite.Frame(4,0,True,DUR=4),
-			obj.sprite.Frame(3,0,True,DUR=4),
-			obj.sprite.Frame(2,0,True,DUR=4),
-			obj.sprite.Frame(1,0,True,DUR=4),
+			obj.sprite.Frame(0,0,True,DUR=16),
+			obj.sprite.Frame(1,0,True,DUR=16),
+			obj.sprite.Frame(2,0,True,DUR=16),
 		)
 	),
 	"runRight": obj.sprite.Animation(
@@ -101,6 +31,7 @@ ANIMS = {
 			obj.sprite.Frame(5,1,DUR=4),
 			obj.sprite.Frame(6,1,DUR=4),
 			obj.sprite.Frame(7,1,DUR=4),
+			obj.sprite.Frame(8,1,DUR=4),
 		)
 	),
 	"runLeft": obj.sprite.Animation(
@@ -113,41 +44,42 @@ ANIMS = {
 			obj.sprite.Frame(5,1,True,DUR=4),
 			obj.sprite.Frame(6,1,True,DUR=4),
 			obj.sprite.Frame(7,1,True,DUR=4),
+			obj.sprite.Frame(8,1,True,DUR=4),
 		)
 	),
 	"jumpRight": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(4,1),
+			obj.sprite.Frame(0,2),
 		),
 		False
 	),
 	"jumpLeft": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(4,1,True),
+			obj.sprite.Frame(0,2,True),
 		),
 		False
 	)
 }
 
-C_BOX_W = 8
-C_BOX_H = 16
+C_BOX_W = 16
+C_BOX_H = 32
 
-C_BOX_W_OFFSET = 4
-C_BOX_H_OFFSET = 0
+C_BOX_W_OFFSET = 12
+C_BOX_H_OFFSET = 8
 
-IMG_W = 16
-IMG_H = 16
+IMG_W = 40
+IMG_H = 40
 
-MAX_H_VEL = 2
-MAX_V_VEL = 2
+MAX_H_VEL = 3
+MAX_V_VEL = 3
 
-MAX_H_WJ_VEL = 1
-MAX_V_WJ_VEL = 2
+MAX_H_WJ_VEL = 2
+MAX_V_WJ_VEL = 4
 
 H_ACC = 0.2
 V_ACC = 0.2
 
-JUMP_VEL = 3
+JUMP_VEL = 5
 
 class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim): 
 	GRP_FILE = "game/data/players.json"
