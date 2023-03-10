@@ -12,6 +12,7 @@ ANIMS = {
 			obj.sprite.Frame(0,0,DUR=16),
 			obj.sprite.Frame(1,0,DUR=16),
 			obj.sprite.Frame(2,0,DUR=16),
+			obj.sprite.Frame(1,0,DUR=16),
 		),
 	),
 	"standLeft": obj.sprite.Animation(
@@ -19,6 +20,7 @@ ANIMS = {
 			obj.sprite.Frame(0,0,True,DUR=16),
 			obj.sprite.Frame(1,0,True,DUR=16),
 			obj.sprite.Frame(2,0,True,DUR=16),
+			obj.sprite.Frame(1,0,True,DUR=16),
 		)
 	),
 	"runRight": obj.sprite.Animation(
