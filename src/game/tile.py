@@ -8,7 +8,7 @@ import numpy as np
 import json
 
 class TileMap(obj.ObjStaticR, obj.physic.ObjRelative, obj.sprite.ObjSprite):
-	DRAW_LAYER = 0
+	DRAW_LAYER = 20
 	GRP_FILE = "game/data/tile_maps.json"
 	
 	def __init__(
@@ -192,10 +192,9 @@ class TileCollision(obj.ObjStaticR):
 		yRel = y - self._rowOffset
 		xRel = x - self._colOffset
 
-		if (y >= 0 and
-			y - self._rowOffset < self._csrMat.shape[0] and
-			x - self._colOffset >= 0 and
-			x - self._colOffset < self._csrMat.shape[1]
+		if (
+			yRel >= 0 and yRel < self._csrMat.shape[0] and
+			xRel >= 0 and xRel < self._csrMat.shape[1]
 		):
 			return Tile(
 				self._csrMat[yRel, xRel],

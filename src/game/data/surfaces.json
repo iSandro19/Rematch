@@ -1,5 +1,11 @@
 [
 	{
-		"file": "game/images/PerfilP.png"
+		"file": "game/images/Fondo Bosque.png"
+	},
+	{
+		"file": "game/images/Fondo Castillo.png"
+	},
+	{
+		"file": "game/images/Fondo bosque (pdx).png"
 	}
 ]

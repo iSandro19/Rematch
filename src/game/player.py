@@ -116,11 +116,11 @@ C_BOX_H_OFFSET = 8
 IMG_W = 40
 IMG_H = 40
 
-MAX_H_VEL = 3
-MAX_V_VEL = 3
+MAX_H_VEL = 2
+MAX_V_VEL = 2
 
 MAX_H_WJ_VEL = 2
-MAX_V_WJ_VEL = 4
+MAX_V_WJ_VEL = 2
 
 H_ACC = 0.2
 V_ACC = 0.2
@@ -130,7 +130,7 @@ JUMP_VEL = 5
 class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim): 
 	GRP_FILE = "game/data/players.json"
 	UPDT_POS = 1
-	DRAW_LAYER = 0
+	DRAW_LAYER = 9
 
 	def __init__(
 		self,
@@ -192,18 +192,15 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 				#self._inGround = True
 				return True
 
-			else:
+			x, y = self.cBox.bottomleft
+			tl = tls[y,x]
 
-				x, y = self.cBox.bottomleft
-				tl = tls[y,x]
+			if tl.form == RECT:
+				#self._inGround = True
+				return True
 
-				if tl.form == RECT:
-					#self._inGround = True
-					return True
+		return False
 
-				else:
-					#self._inGround = False
-					return False
 
 			
 
@@ -217,7 +214,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		elif self.doubleJump:
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
-			self.doubleJump = False
+			#self.doubleJump = False
 
 
 	

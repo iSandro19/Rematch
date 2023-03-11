@@ -96,7 +96,13 @@ class UpdatingPipeline:
 		atributo 'UPDT_POS' definido en la clase de los objetos que contiene el
 		grupo
 		"""
-		self._grps.insert(group.TYPE.UPDT_POS, group)
+		i = 0
+		for grp in self._grps:
+			if grp.TYPE.UPDT_POS > group.TYPE.UPDT_POS:
+				break
+			i += 1
+		
+		self._grps.insert(i, group)
 
 	def update(self): 
 		"""
@@ -141,7 +147,13 @@ class DrawingPipeline:
 		atributo 'DRAW_LAYER' definido en la clase de los objetos que contiene
 		el grupo
 		"""
-		self._grps.insert(group.TYPE.DRAW_LAYER, group)
+		i = 0
+		for grp in self._grps:
+			if grp.TYPE.DRAW_LAYER > group.TYPE.DRAW_LAYER:
+				break
+			i += 1
+
+		self._grps.insert(i, group)
 
 	def draw(self): 
 		"""

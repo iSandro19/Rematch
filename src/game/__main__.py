@@ -6,6 +6,7 @@ import game.tile
 import game.cam
 import game.player
 import game.control
+import game.bckgnd
 
 
 WIND_SIZE = 256,144
@@ -49,6 +50,11 @@ def main():
 	obj.load('Cam', 0, 0)
 	obj.load('TileMap', 0, 0)
 	obj.load('TileCollision', 0, 0)
+	obj.load('TileMap', 1, 0)
+	obj.load('TileCollision', 1, 0)
+	obj.load('Bckgnd', 0, 0)
+	obj.load('Bckgnd', 1, 0)
+	obj.load('BckgndParallax', 0, 0)
 	obj.load('Control', 0, 0)
 	player = obj.load('Player', 0, 0)
 
@@ -93,6 +99,7 @@ def main():
 							a = 1
 
 					elif event.key == K_ESCAPE:
+						player.active = False
 						gameScreen = 2
 				
 				elif event.type == KEYUP:
@@ -102,6 +109,7 @@ def main():
 			elif gameScreen == 2:
 				if event.type == KEYDOWN:
 					if event.key == K_ESCAPE:
+						player.active = True
 						gameScreen = 1
 	
 		if gameScreen == 0:

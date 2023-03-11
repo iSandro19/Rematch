@@ -16,5 +16,11 @@
 		"w": 16,
 		"h": 16,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/castillo.png",
+		"w": 16,
+		"h": 16,
+		"colorkey": null
 	}
 ]
