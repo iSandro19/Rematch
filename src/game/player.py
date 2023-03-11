@@ -34,6 +34,7 @@ ANIMS = {
 			obj.sprite.Frame(6,1,DUR=4),
 			obj.sprite.Frame(7,1,DUR=4),
 			obj.sprite.Frame(8,1,DUR=4),
+			obj.sprite.Frame(9,1,DUR=4)
 		)
 	),
 	"runLeft": obj.sprite.Animation(
@@ -47,17 +48,60 @@ ANIMS = {
 			obj.sprite.Frame(6,1,True,DUR=4),
 			obj.sprite.Frame(7,1,True,DUR=4),
 			obj.sprite.Frame(8,1,True,DUR=4),
+			obj.sprite.Frame(9,1,True,DUR=4),
 		)
 	),
 	"jumpRight": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,2),
+			obj.sprite.Frame(0,2,DUR=1),
+			obj.sprite.Frame(1,2,DUR=1),
+		)
+	),
+	"stopJumpRight": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(2,2),
+		),
+		False
+	),
+	"fallRight": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(3,2,DUR=1),
+			obj.sprite.Frame(4,2,DUR=1),
+		)
+	),
+	"groundingRight": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(0,3,DUR=4),
+			obj.sprite.Frame(1,3,DUR=4),
+			obj.sprite.Frame(2,3,DUR=4),
+			obj.sprite.Frame(3,3,DUR=4)
 		),
 		False
 	),
 	"jumpLeft": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,2,True),
+			obj.sprite.Frame(0,2,True,DUR=1),
+			obj.sprite.Frame(1,2,True,DUR=1)
+		)
+	),
+	"stopJumpLeft": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(2,2,True),
+		),
+		False
+	),
+	"fallLeft": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(3,2,True,DUR=1),
+			obj.sprite.Frame(4,2,True,DUR=1),
+		)
+	),
+	"groundingLeft": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(0,3,True,DUR=4),
+			obj.sprite.Frame(1,3,True,DUR=4),
+			obj.sprite.Frame(2,3,True,DUR=4),
+			obj.sprite.Frame(3,3,True,DUR=4)
 		),
 		False
 	)
@@ -340,26 +384,61 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		if self.isInGround():
 			if self._facingRight:
 				if self.vel.x == 0 and self.acc.x == 0:
-					if self.anim != ANIMS["standRight"]:
+					if (
+						self.anim == ANIMS["fallRight"] or 
+						self.anim == ANIMS["stopJumpRight"]
+					):
+						self.anim = ANIMS["groundingRight"]
+
+					elif (
+						self.anim == ANIMS["groundingRight"] and self.done or
+						self.anim == ANIMS["runRight"]
+					):
 						self.anim = ANIMS["standRight"]
 				else:
 					if self.anim != ANIMS["runRight"]:
 						self.anim = ANIMS["runRight"]
 			else:
 				if self.vel.x == 0 and self.acc.x == 0:
-					if self.anim != ANIMS["standLeft"]:
+					if (
+						self.anim == ANIMS["fallLeft"] or 
+						self.anim == ANIMS["stopJumpLeft"]
+					):
+						self.anim = ANIMS["groundingLeft"]
+
+					if (
+						self.anim == ANIMS["groundingLeft"] and self.done or
+						self.anim == ANIMS["runLeft"]
+					):
 						self.anim = ANIMS["standLeft"]
 				else:
 					if self.anim != ANIMS["runLeft"]:
 						self.anim = ANIMS["runLeft"]
 
-		elif self.vel.y != 0 or self.acc.y == V_ACC or self.acc.y == -V_ACC: 
-			if self._facingRight:
-				if self.anim != ANIMS["jumpRight"]:
-					self.anim = ANIMS["jumpRight"]
+		else:
+			if self.vel.y < 0:
+				if self._facingRight:
+					if self.anim != ANIMS["jumpRight"]:
+						self.anim = ANIMS["jumpRight"]
+				else:
+					if self.anim != ANIMS["jumpLeft"]:
+						self.anim = ANIMS["jumpLeft"]
+
+			elif self.vel.y > 2:
+				if self._facingRight:
+					if self.anim != ANIMS["fallRight"]:
+						self.anim = ANIMS["fallRight"]
+				else:
+					if self.anim != ANIMS["fallLeft"]:
+						self.anim = ANIMS["fallLeft"]
+
 			else:
-				if self.anim != ANIMS["jumpLeft"]:
-					self.anim = ANIMS["jumpLeft"]
+				if self._facingRight:
+					if self.anim != ANIMS["stopJumpRight"]:
+						self.anim = ANIMS["stopJumpRight"]
+				else:
+					if self.anim != ANIMS["stopJumpLeft"]:
+						self.anim = ANIMS["stopJumpLeft"]
 
 
 	def draw(self):
