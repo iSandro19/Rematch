@@ -48,6 +48,8 @@ def main():
 	assert pg.image.get_extended()
 
 	obj.load('Cam', 0, 0)
+	obj.load('VisibleArea', 0, 0)
+	obj.load('VisibleArea', 1, 0)
 	obj.load('TileMap', 0, 0)
 	obj.load('TileCollision', 0, 0)
 	obj.load('TileMap', 1, 0)

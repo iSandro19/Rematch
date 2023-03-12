@@ -377,6 +377,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 			self.doubleJump = True
 
 		self._cam.center = self.cBox.center
+		self._cam.correctPos()
 
 		if self.isInGround():
 			if self._facingRight:
