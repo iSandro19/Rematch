@@ -7,5 +7,17 @@
 	},
 	{
 		"file": "game/images/Fondo bosque (pdx).png"
+	},
+	{
+		"file": "game/images/Fondo Pasillo 2.png"
+	},
+	{
+		"file": "game/images/Fondo Torre.png"
+	},
+	{
+		"file": "game/images/Fondo Pasillo.png"
+	},
+	{
+		"file": "game/images/Fondo biblio.png"
 	}
 ]

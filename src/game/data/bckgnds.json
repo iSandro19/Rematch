@@ -2,13 +2,37 @@
 	{
 		"surfHash": 0,
 		"camHash": 0,
-		"x": 32,
+		"x": 16,
 		"y": 912
 	},
 	{
 		"surfHash": 1,
 		"camHash": 0,
-		"x": 640,
+		"x": 592,
 		"y": 768
+	},
+	{
+		"surfHash": 3,
+		"camHash": 0,
+		"x": 864,
+		"y": 672
+	},
+	{
+		"surfHash": 4,
+		"camHash": 0,
+		"x": 656,
+		"y": 16
+	},
+	{
+		"surfHash": 5,
+		"camHash": 0,
+		"x": 1088,
+		"y": 928
+	},
+	{
+		"surfHash": 6,
+		"camHash": 0,
+		"x": 1696,
+		"y": 720
 	}
 ]
