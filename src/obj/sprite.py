@@ -18,8 +18,8 @@ class SpriteSheet:
 		"""
 		Sus argumentos son:
 		-SHEET, pygame.Surface con el sprite sheet.
-		- w, numero de columnas que contiene el sprite sheet.
-		- h, numero de filas que contiene el sprite sheet.
+		- w, pixeles de ancho de cada sprite.
+		- h, pixeles de alto de cada sprite.
 		- colorkey, pygame.Color del fondo para hacerlo trasparente.
 		"""
 		self.SHEET = SHEET

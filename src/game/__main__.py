@@ -7,6 +7,7 @@ import game.cam
 import game.player
 import game.control
 import game.bckgnd
+import game.enemy
 
 
 WIND_SIZE = 256,144
@@ -51,6 +52,7 @@ def main():
 	obj.load('Cam', 0, 0)
 	obj.load('Control', 0, 0)
 	player = obj.load('Player', 0, 0)
+	peon = obj.load('Peon', 0, 0)
 
 	# Objetos sala jardin
 	obj.load('VisibleArea', 0, 0)
@@ -58,14 +60,14 @@ def main():
 	obj.load('TileCollision', 0, 0)
 	obj.load('Bckgnd', 0, 0)
 	obj.load('BckgndParallax', 0, 0)
-
+	
 	# Objetos sala central del castillo
 	obj.load('VisibleArea', 1, 0)
 	obj.load('TileMap', 1, 0)
 	obj.load('TileCollision', 1, 0)
 	obj.load('Bckgnd', 1, 0)
 	obj.load('Bckgnd', 2, 0)
-	obj.load('BckgndParallax', 0, 0)
+	#obj.load('BckgndParallax', 0, 0)
 
 	# Objetos sala torre
 	obj.load('VisibleArea', 2, 0)
@@ -80,7 +82,7 @@ def main():
 	# Objetos sala biblio
 	obj.load('Bckgnd', 5, 0)
 	obj.load('VisibleArea', 5, 0)
-
+	
 
 	# Instanciar player para poder llamar las funciones
 
