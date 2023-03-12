@@ -2,6 +2,7 @@
 	{
 		"surfHash": 2,
 		"camHash": 0,
+		"Z_OFFSET": 0.1,
 		"x": 0,
 		"y": 0
 	}

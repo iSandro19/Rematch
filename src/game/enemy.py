@@ -31,7 +31,9 @@ HIT_OFFSET_H = 0
 HIT_OFFSET_W = 0
 HIT_BOX_W = 16
 HIT_BOX_H = 32
-HIT_CNT_MAX = 8 # par o se queda invisible
+
+HIT_CNT_MAX = 16 # par o se queda invisible
+
 H_VEL = 1
 
 class Ficha(
@@ -42,7 +44,18 @@ class Ficha(
 ):
 
 	@abstractmethod
-	def __init__(self, HASH, FATHR_HASH, life, maxLife, sprtShtHash, camHash, x, y):
+	def __init__(
+		self,
+		HASH,
+		FATHR_HASH,
+		life,
+		maxLife,
+		dmg,
+		sprtShtHash,
+		camHash,
+		x,
+		y
+	):
 
 		try:
 			self._sprtSht = obj.getGroup(SpriteSheet)[sprtShtHash]
@@ -75,9 +88,14 @@ class Ficha(
 		self.anim = ANIMS["runRight"]
 		self._hitCnt = 0
 		self._facingRight = False
+		self._dmg = dmg
 
 	def update(self):
 		if self._hitCnt == 0:
+			if self.life <= 0:
+				self.close()
+				return
+
 			tlBellow = False
 
 			if self._facingRight:
@@ -100,8 +118,6 @@ class Ficha(
 					self._facingRight = False
 
 			else:
-				tlBellow = False
-
 				for tls in obj.getGroup(TileCollision):
 
 					x, y = self.hitBox.bottomleft
@@ -132,21 +148,27 @@ class Ficha(
 				self.anim = ANIMS["runLeft"]
 
 		ObjAlive.draw(self)
-		obj.sprite.ObjAnim.draw(self)
 
 		if self._hitCnt != 0:
-			self.image.set_alpha(255 if self._hitCnt%2 else 0)
-			self._hitCnt -= 1			
+			self.image.set_alpha(255 if self._hitCnt%4 >= 2 else 0)
+			self._hitCnt -= 1
+		else:
+			obj.sprite.ObjAnim.draw(self)	
 
 		obj.ObjDraw.draw(self)
 
 	def close(self):
 		self._sprtSht.leave()
+		obj.Obj.close(self)
 
 	def attack(self, dmg):
 		self._hitCnt = HIT_CNT_MAX
 		self.life -= dmg
 		
+
+PEON_LIFE = 1
+PEON_DMG = 1
+PEON_SPRT_SHT = 4
 
 class Peon(Ficha):
 	GRP_FILE = "game/data/peones.json"
@@ -154,9 +176,107 @@ class Peon(Ficha):
 	DRAW_LAYER = 9
 
 	def __init__(self, HASH, FATHR_HASH, life, camHash, x, y):
-		Ficha.__init__(self, HASH, FATHR_HASH, life, 5, 4, camHash, x, y)
+		Ficha.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			life,
+			PEON_LIFE,
+			PEON_DMG,
+			PEON_SPRT_SHT,
+			camHash,
+			x,
+			y
+		)
 
 try:
 	obj.getGroup(Peon)
 except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Peon))
+
+
+ALFIL_LIFE = 2
+ALFIL_DMG = 2
+ALFIL_SPRT_SHT = 4
+
+class Alfil(Ficha):
+	GRP_FILE = "game/data/alfiles.json"
+	UPDT_POS = 2
+	DRAW_LAYER = 9
+
+	def __init__(self, HASH, FATHR_HASH, life, camHash, x, y):
+		Ficha.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			life,
+			ALFIL_LIFE,
+			ALFIL_DMG,
+			ALFIL_SPRT_SHT,
+			camHash,
+			x,
+			y
+		)
+
+try:
+	obj.getGroup(Alfil)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Alfil))
+
+
+CABALLO_LIFE = 2
+CABALLO_DMG = 3
+CABALLO_SPRT_SHT = 4
+
+class Caballo(Ficha):
+	GRP_FILE = "game/data/caballos.json"
+	UPDT_POS = 2
+	DRAW_LAYER = 9
+
+	def __init__(self, HASH, FATHR_HASH, life, camHash, x, y):
+		Ficha.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			life,
+			CABALLO_LIFE,
+			CABALLO_DMG,
+			CABALLO_SPRT_SHT,
+			camHash,
+			x,
+			y
+		)
+
+try:
+	obj.getGroup(Caballo)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Caballo))
+
+
+TORRE_LIFE = 2
+TORRE_DMG = 3
+TORRE_SPRT_SHT = 4
+
+class Torre(Ficha):
+	GRP_FILE = "game/data/torres.json"
+	UPDT_POS = 2
+	DRAW_LAYER = 9
+
+	def __init__(self, HASH, FATHR_HASH, life, camHash, x, y):
+		Ficha.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			life,
+			TORRE_LIFE,
+			TORRE_DMG,
+			TORRE_SPRT_SHT,
+			camHash,
+			x,
+			y
+		)
+
+try:
+	obj.getGroup(Torre)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Torre))

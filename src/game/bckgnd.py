@@ -48,7 +48,7 @@ class BckgndParallax(obj.ObjStaticR, obj.physic.ObjParallax):
 	GRP_FILE = "game/data/bckgnds_par.json"
 	DRAW_LAYER = 0
 
-	def __init__(self, HASH, FATHR_HASH, surfHash, camHash, x, y):
+	def __init__(self, HASH, FATHR_HASH, surfHash, camHash, Z_OFFSET, x, y):
 
 		try:
 			self.surf = obj.getGroup(Surface)[surfHash]
@@ -57,7 +57,6 @@ class BckgndParallax(obj.ObjStaticR, obj.physic.ObjParallax):
 			self.surf = obj.load(Surface, surfHash, HASH)
 
 		cam = obj.getGroup(Cam)[camHash]
-
 
 		obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)
 		obj.physic.ObjParallax.__init__(
@@ -69,7 +68,7 @@ class BckgndParallax(obj.ObjStaticR, obj.physic.ObjParallax):
 			self.surf.image.get_height(),
 			cam,
 			pg.math.Vector2(x, y),
-			0.1
+			float(Z_OFFSET)
 		)
 
 	def draw(self):
