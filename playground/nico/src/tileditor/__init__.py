@@ -1,1 +1,0 @@
-from tileditor.tileditor import *
