@@ -177,6 +177,9 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		self._facingRight = True
 		self.doubleJump = True
 
+		self.counter = 0
+		self.dashing = False
+
 
 	# Función para detectar si el jugador está en el suelo o no y actualizar su valor
 	def isInGround(self):
@@ -254,9 +257,44 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 
 	def dash(self):
-		a = 1
+		if self.dashing == False:
+			self.dashing = True
+			self.counter = 30
+
+	def dodash(self):
+
+		if self.counter > 0:
+			# Aumentar velocidad
+			if (self.vel.x > 0) & (self._facingRight) & (self.counter > 20):
+				self.vel.x  += H_ACC*2.5
+			elif (self.vel.x < 0) & (not self._facingRight) & (self.counter > 20):
+				self.vel.x  -= H_ACC*2.5
+
+			# Frenar el dash
+			elif (self.counter > 15) & (self.vel.x > 2.2):
+				self.vel.x -= H_ACC * 5
+			elif (self.counter > 15) & (self.vel.x < -2.2):
+				self.vel.x += H_ACC * 5
+
+			# Asegurarse de seguir a la maxima velocidad usual
+			elif (self.counter < 15) & (self.vel.x != 2.2) & (self.vel.x > 0):
+				self.vel.x = 2.2
+			elif (self.counter < 15) & (self.vel.x != -2.2) & (self.vel.x < 0):
+				self.vel.x = -2.2
+
+			self.counter -= 1
+		else: self.dashing = False
+		
+		
 
 	def update(self):
+
+		# Controlar el dash
+		if self.dashing: 
+			self.dodash()
+
+		print("C ", self.counter)
+		print("Vel ", self.vel.x)
 
 		obj.physic.ObjPhysic.updateX(self)
 
@@ -323,6 +361,9 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 							self.acc.x = 0
 
 		self.cBox = cBox
+
+		# Velocidad máxima de caída
+		if self.vel.y > 6: self.vel.y = 6
 
 		obj.physic.ObjPhysic.updateY(self)
 
