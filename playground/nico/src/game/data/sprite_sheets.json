@@ -22,5 +22,11 @@
 		"w": 16,
 		"h": 16,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/biblioteca.png",
+		"w": 16,
+		"h": 16,
+		"colorkey": null
 	}
 ]
