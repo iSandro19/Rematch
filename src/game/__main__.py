@@ -105,7 +105,7 @@ def main():
 						
 					elif event.key == K_LSHIFT:
 						# dash
-						#player.dash()
+						player.dash()
 						peon.attack(2)
 
 					elif event.key == K_e:
