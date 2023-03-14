@@ -83,6 +83,10 @@ def main():
 	obj.load('Bckgnd', 5, 0)
 	obj.load('VisibleArea', 5, 0)
 	
+	# Objetos sala catacumbas
+	obj.load('BckgndParallax', 1, 0)
+	obj.load('BckgndParallax', 2, 0)
+	obj.load('VisibleArea', 6, 0)
 
 	# Instanciar player para poder llamar las funciones
 
