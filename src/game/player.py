@@ -228,7 +228,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 							
 
 			# Colisión horizontal por la derecha
-			elif self._facingRight:
+			else:
 
 				xTR, yTR = self.cBox.topright
 				tlTR = tls[yTR,xTR]
@@ -255,13 +255,15 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		elif self.isInWall() and self._facingRight:
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
-			self.vel.x = -MAX_H_VEL*1.2
+			self.vel.x = -MAX_H_VEL*1.1
+			print(self.vel.x)
 			print("Rebotar hacia izquierda")
 		
 		elif self.isInWall() and (not self._facingRight):
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
-			self.vel.x = MAX_H_VEL*1.2
+			self.vel.x = MAX_H_VEL*1.1
+			print(self.vel.x)
 			print("Rebotar hacia derecha")
 			
 		elif self.doubleJump:
@@ -279,8 +281,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 	def stopMove(self):
 
-		self.vel.x = 0
-		self.acc.x = 0
+		# Condición necesaria para poder separarse de la pared si estar pulsando ningún botón, se le delega el frenado a las físicas
+		if (not self.isInWall()):
+			self.vel.x = 0
+			self.acc.x = 0
 
 	def moveLeft(self):
 
@@ -305,27 +309,35 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		else: 
 			self.acc.x = 0
 
-
+	# Inicia la acción de dasheo e inicia el contador
 	def dash(self):
 		if self.dashing == False:
 			self.dashing = True
 			self.counter = 30
 
+
+	# Se puede dashear cada 30 fps y solo una vez mientras estés en el aire
 	def dodash(self):
 
 		if self.counter > 0:
 			# Aumentar velocidad
 			if (self.vel.x > 0) & (self._facingRight) & (self.counter > 20):
 				self.vel.x  += H_ACC*2.5
+				self.vel.y = 0
 			elif (self.vel.x < 0) & (not self._facingRight) & (self.counter > 20):
 				self.vel.x  -= H_ACC*2.5
+				self.vel.y = 0
 
 			# Frenar el dash
 			elif (self.counter > 15) & (self.vel.x > 2.2):
 				self.vel.x -= H_ACC * 5
+				self.vel.y = 0
 			elif (self.counter > 15) & (self.vel.x < -2.2):
 				self.vel.x += H_ACC * 5
+				self.vel.y = 0
 
+			# Durante este tiempo, la velocida vertical no varía
+			
 			# Asegurarse de seguir a la maxima velocidad usual
 			elif (self.counter < 15) & (self.vel.x != 2.2) & (self.vel.x > 0):
 				self.vel.x = 2.2
@@ -333,7 +345,9 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 				self.vel.x = -2.2
 
 			self.counter -= 1
-		else: self.dashing = False
+
+		elif self.isInGround() or self.isInWall(): 
+			self.dashing = False
 			
 
 
@@ -344,7 +358,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 			self.dodash()
 
 		obj.physic.ObjPhysic.updateX(self)
-
 
 		cBox = self.cBox
 		
@@ -414,10 +427,11 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 		# Velocidad máxima de caída
 		if self.vel.y > 6: self.vel.y = 6
-		if self.isInWall() and (not self.isInGround()) and (self.vel.y >= 0):
-			self.vel.y = 1
 
-		print(self.vel.x)
+		# Físicas en pared
+		if self.isInWall() and (not self.isInGround()) and (self.vel.y > 0):
+			self.vel.y = 1
+			self.doubleJump = True
 
 		obj.physic.ObjPhysic.updateY(self)
 
