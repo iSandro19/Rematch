@@ -176,6 +176,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		#self._inGround = True
 		self._facingRight = True
 		self.doubleJump = True
+		#self._inWall = False
 
 		self.counter = 0
 		self.dashing = False
@@ -203,23 +204,72 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 				return True
 
 		return False
+	
+	def isInWall(self):
 
-
+		for tls in obj.getGroup(TileCollision):
 			
+			# Colisión horizontal por la izquierda
+			if not self._facingRight:
+			
+				xTL, yTL = self.cBox.topleft
+				tlTL = tls[yTL,xTL-1]
+
+				if tlTL.form == RECT:
+					return True
+					
+				else:
+
+					xCL, yCL = self.cBox.midleft
+					tlCL = tls[yCL, xCL-1]
+
+					if tlCL.form == RECT:
+						return True
+							
+
+			# Colisión horizontal por la derecha
+			elif self._facingRight:
+
+				xTR, yTR = self.cBox.topright
+				tlTR = tls[yTR,xTR]
+
+				if tlTR.form == RECT:
+					return True
+				else:
+
+					xCR, yCR = self.cBox.midright
+					tlCR = tls[yCR, xCR]
+
+					if tlCR.form == RECT:
+						return True
+		return False
+
 
 	def jump(self):
 
 		if self.isInGround():
-			#self._inGround = False
+			self._inGround = False
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
 
+		elif self.isInWall() and self._facingRight:
+			self.acc.y = V_ACC
+			self.vel.y = -JUMP_VEL
+			self.vel.x = -MAX_H_VEL*1.2
+			print("Rebotar hacia izquierda")
+		
+		elif self.isInWall() and (not self._facingRight):
+			self.acc.y = V_ACC
+			self.vel.y = -JUMP_VEL
+			self.vel.x = MAX_H_VEL*1.2
+			print("Rebotar hacia derecha")
+			
 		elif self.doubleJump:
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
-			#self.doubleJump = False
-
-
+			self.doubleJump = False
+		
+			
 	
 	def fall(self):	
 
@@ -284,17 +334,14 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 			self.counter -= 1
 		else: self.dashing = False
-		
-		
+			
+
 
 	def update(self):
 
 		# Controlar el dash
 		if self.dashing: 
 			self.dodash()
-
-		print("C ", self.counter)
-		print("Vel ", self.vel.x)
 
 		obj.physic.ObjPhysic.updateX(self)
 
@@ -312,6 +359,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					cBox.left = tlBL.rect.right
 					self.vel.x = 0
 					self.acc.x = 0
+
 				else:
 
 					xTL, yTL = self.cBox.topleft
@@ -321,6 +369,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 						cBox.left = tlBL.rect.right
 						self.vel.x = 0
 						self.acc.x = 0
+						
 					else:
 
 						xCL, yCL = self.cBox.midleft
@@ -330,6 +379,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 							cBox.left = tlBL.rect.right
 							self.vel.x = 0
 							self.acc.x = 0
+							
 
 			# Colisión horizontal por la derecha
 			elif self.vel.x > 0:
@@ -364,6 +414,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 		# Velocidad máxima de caída
 		if self.vel.y > 6: self.vel.y = 6
+		if self.isInWall() and (not self.isInGround()) and (self.vel.y >= 0):
+			self.vel.y = 1
+
+		print(self.vel.x)
 
 		obj.physic.ObjPhysic.updateY(self)
 
