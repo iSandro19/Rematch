@@ -77,11 +77,16 @@ def main():
 	# Objetos sala pasillo
 	obj.load('VisibleArea', 3, 0)
 	obj.load('VisibleArea', 4, 0)
+	obj.load('TileMap', 2, 0)
+	obj.load('TileCollision', 2, 0)
 	obj.load('Bckgnd', 4, 0)
 
 	# Objetos sala biblio
 	obj.load('Bckgnd', 5, 0)
 	obj.load('VisibleArea', 5, 0)
+	obj.load('TileMap', 3, 0)
+	obj.load('TileCollision', 3, 0)
+
 	
 	# Objetos sala catacumbas
 	obj.load('BckgndParallax', 1, 0)

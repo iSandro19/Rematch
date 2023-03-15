@@ -478,7 +478,7 @@ class ObjStaticR(Obj):
 				else:
 					return cls(HASH, FATHR_HASH, **obj)
 
-			raise ObjNotFoundError(self.TYPE, HASH)
+			raise ObjNotFoundError(cls, HASH)
 
 
 class ObjStaticRW(ObjStaticR):
