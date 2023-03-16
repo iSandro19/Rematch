@@ -34,5 +34,17 @@
 		"w": 16,
 		"h": 16,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/catacumbas.png",
+		"w": 16,
+		"h": 16,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Botones_MenuPausa.png",
+		"w": 16,
+		"h": 16,
+		"colorkey": null
 	}
 ]
