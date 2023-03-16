@@ -2,6 +2,7 @@ import pygame as pg
 from pygame.locals import *
 from typing import List, Dict, Tuple, Union, Callable
 import obj
+import game.room
 import game.tile
 import game.cam
 import game.player
@@ -49,49 +50,10 @@ def main():
 	assert pg.image.get_extended()
 
 	# Objetos independientes de la sala
-	obj.load('Cam', 0, 0)
-	obj.load('Control', 0, 0)
+	cam = obj.load('Cam', 0, 0)
 	player = obj.load('Player', 0, 0)
-	peon = obj.load('Peon', 0, 0)
 
-	# Objetos sala jardin
-	obj.load('VisibleArea', 0, 0)
-	obj.load('TileMap', 0, 0)
-	obj.load('TileCollision', 0, 0)
-	obj.load('Bckgnd', 0, 0)
-	obj.load('BckgndParallax', 0, 0)
-	
-	# Objetos sala central del castillo
-	obj.load('VisibleArea', 1, 0)
-	obj.load('TileMap', 1, 0)
-	obj.load('TileCollision', 1, 0)
-	obj.load('Bckgnd', 1, 0)
-	obj.load('Bckgnd', 2, 0)
-	#obj.load('BckgndParallax', 0, 0)
-
-	# Objetos sala torre
-	obj.load('VisibleArea', 2, 0)
-	obj.load('Bckgnd', 2, 0)
-	obj.load('Bckgnd', 3, 0)
-
-	# Objetos sala pasillo
-	obj.load('VisibleArea', 3, 0)
-	obj.load('VisibleArea', 4, 0)
-	obj.load('TileMap', 2, 0)
-	obj.load('TileCollision', 2, 0)
-	obj.load('Bckgnd', 4, 0)
-
-	# Objetos sala biblio
-	obj.load('Bckgnd', 5, 0)
-	obj.load('VisibleArea', 5, 0)
-	obj.load('TileMap', 3, 0)
-	obj.load('TileCollision', 3, 0)
-
-	
-	# Objetos sala catacumbas
-	obj.load('BckgndParallax', 1, 0)
-	obj.load('BckgndParallax', 2, 0)
-	obj.load('VisibleArea', 6, 0)
+	roomDir = obj.load('RoomDirector', 0, 0)
 
 	# Instanciar player para poder llamar las funciones
 
@@ -102,6 +64,10 @@ def main():
 		for event in pg.event.get():
 			if event.type == pg.QUIT:
 				notExit = False
+				cam.close()
+				player.close()
+				roomDir.close()
+
 			
 			if gameScreen == 0:
 				gameScreen = 1
@@ -115,7 +81,6 @@ def main():
 					elif event.key == K_LSHIFT:
 						# dash
 						player.dash()
-						peon.attack(2)
 
 					elif event.key == K_e:
 						
@@ -136,6 +101,8 @@ def main():
 
 					elif event.key == K_ESCAPE:
 						player.active = False
+						cam.active = False
+						roomDir.active = False
 						gameScreen = 2
 				
 				elif event.type == KEYUP:
@@ -146,6 +113,8 @@ def main():
 				if event.type == KEYDOWN:
 					if event.key == K_ESCAPE:
 						player.active = True
+						cam.active = True
+						roomDir.active = True
 						gameScreen = 1
 	
 		if gameScreen == 0:
@@ -153,8 +122,6 @@ def main():
 			a = 1
 
 		elif gameScreen == 1:
-
-			wind.fill((128, 128, 128))
 
 			keys = pg.key.get_pressed()
 
@@ -170,9 +137,10 @@ def main():
 			else: player.stopMove()
 
 
-			obj.update()
+		obj.update()
 
-			obj.draw()
+		#wind.fill((128, 128, 128))
+		obj.draw()
 
 		pg.display.flip()
 		clock.tick(FPS)

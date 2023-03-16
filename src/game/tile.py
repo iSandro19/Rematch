@@ -100,7 +100,7 @@ class TileMap(obj.ObjStaticR, obj.physic.ObjRelative, obj.sprite.ObjSprite):
 		
 
 	def close(self):
-		self._sprtSht.watch()
+		self._sprtSht.leave()
 		obj.ObjStaticR.close(self)
 
 

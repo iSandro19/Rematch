@@ -37,6 +37,7 @@ class Bckgnd(obj.ObjStaticR, obj.physic.ObjRelative):
 
 	def close(self):
 		self.surf.leave()
+		obj.Obj.close(self)
 
 try:
 	obj.getGroup(Bckgnd)
@@ -77,6 +78,7 @@ class BckgndParallax(obj.ObjStaticR, obj.physic.ObjParallax):
 
 	def close(self):
 		self.surf.leave()
+		obj.Obj.close(self)
 
 try:
 	obj.getGroup(BckgndParallax)

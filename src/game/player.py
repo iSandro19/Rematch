@@ -136,13 +136,11 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		self,
 		HASH,
 		FATHR_HASH,
-		controlHash,
 		sprtShtHash,
 		camHash,
 		x,
 		y
 	):
-		self._control = obj.getGroup(Control)[controlHash]
 
 		try:
 			self._sprtSht = obj.getGroup(SpriteSheet)[sprtShtHash]
@@ -293,8 +291,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		if self.dashing: 
 			self.dodash()
 
-		print("C ", self.counter)
-		print("Vel ", self.vel.x)
+		#print("C ", self.counter)
+		#print("Vel ", self.vel.x)
 
 		obj.physic.ObjPhysic.updateX(self)
 
@@ -498,6 +496,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 	def close(self):
 		#self.save()
 		self._sprtSht.leave()
+		obj.Obj.close(self)
 
 
 try:

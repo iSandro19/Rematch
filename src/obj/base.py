@@ -470,15 +470,19 @@ class ObjStaticR(Obj):
 		Metodo estatico de la clase derivada que crea e inicializa una nueva
 		instancia con los argumentos guardados en el json 'GRP_FILE'. 
 		"""
-		with open(cls.GRP_FILE, "r") as fp:
-			i = 0
-			for obj in ijson.items(fp, "item"):
-				if i < HASH:
-					i += 1
-				else:
-					return cls(HASH, FATHR_HASH, **obj)
+		try:
+			return getGroup(cls)[HASH]
+			
+		except ObjNotFoundError:
+			with open(cls.GRP_FILE, "r") as fp:
+				i = 0
+				for obj in ijson.items(fp, "item"):
+					if i < HASH:
+						i += 1
+					else:
+						return cls(HASH, FATHR_HASH, **obj)
 
-			raise ObjNotFoundError(cls, HASH)
+				raise ObjNotFoundError(cls, HASH)
 
 
 class ObjStaticRW(ObjStaticR):
