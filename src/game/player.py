@@ -5,7 +5,6 @@ from game.image import SpriteSheet
 from game.control import Control
 from game.tile import TileCollision, RECT
 
-
 ANIMS = {
 	"standRight": obj.sprite.Animation(
 		(
@@ -178,11 +177,11 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 		self.counter = 0
 		self.dashing = False
+		self.attacking = False
 
 
 	# Función para detectar si el jugador está en el suelo o no y actualizar su valor
 	def isInGround(self):
-
 		for tls in obj.getGroup(TileCollision):
 
 			# Primero miramos a la derecha, si no hay nada a la izquierda y si no, pues no está en el suelo
@@ -204,12 +203,9 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		return False
 	
 	def isInWall(self):
-
 		for tls in obj.getGroup(TileCollision):
-			
 			# Colisión horizontal por la izquierda
 			if not self._facingRight:
-			
 				xTL, yTL = self.cBox.topleft
 				tlTL = tls[yTL,xTL-1]
 
@@ -217,7 +213,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					return True
 					
 				else:
-
 					xCL, yCL = self.cBox.midleft
 					tlCL = tls[yCL, xCL-1]
 
@@ -227,14 +222,12 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 			# Colisión horizontal por la derecha
 			else:
-
 				xTR, yTR = self.cBox.topright
 				tlTR = tls[yTR,xTR]
 
 				if tlTR.form == RECT:
 					return True
 				else:
-
 					xCR, yCR = self.cBox.midright
 					tlCR = tls[yCR, xCR]
 
@@ -244,7 +237,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 
 	def jump(self):
-
 		if self.isInGround():
 			self._inGround = False
 			self.acc.y = V_ACC
@@ -272,20 +264,17 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 			
 	
 	def fall(self):	
-
 		if self.vel.y < 0:
 			self.vel.y = 0
 
 
 	def stopMove(self):
-
 		# Condición necesaria para poder separarse de la pared si estar pulsando ningún botón, se le delega el frenado a las físicas
 		if (not self.isInWall()):
 			self.vel.x = 0
 			self.acc.x = 0
 
 	def moveLeft(self):
-
 		self._facingRight = False
 
 		self.acc.y = V_ACC
@@ -297,7 +286,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		
 
 	def moveRight(self):
-
 		self._facingRight = True
 
 		self.acc.y = V_ACC
@@ -316,7 +304,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 	# Se puede dashear cada 30 fps y solo una vez mientras estés en el aire
 	def dodash(self):
-
 		if self.counter > 0:
 			# Aumentar velocidad
 			if (self.vel.x > 0) & (self._facingRight) & (self.counter > 20):
@@ -347,10 +334,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		elif self.isInGround() or self.isInWall(): 
 			self.dashing = False
 			
-
+	def basic_attack(self):
+		self.attacking = True
 
 	def update(self):
-
 		# Controlar el dash
 		if self.dashing: 
 			self.dodash()
@@ -360,7 +347,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		cBox = self.cBox
 		
 		for tls in obj.getGroup(TileCollision):
-			
 			# Colisión horizontal por la izquierda
 			if self.vel.x < 0:
 				xBL, yBL = self.cBox.bottomleft
@@ -372,7 +358,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					self.acc.x = 0
 
 				else:
-
 					xTL, yTL = self.cBox.topleft
 					tlTL = tls[yTL,xTL-1]
 
@@ -382,7 +367,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 						self.acc.x = 0
 						
 					else:
-
 						xCL, yCL = self.cBox.midleft
 						tlCL = tls[yCL, xCL-1]
 
@@ -394,7 +378,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 
 			# Colisión horizontal por la derecha
 			elif self.vel.x > 0:
-
 				xBR, yBR = self.cBox.bottomright
 				tlBR = tls[yBR-1,xBR]
 
@@ -403,7 +386,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					self.vel.x = 0
 					self.acc.x = 0
 				else:
-
 					xTR, yTR = self.cBox.topright
 					tlTR = tls[yTR,xTR]
 
@@ -412,7 +394,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 						self.vel.x = 0
 						self.acc.x = 0
 					else:
-
 						xCR, yCR = self.cBox.midright
 						tlCR = tls[yCR, xCR]
 
@@ -436,11 +417,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		cBox = self.cBox
 
 		# Colisiones verticales
-
 		for tls in obj.getGroup(TileCollision):
-	
 			if self.vel.y > 0:
-
 				x, y = cBox.bottomright
 				tl = tls[y,x-1]	# pygame, en los bottom, devuelve el punto externo (xd)
 
@@ -450,7 +428,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					self.acc.y = 0
 
 				else:
-
 					x, y = cBox.bottomleft
 					tl = tls[y,x]
 
@@ -460,7 +437,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 						self.acc.y = 0
 			
 			elif self.vel.y < 0:
-
 				x, y = cBox.topright
 				tl = tls[y-1,x-1]	
 
@@ -469,14 +445,12 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					self.vel.y = 0
 
 				else:
-
 					x, y = cBox.topleft
 					tl = tls[y-1,x]
 
 					if tl.form == RECT:
 						cBox.top = tl.rect.bottom
 						self.vel.y = 0
-
 
 		self.cBox = cBox
 
@@ -566,14 +540,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		self._sprtSht.leave()
 		obj.Obj.close(self)
 
-
 try:
 	obj.getGroup(Player)
 except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Player))
-
-
-
 
 class Test(obj.ObjDynamic, obj.ObjUpdate):
 	UPDT_POS=0
@@ -598,4 +568,3 @@ try:
 	obj.getGroup(Test)
 except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Test))
-
