@@ -41,7 +41,6 @@ def main():
 	notExit = True	# Bucle de eventos
 	gameScreen = 0 	# Si estamos en el menú (0), en gameplay (1) o pausados (2)
 
-
 	clock = pg.time.Clock()
 	wind = pg.display.get_surface()
 	rect = pg.Rect(0,0,128,72)
