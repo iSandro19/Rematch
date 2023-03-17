@@ -9,7 +9,7 @@
 		"file": "game/images/magnus.png",
 		"w": 40,
 		"h": 40,
-		"colorkey": [255,0,0]
+		"colorkey": null
 	},
 	{
 		"file": "game/images/bosque.png",
