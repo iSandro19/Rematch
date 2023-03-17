@@ -143,6 +143,14 @@
 						"hash": 6
 					},
 					{
+						"type": "TileMap",
+						"hash": 5
+					},
+					{
+						"type": "TileCollision",
+						"hash": 5
+					},
+					{
 						"type": "BckgndParallax",
 						"hash": 1
 					},
