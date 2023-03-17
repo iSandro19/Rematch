@@ -1,0 +1,165 @@
+[
+	{
+		"camHash": 0,
+		"rooms": [
+			{
+				"rect": [0,0,688,1344],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 0
+					},
+					{
+						"type": "TileMap",
+						"hash": 0
+					},
+					{
+						"type": "TileCollision",
+						"hash": 0
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 0
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 0
+					},
+					{
+						"type": "Peon",
+						"hash": 0
+					}
+				]
+			},
+			{
+				"rect": [656,736,448,352],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 1
+					},
+					{
+						"type": "TileMap",
+						"hash": 1
+					},
+					{
+						"type": "TileCollision",
+						"hash": 1
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 1
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 2
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 0
+					}
+				]
+			},
+			{
+				"rect": [624,0,480,768],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 2
+					},
+					{
+						"type": "TileMap",
+						"hash": 4
+					},
+					{
+						"type": "TileCollision",
+						"hash": 4
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 2
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 3
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 0
+					}
+				]
+			},
+			{
+				"rect": [1072,928,640,304],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 3
+					},
+					{
+						"type": "VisibleArea",
+						"hash": 4
+					},
+					{
+						"type": "TileMap",
+						"hash": 2
+					},
+					{
+						"type": "TileCollision",
+						"hash": 2
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 4
+					}
+				]
+			},
+			{
+				"rect": [1680,704,672,384],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 5
+					},
+					{
+						"type": "TileMap",
+						"hash": 3
+					},
+					{
+						"type": "TileCollision",
+						"hash": 3
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 5
+					}
+				]
+			},
+			{
+				"rect": [1232,1184,1312,800],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 6
+					},
+					{
+						"type": "TileMap",
+						"hash": 5
+					},
+					{
+						"type": "TileCollision",
+						"hash": 5
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 1
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 2
+					}
+				]
+			}
+		]
+	}
+]
