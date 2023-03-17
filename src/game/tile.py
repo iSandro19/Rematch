@@ -8,7 +8,7 @@ import numpy as np
 import json
 
 class TileMap(obj.ObjStaticR, obj.physic.ObjRelative, obj.sprite.ObjSprite):
-	DRAW_LAYER = 20
+	DRAW_LAYER = 7
 	GRP_FILE = "game/data/tile_maps.json"
 	
 	def __init__(

@@ -6,7 +6,7 @@ import sys
 import tileditor
 import game.image
 
-FPS = 60
+FPS = 10
 
 def main(argc, argv):
 	if argc < 5:
