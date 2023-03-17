@@ -2,6 +2,7 @@ import pygame as pg
 from pygame.locals import *
 from typing import List, Dict, Tuple, Union, Callable
 import obj
+import game.room
 import game.tile
 import game.cam
 import game.player
@@ -9,11 +10,9 @@ import game.control
 import game.bckgnd
 import game.enemy
 
-
 WIND_SIZE = 256,144
 FPS = 60
 WAIT_TIME = 200		# Tiempo a partir del cual se detecta Pulsado Largo en una tecla
-
 
 # Función para determinar si una tecla es pulsada de forma larga o corta
 def tiempoPulsacion(key):
@@ -32,15 +31,15 @@ def tiempoPulsacion(key):
 	# Pulsación corta
 	return False
 
-
 def main():
 	pg.display.init()
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
+	icon = pg.image.load('../assets/logo/icono.png')
+	pg.display.set_icon(icon)
 
 	# Variables para control
 	notExit = True	# Bucle de eventos
 	gameScreen = 0 	# Si estamos en el menú (0), en gameplay (1) o pausados (2)
-
 
 	clock = pg.time.Clock()
 	wind = pg.display.get_surface()
@@ -49,58 +48,24 @@ def main():
 	assert pg.image.get_extended()
 
 	# Objetos independientes de la sala
-	obj.load('Cam', 0, 0)
-	obj.load('Control', 0, 0)
+	cam = obj.load('Cam', 0, 0)
 	player = obj.load('Player', 0, 0)
-	peon = obj.load('Peon', 0, 0)
 
-	# Objetos sala jardin
-	obj.load('VisibleArea', 0, 0)
-	obj.load('TileMap', 0, 0)
-	obj.load('TileCollision', 0, 0)
-	obj.load('Bckgnd', 0, 0)
-	obj.load('BckgndParallax', 0, 0)
-	
-	# Objetos sala central del castillo
-	obj.load('VisibleArea', 1, 0)
-	obj.load('TileMap', 1, 0)
-	obj.load('TileCollision', 1, 0)
-	obj.load('Bckgnd', 1, 0)
-	obj.load('Bckgnd', 2, 0)
-	#obj.load('BckgndParallax', 0, 0)
-
-	# Objetos sala torre
-	obj.load('VisibleArea', 2, 0)
-	obj.load('Bckgnd', 2, 0)
-	obj.load('Bckgnd', 3, 0)
-
-	# Objetos sala pasillo
-	obj.load('VisibleArea', 3, 0)
-	obj.load('VisibleArea', 4, 0)
-	obj.load('Bckgnd', 4, 0)
-
-	# Objetos sala biblio
-	obj.load('Bckgnd', 5, 0)
-	obj.load('VisibleArea', 5, 0)
-	
-	# Objetos sala catacumbas
-	obj.load('BckgndParallax', 1, 0)
-	obj.load('BckgndParallax', 2, 0)
-	obj.load('VisibleArea', 6, 0)
+	roomDir = obj.load('RoomDirector', 0, 0)
 
 	# Instanciar player para poder llamar las funciones
-
 	while notExit:
-
 		# Faltan los inputs que dependen de objetos en la pantalla (menú y pantalla de pausa)
-		# Los a=1 son solo para evitar que de error el if, al tener las funciones hechas quitarlo
 		for event in pg.event.get():
 			if event.type == pg.QUIT:
 				notExit = False
+				cam.close()
+				player.close()
+				roomDir.close()
 			
 			if gameScreen == 0:
 				gameScreen = 1
-				#Etc
+
 			elif gameScreen == 1:
 				if event.type == KEYDOWN:
 					if event.key == K_SPACE:
@@ -110,27 +75,14 @@ def main():
 					elif event.key == K_LSHIFT:
 						# dash
 						player.dash()
-						peon.attack(2)
 
 					elif event.key == K_e:
-						
-						if tiempoPulsacion(event.key):
-							a = 1
-							#ataque1
-
-						else: #ataque2
-							a = 1
-					
-					elif event.key == K_q:
-
-						if tiempoPulsacion(event.key):
-							a = 1
-							#ataque3
-						else: #ataque4
-							a = 1
+						player.basic_attack()
 
 					elif event.key == K_ESCAPE:
 						player.active = False
+						cam.active = False
+						roomDir.active = False
 						gameScreen = 2
 				
 				elif event.type == KEYUP:
@@ -141,16 +93,14 @@ def main():
 				if event.type == KEYDOWN:
 					if event.key == K_ESCAPE:
 						player.active = True
+						cam.active = True
+						roomDir.active = True
 						gameScreen = 1
 	
 		if gameScreen == 0:
-
-			a = 1
+			pass
 
 		elif gameScreen == 1:
-
-			wind.fill((128, 128, 128))
-
 			keys = pg.key.get_pressed()
 
 			if keys[pg.K_LEFT] and keys[pg.K_RIGHT]:
@@ -164,10 +114,10 @@ def main():
 
 			else: player.stopMove()
 
+		obj.update()
 
-			obj.update()
-
-			obj.draw()
+		#wind.fill((128, 128, 128))
+		obj.draw()
 
 		pg.display.flip()
 		clock.tick(FPS)
@@ -176,9 +126,5 @@ def main():
 
 	return 0
 
-
 if __name__ == '__main__':
 	main()
-
-
-
