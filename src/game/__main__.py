@@ -36,6 +36,7 @@ def main():
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
 	icon = pg.image.load('../assets/logo/icono.png')
 	pg.display.set_icon(icon)
+	pg.display.set_caption("Rematch 2D", "Rematch 2D")
 
 	# Variables para control
 	notExit = True	# Bucle de eventos
