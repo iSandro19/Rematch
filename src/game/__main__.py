@@ -34,8 +34,8 @@ def tiempoPulsacion(key):
 def main():
 	pg.display.init()
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
-	pygame_icon = pygame.image.load('#Enter the image')
-	pygame.display.set_icon(pygame_icon)
+	icon = pg.image.load('../assets/logo/icono.png')
+	pg.display.set_icon(icon)
 
 	# Variables para control
 	notExit = True	# Bucle de eventos
