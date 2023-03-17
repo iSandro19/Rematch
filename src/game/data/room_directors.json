@@ -2,7 +2,7 @@
 	{
 		"camHash": 0,
 		"rooms": [
-			{// Jardín
+			{
 				"rect": [0,0,688,1344],
 				"objs": [
 					{
@@ -31,7 +31,7 @@
 					}
 				]
 			},
-			{// Centro
+			{
 				"rect": [656,736,448,352],
 				"objs": [
 					{
@@ -60,12 +60,20 @@
 					}
 				]
 			},
-			{// Torre
+			{
 				"rect": [624,0,480,768],
 				"objs": [
 					{
 						"type": "VisibleArea",
 						"hash": 2
+					},
+					{
+						"type": "TileMap",
+						"hash": 4
+					},
+					{
+						"type": "TileCollision",
+						"hash": 4
 					},
 					{
 						"type": "Bckgnd",
@@ -81,7 +89,7 @@
 					}
 				]
 			},
-			{// Pasillo
+			{
 				"rect": [1072,928,640,304],
 				"objs": [
 					{
@@ -106,7 +114,7 @@
 					}
 				]
 			},
-			{// Biblioteca
+			{
 				"rect": [1680,704,672,384],
 				"objs": [
 					{
@@ -127,7 +135,7 @@
 					}
 				]
 			},
-			{// Catacumbas
+			{
 				"rect": [1232,1184,1312,800],
 				"objs": [
 					{
