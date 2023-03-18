@@ -15,6 +15,11 @@ WIND_SIZE = 256,144
 FPS = 60
 WAIT_TIME = 200		# Tiempo a partir del cual se detecta Pulsado Largo en una tecla
 
+INTRO = 0
+GAME  = 1
+PAUSE = 2
+
+
 def main():
 	pg.display.init()
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
@@ -42,33 +47,36 @@ def main():
 	while notExit:
 		# Faltan los inputs que dependen de objetos en la pantalla (menú y pantalla de pausa)
 		for event in pg.event.get():
-			if event.type == pg.QUIT:
-				notExit = False
-				
-				mainMenu.close()
+			if gameScreen == INTRO:
+				if event.type == pg.QUIT:
+					mainMenu.close()
 
-				if(cam != None):
-					cam.close()
-					player.close()
-					roomDir.close()
-			
-			if gameScreen == 0:
-				if event.type == MOUSEBUTTONDOWN:
+					notExit = False
+
+				elif event.type == MOUSEBUTTONDOWN:
 					if mainMenu.botonC.isSelected():
 							# Objetos independientes de la sala
 						cam = obj.load('Cam', 0, 0)
 						player = obj.load('Player', 0, 0)
 						roomDir = obj.load('RoomDirector', 0, 0)
-						gameScreen = 1
 						mainMenu.close()
+
+						gameScreen = GAME
 
 					elif mainMenu.botonS.isSelected():
-						notExit = False
 						mainMenu.close()
+
 						notExit = False
 
-			elif gameScreen == 1:
-				if event.type == KEYDOWN:
+			elif gameScreen == GAME:
+				if event.type == pg.QUIT:
+					cam.close()
+					player.close()
+					roomDir.close()
+
+					notExit = False
+
+				elif event.type == KEYDOWN:
 					if event.key == K_SPACE:
 						#jump and double jump
 						player.jump()
@@ -85,40 +93,51 @@ def main():
 						cam.active = False
 						roomDir.active = False
 						pauseMenu = game.menus.PauseMenu(0)
-						gameScreen = 2
+
+						gameScreen = PAUSE
 				
 				elif event.type == KEYUP:
 					if event.key == K_SPACE:
 						player.fall()
 
-			elif gameScreen == 2:
-				if event.type == KEYDOWN:
+			elif gameScreen == PAUSE:
+				if event.type == pg.QUIT:
+					cam.close()
+					player.close()
+					roomDir.close()
+					pauseMenu.close()
+
+					notExit = False
+
+				elif event.type == KEYDOWN:
 					if event.key == K_ESCAPE:
 						player.active = True
 						cam.active = True
 						roomDir.active = True
-						gameScreen = 1
 						pauseMenu.close()
 
-				if event.type == MOUSEBUTTONDOWN:
+						gameScreen = GAME
+
+				elif event.type == MOUSEBUTTONDOWN:
 					if pauseMenu.botonC.isSelected():
 						player.active = True
 						cam.active = True
 						roomDir.active = True
-						gameScreen = 1
 						pauseMenu.close()
 
+						gameScreen = GAME
+
 					elif pauseMenu.botonS.isSelected():
-						notExit = False
 						cam.close()
 						player.close()
 						roomDir.close()
 						pauseMenu.close()
+
 						notExit = False
 						#gameScreen = 0
 
 
-		if gameScreen == 1:
+		if gameScreen == GAME:
 			keys = pg.key.get_pressed()
 
 			if keys[pg.K_LEFT] and keys[pg.K_RIGHT]:
