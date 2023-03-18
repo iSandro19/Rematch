@@ -63,6 +63,6 @@ class ObjAlive(obj.physic.ObjRelative):
 			self._hitBoxH
 		)
 
-	#@abstractmethod
+	@abstractmethod
 	def attack(self, dmg):
 		pass

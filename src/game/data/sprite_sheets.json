@@ -64,5 +64,11 @@
 		"w": 176,
 		"h": 32,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/stand.png",
+		"w": 80,
+		"h": 80,
+		"colorkey": [255,0,0]
 	}
 ]

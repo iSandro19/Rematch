@@ -2,7 +2,7 @@
 	{
 		"surfHash": 2,
 		"camHash": 0,
-		"Z_OFFSET": 0.1,
+		"Z_OFFSET": 0.05,
 		"x": 0,
 		"y": 0
 	},
@@ -19,5 +19,12 @@
 		"Z_OFFSET": 0.1,
 		"x": 120,
 		"y": 120
+	},
+	{
+		"surfHash": 11,
+		"camHash": 0,
+		"Z_OFFSET": 0.1,
+		"x": 0,
+		"y": 0
 	}
 ]

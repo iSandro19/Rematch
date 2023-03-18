@@ -5,6 +5,7 @@ from game.image import SpriteSheet
 from game.control import Control
 from game.tile import TileCollision, RECT
 from game.alive import ObjAlive
+from game.stand import Stand
 
 ANIMS = {
 	"standRight": obj.sprite.Animation(
@@ -136,6 +137,12 @@ HIT_INVUL_TIME = 64
 
 life = 3
 maxLife = 3
+LIFE_REGEN_TIME = 256
+
+STAND_OFFSET_H = 10
+STAND_OFFSET_V = 34
+
+ATTACK_COOLDOWN = 64
 
 
 class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive): 
@@ -205,14 +212,18 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 		self.counter = 0
 		self.dashing = False
-		self.attacking = False
+		self.attackCnt = 0
 
 		self.attackedCnt = 0
+		self.regenCnt = 0
 
 		self._ui = UI(0, self.life, self.maxLife)
 
+		self.stand = None
+
 	def attack(self, dmg):
-		if self.attackedCnt == 0:
+		if not self.dashing and self.attackedCnt == 0:
+			self.regenCnt = 0
 			self.life -= dmg
 			self.attackedCnt = HIT_INVUL_TIME
 			self._ui.updateLife(self.life)
@@ -335,6 +346,11 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			self.dashing = True
 			self.counter = 30
 
+			if self._facingRight:
+				self.stand = Stand(hash(self), "lanceRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+			else:
+				self.stand = Stand(hash(self), "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+
 
 	# Se puede dashear cada 30 fps y solo una vez mientras estés en el aire
 	def dodash(self):
@@ -369,9 +385,48 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			self.dashing = False
 			
 	def basic_attack(self):
-		self.attacking = True
+		if self.attackCnt == 0:
+			if self._facingRight:
+				self.stand = Stand(hash(self), "basicRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+			else:
+				self.stand = Stand(hash(self), "basicLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+
+			self.attackCnt = ATTACK_COOLDOWN
+
+	def rotatory_attack(self):
+		if self.attackCnt == 0:
+			if self._facingRight:
+				self.stand = Stand(hash(self), "rotatoryRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+			else:
+				self.stand = Stand(hash(self), "rotatoryLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+
+			self.attackCnt = ATTACK_COOLDOWN
+
+	@property
+	def active(self):
+		return self._active
+
+	@active.setter
+	def active(self, value):
+		if self.stand:
+			self.stand.active = value
+
+		self._active = value
+	
 
 	def update(self):
+		if self.attackCnt != 0:
+			self.attackCnt -= 1
+
+		if self.life < self.maxLife:
+			if self.regenCnt < LIFE_REGEN_TIME:
+				self.regenCnt += 1
+			else:
+				self.regenCnt = 0
+				self.life += 1
+				self._ui.updateLife(self.life)
+
+
 		# Controlar el dash
 		if self.dashing: 
 			self.dodash()
@@ -494,6 +549,18 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 		self._cam.center = self.cBox.center
 		self._cam.correctPos()
 
+		if self.stand and self.dashing:
+			if self.stand.active:
+				if self._facingRight:
+					self.stand.pos.x = self.pos.x-STAND_OFFSET_H
+					self.stand.pos.y = self.pos.y-STAND_OFFSET_V
+
+				else:
+					self.stand.pos.x = self.pos.x-IMG_W+STAND_OFFSET_H
+					self.stand.pos.y = self.pos.y-STAND_OFFSET_V
+			else:
+				self.stand = None
+
 
 	def draw(self):
 		if self.isInGround():
@@ -576,6 +643,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 	def close(self):
 		#self.save()
+
+		if self.stand and self.stand.active:
+			self.stand.close()
+
 		self._sprtSht.leave()
 		self._ui.close()
 		obj.Obj.close(self)
@@ -605,10 +676,28 @@ class LifePoint(obj.ObjDynamic, obj.sprite.ObjSprite):
 		self._number = number
 		self.frame = obj.sprite.Frame(0,0)
 
+		self.regen = False
+		self.blinkCnt = 0
+
 
 	def updateLife(self, life):
 		if life < self._number:
 			self.frame = obj.sprite.Frame(1,0)
+			self.regen = life+1 == self._number
+			self.blinkCnt = 16
+		else:
+			self.frame = obj.sprite.Frame(0,0)
+			self.regen = False
+
+	def draw(self):
+		if self.regen:
+			if self.blinkCnt != 0:
+				self.frame = obj.sprite.Frame(0,0) if self.blinkCnt >= 8 else obj.sprite.Frame(1,0)
+				self.blinkCnt -= 1
+			else:
+				self.blinkCnt = 16
+
+		obj.sprite.ObjSprite.draw(self)
 
 try:
 	obj.getGroup(LifePoint)

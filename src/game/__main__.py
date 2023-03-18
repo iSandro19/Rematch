@@ -81,6 +81,9 @@ def main():
 					elif event.key == K_e:
 						player.basic_attack()
 
+					elif event.key == K_w:
+						player.rotatory_attack()
+
 					elif event.key == K_ESCAPE:
 						player.active = False
 						cam.active = False

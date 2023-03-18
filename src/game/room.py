@@ -17,18 +17,27 @@ def _pauseObjs(room, rooms):
 				break
 	
 		if single:
-			obj.getGroup(o["type"])[o["hash"]].active = False
+			try:
+				obj.getGroup(o["type"])[o["hash"]].active = False
+			except obj.ObjNotFoundError:
+				pass
 
 def _resumeObjs(objs):
 	for objIDs in objs:
-		obj.getGroup(objIDs["type"])[objIDs["hash"]].active = True
+		try:
+			obj.getGroup(objIDs["type"])[objIDs["hash"]].active = True
+		except obj.ObjNotFoundError:
+			pass
 
 def _saveObjs(objs):
 	for objIDs in objs:
 		grp = obj.getGroup(objIDs["type"])
 
 		if issubclass(grp.TYPE, obj.ObjStaticRW):
-			grp[objIDs["hash"]].save()
+			try:
+				grp[objIDs["hash"]].save()
+			except obj.ObjNotFoundError:
+				pass
 
 def _closeObjs(room, rooms):
 	if room in rooms:
@@ -57,7 +66,7 @@ def _loadObjs(objs, FATHR_HASH):
 class RoomDirector(obj.ObjStaticR, obj.ObjUpdate):
 	UPDT_POS = 0
 	GRP_FILE = "game/data/room_directors.json"
-	MAX_ROOMS = 4
+	MAX_ROOMS = 3
 
 	def __init__(self, HASH, FATHR_HASH, rooms, camHash):
 		obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)
