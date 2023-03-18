@@ -140,6 +140,10 @@
 				"objs": [
 					{
 						"type": "VisibleArea",
+						"hash": 7
+					},
+					{
+						"type": "VisibleArea",
 						"hash": 6
 					},
 					{

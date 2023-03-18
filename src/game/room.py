@@ -77,7 +77,7 @@ class RoomDirector(obj.ObjStaticR, obj.ObjUpdate):
 				_resumeObjs(room["objs"])
 		else:
 			for room in self._activeRooms:
-				_pauseObjs(room, self._activeRooms)
+				_pauseObjs(room, [])
 
 		self._active = value
 
