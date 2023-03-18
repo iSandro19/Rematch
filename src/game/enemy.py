@@ -3,6 +3,7 @@ from game.image import SpriteSheet
 from game.cam import Cam
 from game.alive import ObjAlive
 from game.tile import TileCollision, VOID, RECT
+from game.player import Player
 from abc import abstractmethod
 import pygame as pg
 
@@ -137,6 +138,10 @@ class Ficha(
 					self._facingRight = True
 
 			self.pos.x += H_VEL if self._facingRight else -H_VEL
+
+		for player in obj.getGroup(Player):
+			if player.hitBox.colliderect(self.hitBox):
+				player.attack(self._dmg)
 
 	def draw(self):
 		if self._facingRight:

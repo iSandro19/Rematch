@@ -64,5 +64,5 @@ class ObjAlive(obj.physic.ObjRelative):
 		)
 
 	#@abstractmethod
-	def attact(self, dmg):
+	def attack(self, dmg):
 		pass

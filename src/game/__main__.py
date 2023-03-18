@@ -29,7 +29,7 @@ def main():
 
 	# Variables para control
 	notExit = True	# Bucle de eventos
-	gameScreen = 0 	# Si estamos en el menú (0), en gameplay (1) o pausados (2)
+	gameScreen = INTRO 	# Si estamos en el menú (0), en gameplay (1) o pausados (2)
 
 	clock = pg.time.Clock()
 	wind = pg.display.get_surface()
@@ -151,10 +151,22 @@ def main():
 
 			else: player.stopMove()
 
+
+
 		obj.update()
 
 		#wind.fill((128, 128, 128))
 		obj.draw()
+
+		if gameScreen == GAME:
+			if player.life <= 0:
+				cam.close()
+				player.close()
+				roomDir.close()
+
+				mainMenu = game.menus.PauseMenu(0)
+
+				gameScreen = INTRO
 
 		pg.display.flip()
 		clock.tick(FPS)

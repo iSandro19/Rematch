@@ -4,6 +4,7 @@ from game.cam import Cam
 from game.image import SpriteSheet
 from game.control import Control
 from game.tile import TileCollision, RECT
+from game.alive import ObjAlive
 
 ANIMS = {
 	"standRight": obj.sprite.Animation(
@@ -126,7 +127,18 @@ V_ACC = 0.2
 
 JUMP_VEL = 5
 
-class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim): 
+HIT_OFFSET_H = 12
+HIT_OFFSET_W = 8
+HIT_BOX_W = 16
+HIT_BOX_H = 32
+
+HIT_INVUL_TIME = 64
+
+life = 3
+maxLife = 3
+
+
+class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive): 
 	GRP_FILE = "game/data/players.json"
 	UPDT_POS = 1
 	DRAW_LAYER = 9
@@ -150,6 +162,22 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		self._cam = obj.getGroup(Cam)[camHash]
 
 		obj.state.ObjState.__init__(self, HASH, FATHR_HASH)
+		ObjAlive.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			None,
+			IMG_W,
+			IMG_H,
+			self._cam,
+			pg.math.Vector2(x, y),
+			life,
+			maxLife,
+			HIT_OFFSET_H,
+			HIT_OFFSET_W,
+			HIT_BOX_W,
+			HIT_BOX_H
+		)
 		obj.physic.ObjPhysic.__init__(
 			self,
 			HASH,
@@ -178,6 +206,16 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		self.counter = 0
 		self.dashing = False
 		self.attacking = False
+
+		self.attackedCnt = 0
+
+		self._ui = UI(0, self.life, self.maxLife)
+
+	def attack(self, dmg):
+		if self.attackedCnt == 0:
+			self.life -= dmg
+			self.attackedCnt = HIT_INVUL_TIME
+			self._ui.updateLife(self.life)
 
 
 	# Función para detectar si el jugador está en el suelo o no y actualizar su valor
@@ -456,6 +494,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 		self._cam.center = self.cBox.center
 		self._cam.correctPos()
 
+
+	def draw(self):
 		if self.isInGround():
 			if self._facingRight:
 				if self.vel.x == 0 and self.acc.x == 0:
@@ -515,10 +555,13 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 					if self.anim != ANIMS["stopJumpLeft"]:
 						self.anim = ANIMS["stopJumpLeft"]
 
-
-	def draw(self):
 		obj.sprite.ObjAnim.draw(self)
 		obj.physic.ObjPhysic.draw(self)
+
+		if self.attackedCnt != 0:
+			self.image.set_alpha(255 if self.attackedCnt%4 >= 2 else 0)
+			self.attackedCnt -= 1
+
 		obj.ObjDraw.draw(self)		
 
 
@@ -534,6 +577,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 	def close(self):
 		#self.save()
 		self._sprtSht.leave()
+		self._ui.close()
 		obj.Obj.close(self)
 
 try:
@@ -541,26 +585,59 @@ try:
 except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Player))
 
-class Test(obj.ObjDynamic, obj.ObjUpdate):
-	UPDT_POS=0
-	def __init__(self, FATHR_HASH):
+
+LIFE_POINT_SPRITE_SHEET_HASH = 9
+
+class LifePoint(obj.ObjDynamic, obj.sprite.ObjSprite):
+	DRAW_LAYER = 20
+
+	def __init__(self, FATHR_HASH, number):
+
 		obj.ObjDynamic.__init__(self, FATHR_HASH)
-		self._cam = obj.getGroup(Cam)[0]
+		try:
+			self._sprtSht = obj.getGroup(SpriteSheet)[LIFE_POINT_SPRITE_SHEET_HASH]
+			self._sprtSht.watch()
+		except obj.ObjNotFoundError:
+			self._sprtSht = obj.load(SpriteSheet, LIFE_POINT_SPRITE_SHEET_HASH, hash(self))
 
-	def update(self):
-		if(pg.key.get_pressed()[pg.K_a]):
-			self._cam.move_ip(-1,0)
+		obj.sprite.ObjSprite.__init__(self, hash(self), FATHR_HASH, self._sprtSht, self._sprtSht.clip.w*(number-1), 0)
 
-		if(pg.key.get_pressed()[pg.K_d]):
-			self._cam.move_ip(1,0)
+		self._number = number
+		self.frame = obj.sprite.Frame(0,0)
 
-		if(pg.key.get_pressed()[pg.K_w]):
-			self._cam.move_ip(0,-1)
 
-		if(pg.key.get_pressed()[pg.K_s]):
-			self._cam.move_ip(0,1)
+	def updateLife(self, life):
+		if life < self._number:
+			self.frame = obj.sprite.Frame(1,0)
 
 try:
-	obj.getGroup(Test)
+	obj.getGroup(LifePoint)
 except obj.GroupNotFoundError:
-	obj.addGroup(obj.Group(Test))
+	obj.addGroup(obj.Group(LifePoint))
+
+
+def _newLifePoint(number):
+	return LifePoint(0, number)
+
+class UI(obj.ObjDynamic):
+	def __init__(self, FATHR_HASH, life, maxLife):
+		obj.ObjDynamic.__init__(self, FATHR_HASH)
+
+		self._lifePoints = tuple(map(_newLifePoint, range(1, maxLife+1)))
+
+		self.updateLife(life)
+
+	def updateLife(self, life):
+		for lp in self._lifePoints:
+			lp.updateLife(life)
+
+	def close(self):
+		for lp in self._lifePoints:
+			lp.close()
+
+		obj.Obj.close(self)
+
+try:
+	obj.getGroup(UI)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(UI))
