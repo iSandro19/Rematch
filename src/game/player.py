@@ -246,15 +246,11 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim):
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
 			self.vel.x = -MAX_H_VEL*1.1
-			print(self.vel.x)
-			print("Rebotar hacia izquierda")
 		
 		elif self.isInWall() and (not self._facingRight):
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
 			self.vel.x = MAX_H_VEL*1.1
-			print(self.vel.x)
-			print("Rebotar hacia derecha")
 			
 		elif self.doubleJump:
 			self.acc.y = V_ACC

@@ -54,7 +54,7 @@ class ObjUpdate(Obj):
 
 class ObjDraw(Obj):
 	DRAW_PL:Final[DrawingPipeline]#staticattr
-	DRAW_LAYER:Final[int]#classattr
+	DRAW_LAYER:int#classattr
 	image:pg.Surface
 	rect:pg.Rect
 	_BCKGND:Final[pg.Surface]

@@ -42,9 +42,15 @@
 		"colorkey": null
 	},
 	{
-		"file": "game/images/Botones_MenuPausa.png",
-		"w": 16,
-		"h": 16,
+		"file": "game/images/Boton_continuar.png",
+		"w": 96,
+		"h": 32,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Boton_salir.png",
+		"w": 96,
+		"h": 32,
 		"colorkey": null
 	}
 ]
