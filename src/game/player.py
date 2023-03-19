@@ -142,7 +142,7 @@ LIFE_REGEN_TIME = 256
 STAND_OFFSET_H = 10
 STAND_OFFSET_V = 34
 
-ATTACK_COOLDOWN = 64
+ATTACK_COOLDOWN = 32
 
 
 class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive): 

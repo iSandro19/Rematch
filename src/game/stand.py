@@ -11,69 +11,77 @@ CAM_HASH = 0
 ANIMS = {
 	"basicRight": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,0,DUR=4),
-			obj.sprite.Frame(1,0,DUR=4),
-			obj.sprite.Frame(2,0,DUR=16),
-			obj.sprite.Frame(3,0,DUR=8),
-			obj.sprite.Frame(4,0,DUR=8)
+			obj.sprite.Frame(0,0,DUR=2),
+			obj.sprite.Frame(1,0,DUR=2),
+			obj.sprite.Frame(2,0,DUR=8),
+			obj.sprite.Frame(3,0,DUR=4),
+			obj.sprite.Frame(4,0,DUR=4)
 		),
 		False
 	),
 	"basicLeft": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,0,True,DUR=4),
-			obj.sprite.Frame(1,0,True,DUR=4),
-			obj.sprite.Frame(2,0,True,DUR=16),
-			obj.sprite.Frame(3,0,True,DUR=8),
-			obj.sprite.Frame(4,0,True,DUR=8)
+			obj.sprite.Frame(0,0,True,DUR=2),
+			obj.sprite.Frame(1,0,True,DUR=2),
+			obj.sprite.Frame(2,0,True,DUR=8),
+			obj.sprite.Frame(3,0,True,DUR=4),
+			obj.sprite.Frame(4,0,True,DUR=4)
 		),
 		False
 	),
 	"rotatoryRight": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,1,DUR=4),
-			obj.sprite.Frame(1,1,DUR=4),
-			obj.sprite.Frame(2,1,DUR=4),
-			obj.sprite.Frame(3,1,DUR=4),
-			obj.sprite.Frame(4,1,DUR=4),
-			obj.sprite.Frame(5,1,DUR=6),
-			obj.sprite.Frame(3,0,DUR=8),
-			obj.sprite.Frame(4,0,DUR=8)
+			obj.sprite.Frame(0,1,DUR=2),
+			obj.sprite.Frame(1,1,DUR=2),
+			obj.sprite.Frame(2,1,DUR=2),
+			obj.sprite.Frame(3,1,DUR=2),
+			obj.sprite.Frame(4,1,DUR=2),
+			obj.sprite.Frame(1,1,DUR=2),
+			obj.sprite.Frame(2,1,DUR=2),
+			obj.sprite.Frame(3,1,DUR=2),
+			obj.sprite.Frame(4,1,DUR=2),
+			obj.sprite.Frame(5,1,DUR=2),
+			obj.sprite.Frame(3,0,DUR=4),
+			obj.sprite.Frame(4,0,DUR=4)
 		),
 		False
 	),
 	"rotatoryLeft": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,1,True,DUR=4),
-			obj.sprite.Frame(1,1,True,DUR=4),
-			obj.sprite.Frame(2,1,True,DUR=4),
-			obj.sprite.Frame(3,1,True,DUR=4),
-			obj.sprite.Frame(4,1,True,DUR=4),
-			obj.sprite.Frame(5,1,True,DUR=6),
-			obj.sprite.Frame(3,0,True,DUR=8),
-			obj.sprite.Frame(4,0,True,DUR=8)
+			obj.sprite.Frame(0,1,True,DUR=2),
+			obj.sprite.Frame(1,1,True,DUR=2),
+			obj.sprite.Frame(2,1,True,DUR=2),
+			obj.sprite.Frame(3,1,True,DUR=2),
+			obj.sprite.Frame(4,1,True,DUR=2),
+			obj.sprite.Frame(1,1,True,DUR=2),
+			obj.sprite.Frame(2,1,True,DUR=2),
+			obj.sprite.Frame(3,1,True,DUR=2),
+			obj.sprite.Frame(4,1,True,DUR=2),
+			obj.sprite.Frame(5,1,True,DUR=2),
+			obj.sprite.Frame(3,0,True,DUR=4),
+			obj.sprite.Frame(4,0,True,DUR=4)
 		),
 		False
 	),
 	"lanceRight": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,2,DUR=4),
-			obj.sprite.Frame(1,2,DUR=4),
-			obj.sprite.Frame(2,2,DUR=8),
-			obj.sprite.Frame(3,2,DUR=8),
-			obj.sprite.Frame(3,0,DUR=8),
-			obj.sprite.Frame(4,0,DUR=8)
+			obj.sprite.Frame(0,2,DUR=2),
+			obj.sprite.Frame(1,2,DUR=2),
+			obj.sprite.Frame(2,2,DUR=4),
+			obj.sprite.Frame(3,2,DUR=4),
+			obj.sprite.Frame(3,0,DUR=4),
+			obj.sprite.Frame(4,0,DUR=4)
 		),
 		False
 	),
 	"lanceLeft": obj.sprite.Animation(
 		(
-			obj.sprite.Frame(0,2,True,DUR=4),
-			obj.sprite.Frame(1,2,True,DUR=4),
-			obj.sprite.Frame(2,2,True,DUR=8),
-			obj.sprite.Frame(3,2,True,DUR=8),
-			obj.sprite.Frame(3,0,True,DUR=8),
-			obj.sprite.Frame(4,0,True,DUR=8)
+			obj.sprite.Frame(0,2,True,DUR=2),
+			obj.sprite.Frame(1,2,True,DUR=2),
+			obj.sprite.Frame(2,2,True,DUR=4),
+			obj.sprite.Frame(3,2,True,DUR=4),
+			obj.sprite.Frame(3,0,True,DUR=4),
+			obj.sprite.Frame(4,0,True,DUR=4)
 		),
 		False
 	)
@@ -137,29 +145,29 @@ class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjU
 
 
 	def update(self):
-		if self.frmCnt < 40:
+		if not self.done:
 			if   self.attack == "basicRight":
-				if 4 <= self.frmCnt < 8:
+				if 2 <= self.frmCnt < 4:
 					self.doAttack()
 
 			elif self.attack == "basicLeft":
-				if 4 <= self.frmCnt < 8:
+				if 2 <= self.frmCnt < 4:
 					self.doAttack()
 
 			elif self.attack == "rotatoryRight":
-				if 4 <= self.frmCnt < 16:
+				if 2 <= self.frmCnt < 14:
 					self.doAttack()
 
 			elif self.attack == "rotatoryLeft":
-				if 4 <= self.frmCnt < 16:
+				if 2 <= self.frmCnt < 14:
 					self.doAttack()
 				
 			elif self.attack == "lanceRight":
-				if 4 <= self.frmCnt < 12:
+				if 2 <= self.frmCnt < 8:
 					self.doAttack()
 				
 			elif self.attack == "lanceLeft":
-				if 4 <= self.frmCnt < 12:
+				if 2 <= self.frmCnt < 8:
 					self.doAttack()
 
 			self.frmCnt += 1
