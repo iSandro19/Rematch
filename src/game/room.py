@@ -66,7 +66,7 @@ def _loadObjs(objs, FATHR_HASH):
 class RoomDirector(obj.ObjStaticR, obj.ObjUpdate):
 	UPDT_POS = 0
 	GRP_FILE = "game/data/room_directors.json"
-	MAX_ROOMS = 3
+	MAX_ROOMS = 4
 
 	def __init__(self, HASH, FATHR_HASH, rooms, camHash):
 		obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)

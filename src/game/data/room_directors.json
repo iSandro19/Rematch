@@ -98,6 +98,26 @@
 					{
 						"type": "BckgndParallax",
 						"hash": 3
+					},
+					{
+						"type": "Alfil",
+						"hash": 3
+					},
+					{
+						"type": "Alfil",
+						"hash": 4
+					},
+					{
+						"type": "Torre",
+						"hash": 0
+					},
+					{
+						"type": "Torre",
+						"hash": 1
+					},
+					{
+						"type": "Peon",
+						"hash": 3
 					}
 				]
 			},
@@ -144,6 +164,26 @@
 					{
 						"type": "Bckgnd",
 						"hash": 5
+					},
+					{
+						"type": "Peon",
+						"hash": 1
+					},
+					{
+						"type": "Peon",
+						"hash": 2
+					},
+					{
+						"type": "Alfil",
+						"hash": 0
+					},
+					{
+						"type": "Alfil",
+						"hash": 1
+					},
+					{
+						"type": "Alfil",
+						"hash": 2
 					}
 				]
 			},
@@ -173,6 +213,34 @@
 					{
 						"type": "BckgndParallax",
 						"hash": 2
+					},
+					{
+						"type": "Alfil",
+						"hash": 5
+					},
+					{
+						"type": "Alfil",
+						"hash": 6
+					},
+					{
+						"type": "Peon",
+						"hash": 4
+					},
+					{
+						"type": "Alfil",
+						"hash": 7
+					},
+					{
+						"type": "Torre",
+						"hash": 2
+					},
+					{
+						"type": "Caballo",
+						"hash": 0
+					},
+					{
+						"type": "Caballo",
+						"hash": 1
 					}
 				]
 			}

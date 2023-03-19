@@ -135,8 +135,8 @@ HIT_BOX_H = 32
 
 HIT_INVUL_TIME = 64
 
-life = 3
-maxLife = 3
+life = 4
+maxLife = 4
 LIFE_REGEN_TIME = 256
 
 STAND_OFFSET_H = 10
