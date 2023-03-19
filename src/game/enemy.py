@@ -32,7 +32,7 @@ HIT_OFFSET_W = 0
 HIT_BOX_W = 16
 HIT_BOX_H = 32
 
-HIT_CNT_MAX = 16 # par o se queda invisible
+HIT_CNT_MAX = 8 # par o se queda invisible
 
 H_VEL = 1
 
@@ -138,9 +138,10 @@ class Ficha(
 
 			self.pos.x += H_VEL if self._facingRight else -H_VEL
 
-		for player in obj.getGroup("Player"):
-			if player.hitBox.colliderect(self.hitBox):
-				player.attack(self._dmg)
+		if self._hitCnt == 0:
+			for player in obj.getGroup("Player"):
+				if player.hitBox.colliderect(self.hitBox):
+					player.attack(self._dmg)
 
 	def draw(self):
 		if self._facingRight:
@@ -166,8 +167,9 @@ class Ficha(
 		obj.Obj.close(self)
 
 	def attack(self, dmg):
-		self._hitCnt = HIT_CNT_MAX
-		self.life -= dmg
+		if self._hitCnt == 0:
+			self._hitCnt = HIT_CNT_MAX
+			self.life -= dmg
 		
 
 PEON_LIFE = 1
@@ -184,7 +186,7 @@ class Peon(Ficha):
 			self,
 			HASH,
 			FATHR_HASH,
-			life,
+			PEON_LIFE,
 			PEON_LIFE,
 			PEON_DMG,
 			PEON_SPRT_SHT,
@@ -201,7 +203,7 @@ except obj.GroupNotFoundError:
 
 ALFIL_LIFE = 2
 ALFIL_DMG = 2
-ALFIL_SPRT_SHT = 4
+ALFIL_SPRT_SHT = 12
 
 class Alfil(Ficha):
 	GRP_FILE = "game/data/alfiles.json"
@@ -213,7 +215,7 @@ class Alfil(Ficha):
 			self,
 			HASH,
 			FATHR_HASH,
-			life,
+			ALFIL_LIFE,
 			ALFIL_LIFE,
 			ALFIL_DMG,
 			ALFIL_SPRT_SHT,
@@ -228,9 +230,9 @@ except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Alfil))
 
 
-CABALLO_LIFE = 2
+CABALLO_LIFE = 1
 CABALLO_DMG = 3
-CABALLO_SPRT_SHT = 4
+CABALLO_SPRT_SHT = 13
 
 class Caballo(Ficha):
 	GRP_FILE = "game/data/caballos.json"
@@ -242,7 +244,7 @@ class Caballo(Ficha):
 			self,
 			HASH,
 			FATHR_HASH,
-			life,
+			CABALLO_LIFE,
 			CABALLO_LIFE,
 			CABALLO_DMG,
 			CABALLO_SPRT_SHT,
@@ -257,9 +259,9 @@ except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Caballo))
 
 
-TORRE_LIFE = 2
-TORRE_DMG = 3
-TORRE_SPRT_SHT = 4
+TORRE_LIFE = 3
+TORRE_DMG = 1
+TORRE_SPRT_SHT = 14
 
 class Torre(Ficha):
 	GRP_FILE = "game/data/torres.json"
@@ -271,7 +273,7 @@ class Torre(Ficha):
 			self,
 			HASH,
 			FATHR_HASH,
-			life,
+			TORRE_LIFE,
 			TORRE_LIFE,
 			TORRE_DMG,
 			TORRE_SPRT_SHT,

@@ -91,8 +91,8 @@ HITBOX = {
 DMG = {
 	"basicRight": 1,
 	"basicLeft": 1,
-	"rotatoryRight": 2,
-	"rotatoryLeft": 2,
+	"rotatoryRight": 1,
+	"rotatoryLeft": 1,
 	"lanceRight": 2,
 	"lanceLeft": 2
 

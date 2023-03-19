@@ -160,7 +160,7 @@ def main():
 				player.close()
 				roomDir.close()
 
-				mainMenu = game.menus.PauseMenu(0)
+				mainMenu = game.menus.MainMenu(0)
 
 				gameScreen = INTRO
 

@@ -471,7 +471,9 @@ class ObjStaticR(Obj):
 		instancia con los argumentos guardados en el json 'GRP_FILE'. 
 		"""
 		try:
-			return getGroup(cls)[HASH]
+			obj = getGroup(cls)[HASH]
+			obj.active = True
+			return obj
 			
 		except ObjNotFoundError:
 			with open(cls.GRP_FILE, "r") as fp:
