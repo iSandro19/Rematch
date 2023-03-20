@@ -8,10 +8,5 @@
 		"triggerRect": [1248,1776,16,80],
 		"destX": 940,
 		"destY": 1016
-	},
-	{
-		"triggerRect": [944,1040,16,16],
-		"destX": 32,
-		"destY": 1672
 	}
 ]

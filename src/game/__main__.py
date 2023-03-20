@@ -12,6 +12,7 @@ import game.enemy
 import game.menus
 import game.teleporter
 import game.boss
+import game.teleporter
 
 WIND_SIZE = 256,144
 FPS = 60
@@ -93,6 +94,10 @@ def main():
 						pauseMenu = game.menus.PauseMenu(0)
 
 						gameScreen = PAUSE
+					elif event.key == K_UP:
+						for smallDoor in obj.getGroup(game.teleporter.SmallDoor):
+							if smallDoor.active:
+								smallDoor.doTPifInDoor()
 				
 				elif event.type == KEYUP:
 					if event.key == K_SPACE:
