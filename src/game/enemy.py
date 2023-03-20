@@ -28,7 +28,7 @@ ANIMS = {
 
 
 HIT_OFFSET_H = 0
-HIT_OFFSET_W = 0
+HIT_OFFSET_V = 0
 HIT_BOX_W = 16
 HIT_BOX_H = 32
 
@@ -78,7 +78,7 @@ class Ficha(
 			life,
 			maxLife,
 			HIT_OFFSET_H,
-			HIT_OFFSET_W,
+			HIT_OFFSET_V,
 			HIT_BOX_W,
 			HIT_BOX_H
 		)
@@ -87,7 +87,7 @@ class Ficha(
 
 		self.anim = ANIMS["runRight"]
 		self._hitCnt = 0
-		self._facingRight = False
+		self._facingRight = True
 		self._dmg = dmg
 
 	def update(self):

@@ -5,7 +5,7 @@ from game.cam import Cam
 from game.enemy import Peon, Caballo, Alfil, Torre
 from abc import abstractmethod
 
-SPRITE_SHEET_HASH = 11
+
 CAM_HASH = 0
 
 ANIMS = {
@@ -106,20 +106,18 @@ DMG = {
 
 }
 
-enemyTypes = (Peon, Caballo, Alfil, Torre)
-
 class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjUpdate):
 	UPDT_POS = 2
 	DRAW_LAYER = 8
 
-	def __init__(self, FATHR_HASH, attack, x, y):
+	def __init__(self, FATHR_HASH, sprtShtHash, attack, x, y):
 		obj.ObjDynamic.__init__(self, FATHR_HASH)
 
 		try:
-			self._sprtSht = obj.getGroup(SpriteSheet)[SPRITE_SHEET_HASH]
+			self._sprtSht = obj.getGroup(SpriteSheet)[sprtShtHash]
 			self._sprtSht.watch()
 		except obj.ObjNotFoundError:
-			self._sprtSht = obj.load(SpriteSheet, SPRITE_SHEET_HASH, hash(self))
+			self._sprtSht = obj.load(SpriteSheet, sprtShtHash, hash(self))
 
 		self._cam = obj.getGroup(Cam)[CAM_HASH]
 
@@ -135,14 +133,9 @@ class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjU
 		self.frmCnt = 0
 		self.alpha = 255
 
+	@abstractmethod
 	def doAttack(self):
-		hitBox = HITBOX[self.attack].move(self.pos)
-
-		for enemyType in enemyTypes:
-			for enemy in obj.getGroup(enemyType):
-				if enemy.hitBox.colliderect(hitBox):
-					enemy.attack(DMG[self.attack])
-
+		pass
 
 	def update(self):
 		if not self.done:
@@ -188,7 +181,33 @@ class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjU
 		self._sprtSht.leave()
 		obj.Obj.close(self)
 
+
+enemyTypes = (Peon, Caballo, Alfil, Torre, "BasicBoss")
+
+class StandFriend(Stand):
+	def doAttack(self):
+		hitBox = HITBOX[self.attack].move(self.pos)
+
+		for enemyType in enemyTypes:
+			for enemy in obj.getGroup(enemyType):
+				if enemy.hitBox.colliderect(hitBox):
+					enemy.attack(DMG[self.attack])
+
 try:
-	obj.getGroup(Stand)
+	obj.getGroup(StandFriend)
 except obj.GroupNotFoundError:
-	obj.addGroup(obj.Group(Stand))
+	obj.addGroup(obj.Group(StandFriend))
+
+
+class StandEnemy(Stand):
+	def doAttack(self):
+		hitBox = HITBOX[self.attack].move(self.pos)
+
+		for player in obj.getGroup("Player"):
+			if player.hitBox.colliderect(hitBox):
+				player.attack(DMG[self.attack])
+
+try:
+	obj.getGroup(StandEnemy)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(StandEnemy))

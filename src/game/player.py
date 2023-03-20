@@ -5,7 +5,7 @@ from game.image import SpriteSheet
 from game.control import Control
 from game.tile import TileCollision, RECT
 from game.alive import ObjAlive
-from game.stand import Stand
+from game.stand import StandFriend
 
 ANIMS = {
 	"standRight": obj.sprite.Animation(
@@ -143,6 +143,7 @@ STAND_OFFSET_H = 10
 STAND_OFFSET_V = 34
 
 ATTACK_COOLDOWN = 32
+STAND_SPRITE_SHEET_HASH = 11
 
 
 class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive): 
@@ -220,6 +221,29 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 		self._ui = UI(0, self.life, self.maxLife)
 
 		self.stand = None
+		
+
+	def teleport(self, x, y):
+		self.pos.x = x
+		self.pos.y = y
+
+		self.vel.x = 0
+		self.vel.y = 0
+
+		self.acc.x = 0
+		self.acc.y = 0
+
+		self._facingRight = True
+		self.doubleJump = True
+		self.anim = ANIMS["standRight"]
+
+		self.counter = 0
+		self.dashing = False
+		self.attackCnt = 0
+
+		self.attackedCnt = 0
+		self.regenCnt = 0
+
 
 	def attack(self, dmg):
 		if not self.dashing and self.attackedCnt == 0:
@@ -347,9 +371,9 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			self.counter = 30
 
 			if self._facingRight:
-				self.stand = Stand(hash(self), "lanceRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 			else:
-				self.stand = Stand(hash(self), "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
 
 	# Se puede dashear cada 30 fps y solo una vez mientras estés en el aire
@@ -387,18 +411,18 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 	def basic_attack(self):
 		if self.attackCnt == 0:
 			if self._facingRight:
-				self.stand = Stand(hash(self), "basicRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 			else:
-				self.stand = Stand(hash(self), "basicLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
 			self.attackCnt = ATTACK_COOLDOWN
 
 	def rotatory_attack(self):
 		if self.attackCnt == 0:
 			if self._facingRight:
-				self.stand = Stand(hash(self), "rotatoryRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 			else:
-				self.stand = Stand(hash(self), "rotatoryLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
 			self.attackCnt = ATTACK_COOLDOWN
 

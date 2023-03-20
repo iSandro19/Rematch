@@ -10,6 +10,8 @@ import game.control
 import game.bckgnd
 import game.enemy
 import game.menus
+import game.teleporter
+import game.boss
 
 WIND_SIZE = 256,144
 FPS = 60
@@ -81,7 +83,7 @@ def main():
 					elif event.key == K_e:
 						player.basic_attack()
 
-					elif event.key == K_w:
+					elif event.key == K_s:
 						player.rotatory_attack()
 
 					elif event.key == K_ESCAPE:

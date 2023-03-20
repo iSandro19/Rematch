@@ -65,6 +65,10 @@
 					{
 						"type": "BckgndParallax",
 						"hash": 3
+					},
+					{
+						"type": "CollideTP",
+						"hash": 2
 					}
 				]
 			},
@@ -184,6 +188,10 @@
 					{
 						"type": "Alfil",
 						"hash": 2
+					},
+					{
+						"type": "CollideTP",
+						"hash": 0
 					}
 				]
 			},
@@ -241,6 +249,31 @@
 					{
 						"type": "Caballo",
 						"hash": 1
+					},
+					{
+						"type": "CollideTP",
+						"hash": 1
+					}
+				]
+			},
+			{
+				"rect": [0,1584,256,144],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 8
+					},
+					{
+						"type": "BasicBoss",
+						"hash": 0
+					},
+					{
+						"type": "TileMap",
+						"hash": 6
+					},
+					{
+						"type": "TileCollision",
+						"hash": 6
 					}
 				]
 			}

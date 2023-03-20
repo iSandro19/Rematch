@@ -88,5 +88,11 @@
 		"w": 16,
 		"h": 32,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/Garri.png",
+		"w": 32,
+		"h": 32,
+		"colorkey": null
 	}
 ]
