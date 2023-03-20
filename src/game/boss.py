@@ -72,7 +72,10 @@ class BasicBoss(
 		life,
 		maxLife,
 		sprtShtHash,
+		standSprtShtHash,
 		camHash,
+		attackRight,
+		attackLeft,
 		x,
 		y
 	):
@@ -112,6 +115,10 @@ class BasicBoss(
 
 		self._attackCnt = 0
 
+		self._attackRight = attackRight
+		self._attackLeft = attackLeft
+		self._standSprtShtHash = standSprtShtHash
+
 		self._stand = None
 
 	def update(self):
@@ -140,7 +147,7 @@ class BasicBoss(
 				if self._attackCnt == 0:
 					if self.hitBox.center[0]-16 <= self._player.hitBox.center[0]-PLAYER_OFFSET < self.hitBox.center[0]+16:
 						self._attackCnt = ATTACK_COOLDOWN
-						self._stand = StandEnemy(hash(self), 11, "basicRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+						self._stand = StandEnemy(hash(self), self._standSprtShtHash, self._attackRight, self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 				else:
 					self._attackCnt -= 1
 				
@@ -164,7 +171,7 @@ class BasicBoss(
 				if self._attackCnt == 0:
 					if self.hitBox.center[0]-PLAYER_OFFSET-16 <= self._player.hitBox.center[0] < self.hitBox.center[0]-PLAYER_OFFSET+16:
 						self._attackCnt = ATTACK_COOLDOWN
-						self._stand = StandEnemy(hash(self), 11, "basicLeft", self.pos.x-32-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+						self._stand = StandEnemy(hash(self), self._standSprtShtHash, self._attackLeft, self.pos.x-32-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 				else:
 					self._attackCnt -= 1
 
@@ -227,7 +234,10 @@ class BasicBoss(
 			sprtShtHash=hash(self._sprtSht),
 			camHash=hash(self._cam),
 			x=self.pos.x,
-			y=self.pos.y
+			y=self.pos.y,
+			attackRight=self._attackRight,
+			attackLeft=self._attackLeft,
+			standSprtShtHash=self._standSprtShtHash
 		)
 
 try:

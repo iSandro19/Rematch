@@ -32,7 +32,7 @@ SMALL_DOOR_SURF_HASH = 12
 
 class SmallDoor(obj.ObjStaticR, obj.physic.ObjRelative):
 	GRP_FILE = "game/data/small_doors.json"
-	DRAW_LAYER = 8
+	DRAW_LAYER = 7
 
 	def __init__(self, HASH, FATHR_HASH, camHash, srcX, srcY, destX, destY):
 		obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)

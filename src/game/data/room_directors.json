@@ -32,6 +32,22 @@
 					{
 						"type": "Peon",
 						"hash": 0
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 0
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 1
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 2
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 3
 					}
 				]
 			},

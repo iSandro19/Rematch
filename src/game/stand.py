@@ -4,7 +4,7 @@ from game.image import SpriteSheet
 from game.cam import Cam
 from game.enemy import Peon, Caballo, Alfil, Torre
 from abc import abstractmethod
-
+from game.interact import BreakBlock
 
 CAM_HASH = 0
 
@@ -92,8 +92,8 @@ HITBOX = {
 	"basicLeft": pg.Rect(7,40,33,33),
 	"rotatoryRight": pg.Rect(27,30,49,49),
 	"rotatoryLeft": pg.Rect(5,30,49,49),
-	"lanceRight": pg.Rect(40,53,39,5),
-	"lanceLeft": pg.Rect(1,53,39,5)
+	"lanceRight": pg.Rect(40,52,39,7),
+	"lanceLeft": pg.Rect(1,52,39,7)
 }
 
 DMG = {
@@ -182,7 +182,7 @@ class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjU
 		obj.Obj.close(self)
 
 
-enemyTypes = (Peon, Caballo, Alfil, Torre, "BasicBoss")
+enemyTypes = (Peon, Caballo, Alfil, Torre, "BasicBoss", BreakBlock)
 
 class StandFriend(Stand):
 	def doAttack(self):
