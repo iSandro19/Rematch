@@ -32,6 +32,22 @@
 					{
 						"type": "Peon",
 						"hash": 0
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 0
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 1
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 2
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 3
 					}
 				]
 			},
@@ -65,10 +81,6 @@
 					{
 						"type": "BckgndParallax",
 						"hash": 3
-					},
-					{
-						"type": "CollideTP",
-						"hash": 2
 					}
 				]
 			},
@@ -253,6 +265,10 @@
 					{
 						"type": "CollideTP",
 						"hash": 1
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 0
 					}
 				]
 			},
@@ -274,6 +290,10 @@
 					{
 						"type": "TileCollision",
 						"hash": 6
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 1
 					}
 				]
 			}

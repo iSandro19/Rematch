@@ -1,1 +1,3 @@
-[{"life": 20, "maxLife": 20, "sprtShtHash": 15, "camHash": 0, "x": 108.0, "y": 1680.0}]
+[
+	{"life": 20, "maxLife": 20, "sprtShtHash": 15, "standSprtShtHash": 17, "camHash": 0, "attackRight": "lanceRight", "attackLeft": "lanceLeft", "x": 200.0, "y": 1680.0}
+]

@@ -6,6 +6,7 @@ from game.control import Control
 from game.tile import TileCollision, RECT
 from game.alive import ObjAlive
 from game.stand import StandFriend
+from game.interact import BreakBlock
 
 ANIMS = {
 	"standRight": obj.sprite.Animation(
@@ -486,7 +487,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 						if tlCL.form == RECT:
 							cBox.left = tlBL.rect.right
 							self.vel.x = 0
-							self.acc.x = 0
+							self.acc.x = 0				
 							
 
 			# Colisión horizontal por la derecha
@@ -514,6 +515,16 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 							cBox.right = tlBR.rect.left
 							self.vel.x = 0
 							self.acc.x = 0
+
+
+		for bb in obj.getGroup(BreakBlock):
+			if self.vel.x < 0:
+				if bb.hitBox.colliderect(self.cBox):
+					cBox.left = bb.hitBox.right
+
+			elif self.vel.x > 0:
+				if bb.hitBox.colliderect(self.cBox):
+					cBox.right = bb.hitBox.left
 
 		self.cBox = cBox
 
@@ -564,6 +575,16 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 					if tl.form == RECT:
 						cBox.top = tl.rect.bottom
 						self.vel.y = 0
+
+
+		for bb in obj.getGroup(BreakBlock):
+			if self.vel.y < 0:
+				if bb.hitBox.colliderect(self.cBox):
+					cBox.bottom = bb.hitBox.top
+
+			elif self.vel.y > 0:
+				if bb.hitBox.colliderect(self.cBox):
+					cBox.top = bb.hitBox.bottom
 
 		self.cBox = cBox
 
