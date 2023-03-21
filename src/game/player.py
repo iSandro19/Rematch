@@ -274,6 +274,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 				#self._inGround = True
 				return True
 
+		for bb in obj.getGroup(BreakBlock):
+			if bb.hitBox.colliderect(self.cBox.move(0, 1)):
+				return True
+
 		return False
 	
 	def isInWall(self):
@@ -307,6 +311,18 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 					if tlCR.form == RECT:
 						return True
+
+		for bb in obj.getGroup(BreakBlock):
+			if (
+				bb.hitBox.colliderect(
+					self.cBox.move(
+						-1 if self._facingRight else 1,
+						0
+					)
+				)
+			):
+				return True
+
 		return False
 
 
@@ -580,11 +596,11 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 		for bb in obj.getGroup(BreakBlock):
 			if self.vel.y < 0:
 				if bb.hitBox.colliderect(self.cBox):
-					cBox.bottom = bb.hitBox.top
+					cBox.top = bb.hitBox.bottom
 
 			elif self.vel.y > 0:
 				if bb.hitBox.colliderect(self.cBox):
-					cBox.top = bb.hitBox.bottom
+					cBox.bottom = bb.hitBox.top
 
 		self.cBox = cBox
 

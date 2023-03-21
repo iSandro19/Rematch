@@ -159,6 +159,30 @@
 					{
 						"type": "Bckgnd",
 						"hash": 4
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 4
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 5
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 6
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 7
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 8
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 9
 					}
 				]
 			},
@@ -269,6 +293,70 @@
 					{
 						"type": "SmallDoor",
 						"hash": 0
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 10
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 11
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 12
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 13
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 14
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 15
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 16
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 17
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 18
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 19
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 20
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 21
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 22
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 23
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 24
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 25
 					}
 				]
 			},

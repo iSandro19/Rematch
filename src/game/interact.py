@@ -34,7 +34,7 @@ class BreakBlock(obj.ObjStaticR, ObjAlive):
 			self,
 			HASH,
 			FATHR_HASH,
-			self._surf.image,
+			self._surf.image.copy(),
 			w,
 			h,
 			self._cam,
