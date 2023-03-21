@@ -5,9 +5,10 @@ from game.cam import Cam
 from game.stand import StandEnemy
 from game.tile import TileCollision, RECT
 import pygame as pg
+import math as m
 
 
-ANIMS = {
+BB_ANIMS = {
 	"standLeft": obj.sprite.Animation(
 		(
 			obj.sprite.Frame(0,0,True),
@@ -38,22 +39,22 @@ ANIMS = {
 	)
 }
 
-HIT_OFFSET_H = 8
-HIT_OFFSET_V = 0
-HIT_BOX_W = 16
-HIT_BOX_H = 32
+BB_HIT_OFFSET_H = 8
+BB_HIT_OFFSET_V = 0
+BB_HIT_BOX_W = 16
+BB_HIT_BOX_H = 32
 
-HIT_CNT_MAX = 8 # par o se queda invisible
+BB_HIT_CNT_MAX = 8 # par o se queda invisible
 
-H_VEL = 1
+BB_H_VEL = 1
 
-ATTACK_COOLDOWN = 64
+BB_ATTACK_COOLDOWN = 64
 
-PLAYER_HASH = 0
-PLAYER_OFFSET = 32
+BB_PLAYER_HASH = 0
+BB_PLAYER_OFFSET = 32
 
-STAND_OFFSET_H = 10
-STAND_OFFSET_V = 42
+BB_STAND_OFFSET_H = 10
+BB_STAND_OFFSET_V = 42
 
 class BasicBoss(
 	ObjAlive,
@@ -100,18 +101,18 @@ class BasicBoss(
 			pg.math.Vector2(x, y),
 			life,
 			maxLife,
-			HIT_OFFSET_H,
-			HIT_OFFSET_V,
-			HIT_BOX_W,
-			HIT_BOX_H
+			BB_HIT_OFFSET_H,
+			BB_HIT_OFFSET_V,
+			BB_HIT_BOX_W,
+			BB_HIT_BOX_H
 		)
 		obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)
 		obj.sprite.ObjAnim.__init__(self, HASH, FATHR_HASH, self._sprtSht, 0, 0)
 
-		self.anim = ANIMS["runLeft"]
+		self.anim = BB_ANIMS["runLeft"]
 		self._hitCnt = 0
 		self._facingRight = False
-		self._player = obj.getGroup("Player")[PLAYER_HASH]
+		self._player = obj.getGroup("Player")[BB_PLAYER_HASH]
 
 		self._attackCnt = 0
 
@@ -138,16 +139,16 @@ class BasicBoss(
 						break
 
 				if self._facingRight:
-					if self._player.hitBox.center[0]-PLAYER_OFFSET > self.hitBox.center[0]:
-						self.pos.x += H_VEL
+					if self._player.hitBox.center[0]-BB_PLAYER_OFFSET > self.hitBox.center[0]:
+						self.pos.x += BB_H_VEL
 
-					elif self._player.hitBox.center[0]-PLAYER_OFFSET < self.hitBox.center[0]:
-						self.pos.x -= H_VEL
+					elif self._player.hitBox.center[0]-BB_PLAYER_OFFSET < self.hitBox.center[0]:
+						self.pos.x -= BB_H_VEL
 
 				if self._attackCnt == 0:
-					if self.hitBox.center[0]-16 <= self._player.hitBox.center[0]-PLAYER_OFFSET < self.hitBox.center[0]+16:
-						self._attackCnt = ATTACK_COOLDOWN
-						self._stand = StandEnemy(hash(self), self._standSprtShtHash, self._attackRight, self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+					if self.hitBox.center[0]-16 <= self._player.hitBox.center[0]-BB_PLAYER_OFFSET < self.hitBox.center[0]+16:
+						self._attackCnt = BB_ATTACK_COOLDOWN
+						self._stand = StandEnemy(hash(self), self._standSprtShtHash, self._attackRight, self.pos.x-BB_STAND_OFFSET_H, self.pos.y-BB_STAND_OFFSET_V)
 				else:
 					self._attackCnt -= 1
 				
@@ -162,36 +163,36 @@ class BasicBoss(
 						break
 
 				if not self._facingRight:
-					if self._player.hitBox.center[0] < self.hitBox.center[0]-PLAYER_OFFSET:
-						self.pos.x -= H_VEL
+					if self._player.hitBox.center[0] < self.hitBox.center[0]-BB_PLAYER_OFFSET:
+						self.pos.x -= BB_H_VEL
 
-					elif self._player.hitBox.center[0] > self.hitBox.center[0]-PLAYER_OFFSET:
-						self.pos.x += H_VEL
+					elif self._player.hitBox.center[0] > self.hitBox.center[0]-BB_PLAYER_OFFSET:
+						self.pos.x += BB_H_VEL
 				
 				if self._attackCnt == 0:
-					if self.hitBox.center[0]-PLAYER_OFFSET-16 <= self._player.hitBox.center[0] < self.hitBox.center[0]-PLAYER_OFFSET+16:
-						self._attackCnt = ATTACK_COOLDOWN
-						self._stand = StandEnemy(hash(self), self._standSprtShtHash, self._attackLeft, self.pos.x-32-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+					if self.hitBox.center[0]-BB_PLAYER_OFFSET-16 <= self._player.hitBox.center[0] < self.hitBox.center[0]-BB_PLAYER_OFFSET+16:
+						self._attackCnt = BB_ATTACK_COOLDOWN
+						self._stand = StandEnemy(hash(self), self._standSprtShtHash, self._attackLeft, self.pos.x-32-BB_STAND_OFFSET_H, self.pos.y-BB_STAND_OFFSET_V)
 				else:
 					self._attackCnt -= 1
 
 
 	def draw(self):
 		if self._facingRight:
-			if self._player.hitBox.center[0]-PLAYER_OFFSET != self.hitBox.center[0]:
-				if self.anim != ANIMS["runRight"]:
-					self.anim = ANIMS["runRight"]
+			if self._player.hitBox.center[0]-BB_PLAYER_OFFSET != self.hitBox.center[0]:
+				if self.anim != BB_ANIMS["runRight"]:
+					self.anim = BB_ANIMS["runRight"]
 			else:
-				if self.anim != ANIMS["standRight"]:
-					self.anim = ANIMS["standRight"]
+				if self.anim != BB_ANIMS["standRight"]:
+					self.anim = BB_ANIMS["standRight"]
 
 		else:
-			if self._player.hitBox.center[0] != self.hitBox.center[0]-PLAYER_OFFSET:
-				if self.anim != ANIMS["runLeft"]:
-					self.anim = ANIMS["runLeft"]
+			if self._player.hitBox.center[0] != self.hitBox.center[0]-BB_PLAYER_OFFSET:
+				if self.anim != BB_ANIMS["runLeft"]:
+					self.anim = BB_ANIMS["runLeft"]
 			else:
-				if self.anim != ANIMS["standLeft"]:
-					self.anim = ANIMS["standLeft"]
+				if self.anim != BB_ANIMS["standLeft"]:
+					self.anim = BB_ANIMS["standLeft"]
 
 		ObjAlive.draw(self)
 
@@ -224,7 +225,7 @@ class BasicBoss(
 
 	def attack(self, dmg):
 		if self._hitCnt == 0:
-			self._hitCnt = HIT_CNT_MAX
+			self._hitCnt = BB_HIT_CNT_MAX
 			self.life -= dmg
 
 	def save(self):
@@ -244,3 +245,279 @@ try:
 	obj.getGroup(BasicBoss)
 except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(BasicBoss))
+
+
+FB_ANIMS = {
+	"flyLeft": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(0,0,True,DUR=2),
+			obj.sprite.Frame(1,0,True,DUR=2),
+			obj.sprite.Frame(2,0,True,DUR=2),
+			obj.sprite.Frame(3,0,True,DUR=2)
+		),
+	),
+	"flyRight": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(0,0,DUR=2),
+			obj.sprite.Frame(1,0,DUR=2),
+			obj.sprite.Frame(2,0,DUR=2),
+			obj.sprite.Frame(3,0,DUR=2)
+		),
+	)
+}
+
+FB_HIT_OFFSET_H = 8
+FB_HIT_OFFSET_V = 8
+FB_HIT_BOX_W = 16
+FB_HIT_BOX_H = 40
+
+FB_HIT_CNT_MAX = 8 # par o se queda invisible
+
+FB_H_VEL = 1
+FB_V_VEL = 1
+
+FB_KNOCKBACK = 8
+
+FB_ATTACK_COOLDOWN = 64
+
+FB_PLAYER_HASH = 0
+FB_PLAYER_OFFSET_H = 64
+FB_PLAYER_OFFSET_V = 64
+
+FB_STAND_OFFSET_H = 10
+FB_STAND_OFFSET_V = -8
+
+FB_ROOM_W = 16*16
+FB_ROOM_H = 9*16
+
+FB_FRM_MAX = 128*3
+
+FB_STAND_VEL_H = 4
+FB_STAND_VEL_V = 4
+
+class FinalBoss(
+	ObjAlive,
+	obj.ObjStaticRW,
+	obj.sprite.ObjAnim,
+	obj.ObjUpdate
+):
+	GRP_FILE = "game/data/final_bosses.json"
+	UPDT_POS = 1
+	DRAW_LAYER = 9
+
+	def __init__(
+		self,
+		HASH,
+		FATHR_HASH,
+		life,
+		maxLife,
+		sprtShtHash,
+		standSprtShtHash,
+		camHash,
+		x,
+		y,
+		roomX,
+		roomY
+	):
+
+		try:
+			self._sprtSht = obj.getGroup(SpriteSheet)[sprtShtHash]
+			self._sprtSht.watch()
+		except obj.ObjNotFoundError:
+			self._sprtSht = obj.load(SpriteSheet, sprtShtHash, HASH)
+
+		self._cam = obj.getGroup(Cam)[camHash]
+
+
+		ObjAlive.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			None,
+			self._sprtSht.clip.w,
+			self._sprtSht.clip.h,
+			self._cam,
+			pg.math.Vector2(x, y),
+			life,
+			maxLife,
+			FB_HIT_OFFSET_H,
+			FB_HIT_OFFSET_V,
+			FB_HIT_BOX_W,
+			FB_HIT_BOX_H
+		)
+		obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)
+		obj.sprite.ObjAnim.__init__(self, HASH, FATHR_HASH, self._sprtSht, 0, 0)
+
+		self.anim = FB_ANIMS["flyLeft"]
+		self._hitCnt = 0
+		self._facingRight = False
+		self._player = obj.getGroup("Player")[FB_PLAYER_HASH]
+
+		self._attackCnt = 0
+
+		self._standSprtShtHash = standSprtShtHash
+
+		self._stand0 = None
+		self._stand1 = None
+
+		self._roomX = roomX
+		self._roomY = roomY
+
+		self._frmCnt = 0
+
+	def update(self):
+		if self._hitCnt == 0:
+			if self.life <= 0:
+				self.save()
+				self.close()
+				return
+
+			if self._facingRight and self.hitBox.center[0] > (self._roomX+FB_ROOM_W)//2:
+				self._facingRight = False
+
+			elif not self._facingRight and self.hitBox.center[0] < (self._roomX+FB_ROOM_W)//2:
+				self._facingRight = True
+
+			if self._facingRight:
+				if self._player.hitBox.center[0]-FB_PLAYER_OFFSET_H > self.hitBox.center[0]:
+					self.pos.x += FB_H_VEL
+
+				elif self._player.hitBox.center[0]-FB_PLAYER_OFFSET_H < self.hitBox.center[0]:
+					self.pos.x -= FB_H_VEL
+
+			else:
+				if not self._facingRight:
+					if self._player.hitBox.center[0] < self.hitBox.center[0]-FB_PLAYER_OFFSET_H:
+						self.pos.x -= FB_H_VEL
+
+					elif self._player.hitBox.center[0] > self.hitBox.center[0]-FB_PLAYER_OFFSET_H:
+						self.pos.x += FB_H_VEL
+
+			if self._player.pos.y+FB_STAND_OFFSET_V < self.pos.y:
+				self.pos.y -= FB_V_VEL
+
+			elif self._player.pos.y+FB_STAND_OFFSET_V > self.pos.y:
+				self.pos.y += FB_V_VEL
+
+
+			if self._frmCnt == 128:
+				self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "lanceRight", self._roomX-40+32, self._roomY+6+16*3)
+				self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "lanceLeft", self._roomX-40+224, self._roomY+6+16*3)
+
+			elif self._frmCnt == 128*2:
+				self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "basicRight", self._roomX-40+16*6, self._roomY+6-16*2)
+				self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "basicLeft", self._roomX-40+16*10, self._roomY+6-16*2)
+			elif self._frmCnt == 128*3:
+				self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "rotatoryRight", self._roomX-40+16*4, self._roomY+6-16)
+				self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "rotatoryLeft", self._roomX-40+16*12, self._roomY+6-16)
+
+			if 128 < self._frmCnt <= 128+20:
+				self._stand0.pos.x += FB_STAND_VEL_H
+				self._stand1.pos.x -= FB_STAND_VEL_H
+
+			elif 256 < self._frmCnt <= 256+20:
+				self._stand0.pos.y += FB_STAND_VEL_V
+				self._stand1.pos.y += FB_STAND_VEL_V
+
+			if self._frmCnt < FB_FRM_MAX:
+				self._frmCnt += 1
+			else:
+				self._frmCnt = 0
+
+
+	def draw(self):
+		if self._facingRight:
+			if self.anim != FB_ANIMS["flyRight"]:
+				self.anim = FB_ANIMS["flyRight"]
+
+		else:
+			if self.anim != FB_ANIMS["flyLeft"]:
+				self.anim = FB_ANIMS["flyLeft"]
+
+		ObjAlive.draw(self)
+
+		if self._hitCnt != 0:
+			self.image.set_alpha(255 if self._hitCnt%4 >= 2 else 0)
+			self._hitCnt -= 1
+		else:
+			obj.sprite.ObjAnim.draw(self)	
+
+		obj.ObjDraw.draw(self)
+
+		if self._frmCnt in range(128-8-30,128-8,4):
+			pg.draw.rect(self._BCKGND, (255,0,0), (self._roomX+16-self._cam.x,self._roomY+16*6-self._cam.y,16*14,32))
+
+		elif self._frmCnt in range(128*2-8-30,128*2-8,4):
+			pg.draw.rect(self._BCKGND, (255,0,0), (self._roomX+16*6-self._cam.x,self._roomY+16-self._cam.y,64,16*7))
+
+		elif self._frmCnt in range(128*3-8-30,128*3-8,4):
+			pg.draw.rect(self._BCKGND, (255,0,0), (self._roomX+16*3-self._cam.x,self._roomY+16*2-self._cam.y,16*3,32))
+			pg.draw.rect(self._BCKGND, (255,0,0), (self._roomX+16*10-self._cam.x,self._roomY+16*2-self._cam.y,16*3,32))
+
+	@property
+	def active(self):
+		return self._active
+
+	@active.setter
+	def active(self, value):
+		if self._stand0:
+			self._stand0.active = value
+
+		if self._stand1:
+			self._stand1.active = value
+
+		self._active = value
+
+	def close(self):
+		if self._stand0 and self._stand0.active:
+			self._stand0.close()
+
+		if self._stand1 and self._stand1.active:
+			self._stand1.close()
+
+		self._sprtSht.leave()
+		obj.Obj.close(self)
+
+	def attack(self, dmg):
+		if self._hitCnt == 0:
+			self._hitCnt = FB_HIT_CNT_MAX
+			self.life -= dmg
+
+			if self._player.pos != self.pos:
+				r = m.radians(self.pos.angle_to(self._player.pos))
+				self.pos.x += round(m.cos(r)*FB_KNOCKBACK)
+				self.pos.y += round(m.sin(r)*FB_KNOCKBACK)
+
+	def save(self):
+		self._save(
+			life = self.life,
+			maxLife = self.maxLife,
+			sprtShtHash=hash(self._sprtSht),
+			camHash=hash(self._cam),
+			x=self.pos.x,
+			y=self.pos.y,
+			standSprtShtHash=self._standSprtShtHash,
+			roomX=self._roomX,
+			roomY=self._roomY
+		)
+
+"""
+if self._attackCnt == 0:
+	if self.hitBox.center[0]-16 <= self._player.hitBox.center[0]-FB_PLAYER_OFFSET < self.hitBox.center[0]+16:
+		self._attackCnt = FB_ATTACK_COOLDOWN
+		self._stand = StandEnemy(hash(self), self._standSprtShtHash, self._attackRight, self.pos.x-FB_STAND_OFFSET_H, self.pos.y-FB_STAND_OFFSET_V)
+else:
+	self._attackCnt -= 1
+
+if self._attackCnt == 0:
+	if self.hitBox.center[0]-FB_PLAYER_OFFSET-16 <= self._player.hitBox.center[0] < self.hitBox.center[0]-FB_PLAYER_OFFSET+16:
+		self._attackCnt = FB_ATTACK_COOLDOWN
+		self._stand = StandEnemy(hash(self), self._standSprtShtHash, self._attackLeft, self.pos.x-32-FB_STAND_OFFSET_H, self.pos.y-FB_STAND_OFFSET_V)
+else:
+	self._attackCnt -= 1
+"""
+
+try:
+	obj.getGroup(FinalBoss)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(FinalBoss))

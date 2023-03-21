@@ -105,30 +105,42 @@
 		"file": "game/images/Boss Rojo.png",
 		"w": 80,
 		"h": 80,
-		"colorkey": [255,0,0]
+		"colorkey": null
 	},
 	{
 		"file": "game/images/Boss Amarillo.png",
 		"w": 80,
 		"h": 80,
-		"colorkey": [255,0,0]
+		"colorkey": null
 	},
 	{
 		"file": "game/images/Boss Verde.png",
 		"w": 80,
 		"h": 80,
-		"colorkey": [255,0,0]
+		"colorkey": null
 	},
 	{
 		"file": "game/images/Boss Azul.png",
 		"w": 80,
 		"h": 80,
-		"colorkey": [255,0,0]
+		"colorkey": null
 	},
 	{
 		"file": "game/images/Boss Gris.png",
 		"w": 80,
 		"h": 80,
-		"colorkey": [255,0,0]
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Boss final.png",
+		"w": 32,
+		"h": 48,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Portón.png",
+		"w": 64,
+		"h": 80,
+		"colorkey": null
 	}
 ]

@@ -182,7 +182,7 @@ class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjU
 		obj.Obj.close(self)
 
 
-enemyTypes = (Peon, Caballo, Alfil, Torre, "BasicBoss", BreakBlock)
+enemyTypes = (Peon, Caballo, Alfil, Torre, "BasicBoss", BreakBlock, "FinalBoss")
 
 class StandFriend(Stand):
 	def doAttack(self):

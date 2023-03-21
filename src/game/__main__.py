@@ -97,6 +97,10 @@ def main():
 						for smallDoor in obj.getGroup(game.teleporter.SmallDoor):
 							if smallDoor.active:
 								smallDoor.doTPifInDoor()
+
+						for bigDoor in obj.getGroup(game.teleporter.BigDoor):
+							if bigDoor.active:
+								bigDoor.doTPifInDoor()
 				
 				elif event.type == KEYUP:
 					if event.key == K_SPACE:

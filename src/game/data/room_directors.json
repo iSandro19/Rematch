@@ -81,6 +81,10 @@
 					{
 						"type": "BckgndParallax",
 						"hash": 3
+					},
+					{
+						"type": "BigDoor",
+						"hash": 0
 					}
 				]
 			},
@@ -381,6 +385,31 @@
 					},
 					{
 						"type": "SmallDoor",
+						"hash": 1
+					}
+				]
+			},
+			{
+				"rect": [0,1744,256,144],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 9
+					},
+					{
+						"type": "FinalBoss",
+						"hash": 0
+					},
+					{
+						"type": "TileMap",
+						"hash": 7
+					},
+					{
+						"type": "TileCollision",
+						"hash": 7
+					},
+					{
+						"type": "BigDoor",
 						"hash": 1
 					}
 				]
