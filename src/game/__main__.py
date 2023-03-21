@@ -21,7 +21,6 @@ INTRO = 0
 GAME  = 1
 PAUSE = 2
 
-
 def main():
 	pg.display.init()
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
