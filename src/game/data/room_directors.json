@@ -48,6 +48,10 @@
 					{
 						"type": "BreakBlock",
 						"hash": 3
+					},
+					{
+						"type": "MusicDirector",
+						"hash": 0
 					}
 				]
 			},
@@ -187,6 +191,10 @@
 					{
 						"type": "BreakBlock",
 						"hash": 9
+					},
+					{
+						"type": "MusicDirector",
+						"hash": 1
 					}
 				]
 			},
