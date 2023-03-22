@@ -77,14 +77,14 @@ def main():
 						#jump and double jump
 						player.jump()
 						
-					elif event.key == K_LSHIFT:
+					elif event.key == K_q:
 						# dash
 						player.dash()
 
-					elif event.key == K_e:
+					elif event.key == K_w:
 						player.basic_attack()
 
-					elif event.key == K_s:
+					elif event.key == K_e:
 						player.rotatory_attack()
 
 					elif event.key == K_ESCAPE:
