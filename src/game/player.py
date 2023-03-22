@@ -1,5 +1,6 @@
 import obj
 import pygame as pg
+from random import randint
 from game.cam import Cam
 from game.image import SpriteSheet
 from game.control import Control
@@ -223,6 +224,11 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 		self.stand = None
 		
+		self.jump1_sound = pg.mixer.Sound('game/sounds/jump1.ogg')
+		self.jump2_sound = pg.mixer.Sound('game/sounds/jump2.ogg')
+		self.damage1_sound = pg.mixer.Sound('game/sounds/damage1.ogg')
+		self.damage2_sound = pg.mixer.Sound('game/sounds/damage2.ogg')
+		self.damage3_sound = pg.mixer.Sound('game/sounds/damage3.ogg')
 
 	def teleport(self, x, y):
 		self.pos.x = x
@@ -253,6 +259,14 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			self.attackedCnt = HIT_INVUL_TIME
 			self._ui.updateLife(self.life)
 
+			rand = randint(1,3)
+
+			if rand == 1:
+				self.damage1_sound.play()
+			elif rand==2:
+				self.damage2_sound.play()
+			else:
+				self.damage3_sound.play()
 
 	# Función para detectar si el jugador está en el suelo o no y actualizar su valor
 	def isInGround(self):
@@ -331,21 +345,25 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			self._inGround = False
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
+			self.jump1_sound.play()
 
 		elif self.isInWall() and self._facingRight:
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
 			self.vel.x = -MAX_H_VEL*1.1
+			self.jump1_sound.play()
 		
 		elif self.isInWall() and (not self._facingRight):
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
 			self.vel.x = MAX_H_VEL*1.1
+			self.jump1_sound.play()
 			
 		elif self.doubleJump:
 			self.acc.y = V_ACC
 			self.vel.y = -JUMP_VEL
 			self.doubleJump = False
+			self.jump2_sound.play()
 		
 			
 	
