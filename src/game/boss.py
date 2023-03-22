@@ -4,6 +4,7 @@ from game.image import SpriteSheet
 from game.cam import Cam
 from game.stand import StandEnemy
 from game.tile import TileCollision, RECT
+from game.powerup import PowerUp
 import pygame as pg
 import math as m
 
@@ -89,6 +90,9 @@ class BasicBoss(
 
 		self._cam = obj.getGroup(Cam)[camHash]
 
+		for po in obj.getGroup(PowerUp):
+			po.active = False
+
 
 		ObjAlive.__init__(
 			self,
@@ -125,6 +129,9 @@ class BasicBoss(
 	def update(self):
 		if self._hitCnt == 0:
 			if self.life <= 0:
+				for po in obj.getGroup(PowerUp):
+					po.active = True
+				
 				self.save()
 				self.close()
 				return

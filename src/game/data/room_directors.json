@@ -48,6 +48,14 @@
 					{
 						"type": "BreakBlock",
 						"hash": 3
+					},
+					{
+						"type": "PowerUp",
+						"hash": 0
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 6
 					}
 				]
 			},
@@ -138,6 +146,10 @@
 					{
 						"type": "Peon",
 						"hash": 3
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 4
 					}
 				]
 			},
@@ -232,6 +244,10 @@
 					{
 						"type": "CollideTP",
 						"hash": 0
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 2
 					}
 				]
 			},
@@ -411,6 +427,89 @@
 					{
 						"type": "BigDoor",
 						"hash": 1
+					}
+				]
+			},
+			{
+				"rect": [256,1584,256,144],
+				"objs": [
+					{
+						"type": "PowerUp",
+						"hash": 1
+					},
+					{
+						"type": "VisibleArea",
+						"hash": 10
+					},
+					{
+						"type": "BasicBoss",
+						"hash": 1
+					},
+					{
+						"type": "TileMap",
+						"hash": 8
+					},
+					{
+						"type": "TileCollision",
+						"hash": 8
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 3
+					}
+				]
+			},
+			{
+				"rect": [512,1584,256,144],
+				"objs": [
+					{
+						"type": "PowerUp",
+						"hash": 2
+					},
+					{
+						"type": "VisibleArea",
+						"hash": 11
+					},
+					{
+						"type": "BasicBoss",
+						"hash": 2
+					},
+					{
+						"type": "TileMap",
+						"hash": 9
+					},
+					{
+						"type": "TileCollision",
+						"hash": 9
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 5
+					}
+				]
+			},
+			{
+				"rect": [768,1584,256,144],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 12
+					},
+					{
+						"type": "BasicBoss",
+						"hash": 3
+					},
+					{
+						"type": "TileMap",
+						"hash": 10
+					},
+					{
+						"type": "TileCollision",
+						"hash": 10
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 7
 					}
 				]
 			}

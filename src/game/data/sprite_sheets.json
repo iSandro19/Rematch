@@ -142,5 +142,23 @@
 		"w": 64,
 		"h": 80,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/Hikaru.png",
+		"w": 32,
+		"h": 32,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Fabiano.png",
+		"w": 32,
+		"h": 32,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Viswanathan.png",
+		"w": 32,
+		"h": 32,
+		"colorkey": null
 	}
 ]

@@ -13,6 +13,7 @@ import game.menus
 import game.teleporter
 import game.boss
 import game.teleporter
+import game.powerup
 
 WIND_SIZE = 256,144
 FPS = 60

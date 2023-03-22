@@ -40,5 +40,17 @@
 	},
 	{
 		"file": "game/images/Caja rompible.png"
+	},
+	{
+		"file": "game/images/peon power up.png"
+	},
+	{
+		"file": "game/images/alfil power up.png"
+	},
+	{
+		"file": "game/images/torre power up.png"
+	},
+	{
+		"file": "game/images/caballo power up.png"
 	}
 ]
