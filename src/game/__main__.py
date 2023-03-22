@@ -13,6 +13,7 @@ import game.menus
 import game.teleporter
 import game.boss
 import game.teleporter
+import game.music
 
 WIND_SIZE = 256,144
 FPS = 60
@@ -46,12 +47,16 @@ def main():
 
 	mainMenu = game.menus.MainMenu(0)
 
+	music = obj.load("MusicDirector", 0, 0)
+	pg.mixer.music.set_volume(0.5)
+
 	# Instanciar player para poder llamar las funciones
 	while notExit:
 		# Faltan los inputs que dependen de objetos en la pantalla (menú y pantalla de pausa)
 		for event in pg.event.get():
 			if gameScreen == INTRO:
 				if event.type == pg.QUIT:
+					music.close()
 					mainMenu.close()
 					notExit = False
 
@@ -60,6 +65,7 @@ def main():
 					cam = obj.load('Cam', 0, 0)
 					player = obj.load('Player', 0, 0)
 					roomDir = obj.load('RoomDirector', 0, 0)
+					music.close()
 					mainMenu.close()
 
 					gameScreen = GAME
