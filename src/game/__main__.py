@@ -23,6 +23,7 @@ GAME  = 1
 PAUSE = 2
 
 def main():
+	pg.init()
 	pg.display.init()
 	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
 	icon = pg.image.load('../assets/logo/icono.png')
