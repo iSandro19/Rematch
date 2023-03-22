@@ -14,6 +14,7 @@ import game.teleporter
 import game.boss
 import game.teleporter
 import game.powerup
+import game.music
 
 WIND_SIZE = 256,144
 FPS = 60
@@ -47,12 +48,16 @@ def main():
 
 	mainMenu = game.menus.MainMenu(0)
 
+	music = obj.load("MusicDirector", 0, 0)
+	pg.mixer.music.set_volume(0.5)
+
 	# Instanciar player para poder llamar las funciones
 	while notExit:
 		# Faltan los inputs que dependen de objetos en la pantalla (menú y pantalla de pausa)
 		for event in pg.event.get():
 			if gameScreen == INTRO:
 				if event.type == pg.QUIT:
+					music.close()
 					mainMenu.close()
 					notExit = False
 
@@ -61,6 +66,7 @@ def main():
 					cam = obj.load('Cam', 0, 0)
 					player = obj.load('Player', 0, 0)
 					roomDir = obj.load('RoomDirector', 0, 0)
+					music.close()
 					mainMenu.close()
 
 					gameScreen = GAME
@@ -78,14 +84,14 @@ def main():
 						#jump and double jump
 						player.jump()
 						
-					elif event.key == K_LSHIFT:
+					elif event.key == K_q:
 						# dash
 						player.dash()
 
-					elif event.key == K_e:
+					elif event.key == K_w:
 						player.basic_attack()
 
-					elif event.key == K_s:
+					elif event.key == K_e:
 						player.rotatory_attack()
 
 					elif event.key == K_ESCAPE:

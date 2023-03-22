@@ -224,11 +224,15 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 		self.stand = None
 		
-		self.jump1_sound = pg.mixer.Sound('game/sounds/jump1.ogg')
-		self.jump2_sound = pg.mixer.Sound('game/sounds/jump2.ogg')
+		self.jump1_sound = pg.mixer.Sound('game/sounds/jump_1.ogg')
+		self.jump2_sound = pg.mixer.Sound('game/sounds/jump_2.ogg')
 		self.damage1_sound = pg.mixer.Sound('game/sounds/damage1.ogg')
 		self.damage2_sound = pg.mixer.Sound('game/sounds/damage2.ogg')
 		self.damage3_sound = pg.mixer.Sound('game/sounds/damage3.ogg')
+		self.ataque_normal_sound = pg.mixer.Sound('game/sounds/ataque_normal.ogg')
+		self.ataque_giratorio_sound = pg.mixer.Sound('game/sounds/ataque_giratorio.ogg')
+		self.dash1_sound = pg.mixer.Sound('game/sounds/dash1.ogg')
+		self.dash2_sound = pg.mixer.Sound('game/sounds/dash2.ogg')
 
 	def teleport(self, x, y):
 		self.pos.x = x
@@ -411,6 +415,16 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
 
+			rand = randint(1,2)
+
+			print(rand)
+
+			if rand == 1:
+				self.dash1_sound.play()
+			else:
+				self.dash2_sound.play()
+
+
 	# Se puede dashear cada 30 fps y solo una vez mientras estés en el aire
 	def dodash(self):
 		if self.counter > 0:
@@ -450,6 +464,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			else:
 				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
+			self.ataque_normal_sound.play()
 			self.attackCnt = ATTACK_COOLDOWN
 
 	def rotatory_attack(self):
@@ -460,6 +475,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
 			self.attackCnt = ATTACK_COOLDOWN
+			self.ataque_giratorio_sound.play()
 
 	@property
 	def active(self):
