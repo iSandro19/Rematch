@@ -392,6 +392,10 @@
 				"rect": [0,1584,256,144],
 				"objs": [
 					{
+						"type": "PowerUp",
+						"hash": 3
+					},
+					{
 						"type": "VisibleArea",
 						"hash": 8
 					},

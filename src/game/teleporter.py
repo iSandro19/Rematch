@@ -115,8 +115,6 @@ class BigDoor(obj.ObjStaticR, obj.physic.ObjRelative, obj.sprite.ObjSprite):
 
 		self.frame = obj.sprite.Frame(0, 0)
 
-		self.open() # Quitar
-
 	def open(self):
 		self.frame = obj.sprite.Frame(1, 0)
 		self._isOpen = True
@@ -128,6 +126,11 @@ class BigDoor(obj.ObjStaticR, obj.physic.ObjRelative, obj.sprite.ObjSprite):
 					player.teleport(self._destX, self._destY)
 
 	def draw(self):
+		if not self._isOpen:
+			for player in obj.getGroup("Player"):
+				if all(player.powerUps.values()):
+					self.open()
+					
 		obj.physic.ObjRelative.draw(self)
 		obj.sprite.ObjSprite.draw(self)
 

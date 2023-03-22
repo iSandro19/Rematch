@@ -160,7 +160,8 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 		sprtShtHash,
 		camHash,
 		x,
-		y
+		y,
+		powerUps
 	):
 
 		try:
@@ -233,6 +234,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 		self.ataque_giratorio_sound = pg.mixer.Sound('game/sounds/ataque_giratorio.ogg')
 		self.dash1_sound = pg.mixer.Sound('game/sounds/dash1.ogg')
 		self.dash2_sound = pg.mixer.Sound('game/sounds/dash2.ogg')
+
+		self.powerUps = powerUps
+		self._x = x
+		self._y = y
 
 	def teleport(self, x, y):
 		self.pos.x = x
@@ -345,29 +350,30 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 
 	def jump(self):
-		if self.isInGround():
-			self._inGround = False
-			self.acc.y = V_ACC
-			self.vel.y = -JUMP_VEL
-			self.jump1_sound.play()
+		if self.powerUps["peon"]:
+			if self.isInGround():
+				self._inGround = False
+				self.acc.y = V_ACC
+				self.vel.y = -JUMP_VEL
+				self.jump1_sound.play()
 
-		elif self.isInWall() and self._facingRight:
-			self.acc.y = V_ACC
-			self.vel.y = -JUMP_VEL
-			self.vel.x = -MAX_H_VEL*1.1
-			self.jump1_sound.play()
-		
-		elif self.isInWall() and (not self._facingRight):
-			self.acc.y = V_ACC
-			self.vel.y = -JUMP_VEL
-			self.vel.x = MAX_H_VEL*1.1
-			self.jump1_sound.play()
+			elif self.powerUps["alfil"] and self.isInWall() and self._facingRight:
+				self.acc.y = V_ACC
+				self.vel.y = -JUMP_VEL
+				self.vel.x = -MAX_H_VEL*1.1
+				self.jump1_sound.play()
 			
-		elif self.doubleJump:
-			self.acc.y = V_ACC
-			self.vel.y = -JUMP_VEL
-			self.doubleJump = False
-			self.jump2_sound.play()
+			elif self.powerUps["alfil"] and self.isInWall() and (not self._facingRight):
+				self.acc.y = V_ACC
+				self.vel.y = -JUMP_VEL
+				self.vel.x = MAX_H_VEL*1.1
+				self.jump1_sound.play()
+				
+			elif self.powerUps["caballo"] and self.doubleJump:
+				self.acc.y = V_ACC
+				self.vel.y = -JUMP_VEL
+				self.doubleJump = False
+				self.jump2_sound.play()
 		
 			
 	
@@ -405,77 +411,81 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 	# Inicia la acción de dasheo e inicia el contador
 	def dash(self):
-		if self.dashing == False:
-			self.dashing = True
-			self.counter = 30
+		if self.powerUps["torre"]:
+			if self.dashing == False:
+				self.dashing = True
+				self.counter = 30
 
-			if self._facingRight:
-				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
-			else:
-				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				if self._facingRight:
+					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				else:
+					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
 
-			rand = randint(1,2)
+				rand = randint(1,2)
 
-			print(rand)
+				print(rand)
 
-			if rand == 1:
-				self.dash1_sound.play()
-			else:
-				self.dash2_sound.play()
+				if rand == 1:
+					self.dash1_sound.play()
+				else:
+					self.dash2_sound.play()
 
 
 	# Se puede dashear cada 30 fps y solo una vez mientras estés en el aire
 	def dodash(self):
-		if self.counter > 0:
-			# Aumentar velocidad
-			if (self.vel.x > 0) & (self._facingRight) & (self.counter > 20):
-				self.vel.x  += H_ACC*2.5
-				self.vel.y = 0
-			elif (self.vel.x < 0) & (not self._facingRight) & (self.counter > 20):
-				self.vel.x  -= H_ACC*2.5
-				self.vel.y = 0
+		if self.powerUps["torre"]:
+			if self.counter > 0:
+				# Aumentar velocidad
+				if (self.vel.x > 0) & (self._facingRight) & (self.counter > 20):
+					self.vel.x  += H_ACC*2.5
+					self.vel.y = 0
+				elif (self.vel.x < 0) & (not self._facingRight) & (self.counter > 20):
+					self.vel.x  -= H_ACC*2.5
+					self.vel.y = 0
 
-			# Frenar el dash
-			elif (self.counter > 15) & (self.vel.x > 2.2):
-				self.vel.x -= H_ACC * 5
-				self.vel.y = 0
-			elif (self.counter > 15) & (self.vel.x < -2.2):
-				self.vel.x += H_ACC * 5
-				self.vel.y = 0
+				# Frenar el dash
+				elif (self.counter > 15) & (self.vel.x > 2.2):
+					self.vel.x -= H_ACC * 5
+					self.vel.y = 0
+				elif (self.counter > 15) & (self.vel.x < -2.2):
+					self.vel.x += H_ACC * 5
+					self.vel.y = 0
 
-			# Durante este tiempo, la velocida vertical no varía
-			
-			# Asegurarse de seguir a la maxima velocidad usual
-			elif (self.counter < 15) & (self.vel.x != 2.2) & (self.vel.x > 0):
-				self.vel.x = 2.2
-			elif (self.counter < 15) & (self.vel.x != -2.2) & (self.vel.x < 0):
-				self.vel.x = -2.2
+				# Durante este tiempo, la velocida vertical no varía
+				
+				# Asegurarse de seguir a la maxima velocidad usual
+				elif (self.counter < 15) & (self.vel.x != 2.2) & (self.vel.x > 0):
+					self.vel.x = 2.2
+				elif (self.counter < 15) & (self.vel.x != -2.2) & (self.vel.x < 0):
+					self.vel.x = -2.2
 
-			self.counter -= 1
+				self.counter -= 1
 
-		elif self.isInGround() or self.isInWall(): 
-			self.dashing = False
+			elif self.isInGround() or self.isInWall(): 
+				self.dashing = False
 			
 	def basic_attack(self):
-		if self.attackCnt == 0:
-			if self._facingRight:
-				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
-			else:
-				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+		if self.powerUps["peon"]:
+			if self.attackCnt == 0:
+				if self._facingRight:
+					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				else:
+					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
-			self.ataque_normal_sound.play()
-			self.attackCnt = ATTACK_COOLDOWN
+				self.ataque_normal_sound.play()
+				self.attackCnt = ATTACK_COOLDOWN
 
 	def rotatory_attack(self):
-		if self.attackCnt == 0:
-			if self._facingRight:
-				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
-			else:
-				self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+		if self.powerUps["alfil"]:
+			if self.attackCnt == 0:
+				if self._facingRight:
+					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				else:
+					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
-			self.attackCnt = ATTACK_COOLDOWN
-			self.ataque_giratorio_sound.play()
+				self.attackCnt = ATTACK_COOLDOWN
+				self.ataque_giratorio_sound.play()
 
 	@property
 	def active(self):
@@ -729,15 +739,15 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 	def save(self):
 		self._save(
-			controlHash=hash(self._control),
 			sprtShtHash=hash(self._sprtSht),
 			camHash=hash(self._cam),
-			x=self.cBox.x,
-			y=self.cBox.y
+			x=self._x,
+			y=self._y,
+			powerUps=self.powerUps
 		)
 
 	def close(self):
-		#self.save()
+		self.save()
 
 		if self.stand and self.stand.active:
 			self.stand.close()
@@ -745,6 +755,9 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 		self._sprtSht.leave()
 		self._ui.close()
 		obj.Obj.close(self)
+
+	def setPowerUp(self, name):
+		self.powerUps[name] = True
 
 try:
 	obj.getGroup(Player)

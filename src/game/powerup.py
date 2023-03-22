@@ -48,6 +48,7 @@ class PowerUp(obj.ObjStaticRW, obj.physic.ObjRelative, obj.ObjUpdate):
 	def update(self):
 		for player in obj.getGroup(Player):
 			if player.hitBox.colliderect((self.pos, (self.rect.w, self.rect.h))):
+				player.setPowerUp(self._name)
 				self._obtained = True
 				self.save()
 				self.close()
