@@ -18,7 +18,6 @@ import game.music
 
 WIND_SIZE = 256,144
 FPS = 60
-WAIT_TIME = 200		# Tiempo a partir del cual se detecta Pulsado Largo en una tecla
 
 INTRO = 0
 GAME  = 1
