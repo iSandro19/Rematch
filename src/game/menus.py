@@ -143,11 +143,13 @@ class MainMenu (obj.ObjDraw, obj.ObjDynamic):
 
         obj.ObjDraw.__init__(self, hash(self), FATHR_HASH, self.surf.image, self.surf.image.get_rect())
 
-        self.textoBoton = obj.load("Parpadeables", 0 , 0)
+        self.botonC = obj.load("Boton", 2, 0)
+        self.botonS = obj.load("Boton", 3, 0)
 
 
     def close(self):
-        self.textoBoton.close()
+        self.botonC.close()
+        self.botonS.close()
         self.surf.leave()
         obj.Obj.close(self)
 

@@ -64,17 +64,25 @@ def main():
 					notExit = False
 
 				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
-					# Objetos independientes de la sala
-					cam = obj.load('Cam', 0, 0)
-					player = obj.load('Player', 0, 0)
-					roomDir = obj.load('RoomDirector', 0, 0)
-					try:
-						music.close()
-					except Exception:
-						pass
-					mainMenu.close()
+					if mainMenu.botonC.isSelected():	# CAMBIARRRRRRRRRR
+						cam.close()
+						player.close()
+						roomDir.close()
+						pauseMenu.close()
 
-					gameScreen = GAME
+						notExit = False
+					elif mainMenu.botonS.isSelected():					
+						
+						cam = obj.load('Cam', 0, 0)
+						player = obj.load('Player', 0, 0)
+						roomDir = obj.load('RoomDirector', 0, 0)
+						try:
+							music.close()
+						except Exception:
+							pass
+						mainMenu.close()
+
+						gameScreen = GAME
 
 			elif gameScreen == GAME:
 				if event.type == pg.QUIT:
