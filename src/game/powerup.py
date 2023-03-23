@@ -5,7 +5,6 @@ from game.cam import Cam
 from game.player import Player
 import math as m
 
-
 MAX_FRM = 64
 AMP_ANIM = 3
 

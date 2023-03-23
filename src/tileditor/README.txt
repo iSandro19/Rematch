@@ -2,7 +2,7 @@ Editor de niveles para el módulo 'obj':
 
 EJECUCIÓN:
 
-	Desde el directorio 'playground/nico/src/' hacer:
+	Desde el directorio hacer:
 
 	python -m tileditor ROOM_W ROOM_H SPRITE_SHEET_HASH OUT_FILE [IN_FILE]
 

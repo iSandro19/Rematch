@@ -56,6 +56,10 @@
 					{
 						"type": "SmallDoor",
 						"hash": 6
+					},
+					{
+						"type": "Chandelier",
+						"hash": 0
 					}
 				]
 			},

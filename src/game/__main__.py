@@ -15,10 +15,10 @@ import game.boss
 import game.teleporter
 import game.powerup
 import game.music
+import game.chandelier
 
 WIND_SIZE = 256,144
 FPS = 60
-WAIT_TIME = 200		# Tiempo a partir del cual se detecta Pulsado Largo en una tecla
 
 INTRO = 0
 GAME  = 1
@@ -57,20 +57,22 @@ def main():
 		for event in pg.event.get():
 			if gameScreen == INTRO:
 				if event.type == pg.QUIT:
-					#music.close()
 					mainMenu.close()
 					notExit = False
 
 				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
-					# Objetos independientes de la sala
-					cam = obj.load('Cam', 0, 0)
-					player = obj.load('Player', 0, 0)
-					roomDir = obj.load('RoomDirector', 0, 0)
-					music = obj.load("MusicDirector", 0, 0)
-					#music.close()
-					mainMenu.close()
+					if mainMenu.botonC.isSelected():	# CAMBIARRRRRRRRRR
+						pass
 
-					gameScreen = GAME
+						notExit = False
+					elif mainMenu.botonS.isSelected():					
+						
+						cam = obj.load('Cam', 0, 0)
+						player = obj.load('Player', 0, 0)
+						roomDir = obj.load('RoomDirector', 0, 0)
+						music = obj.load("MusicDirector", 0, 0)
+
+						gameScreen = GAME
 
 			elif gameScreen == GAME:
 				if event.type == pg.QUIT:
