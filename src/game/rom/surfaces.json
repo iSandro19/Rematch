@@ -52,5 +52,8 @@
 	},
 	{
 		"file": "game/images/caballo power up.png"
+	},
+	{
+		"file": "game/images/fondo_muerte.png"
 	}
 ]

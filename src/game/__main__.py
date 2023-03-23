@@ -1,6 +1,6 @@
 import pygame as pg
 from pygame.locals import *
-from typing import List, Dict, Tuple, Union, Callable
+from distutils.dir_util import copy_tree
 import obj
 import game.room
 import game.tile
@@ -23,6 +23,7 @@ FPS = 60
 INTRO = 0
 GAME  = 1
 PAUSE = 2
+DEAD = 3
 
 def main():
 	pg.init()
@@ -61,8 +62,16 @@ def main():
 					notExit = False
 
 				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
-					if mainMenu.botonC.isSelected():	# CAMBIARRRRRRRRRR
-						notExit = False
+					if mainMenu.botonC.isSelected():
+						copy_tree("game/rom", "game/data")
+
+						mainMenu.close()
+						cam = obj.load('Cam', 0, 0)
+						player = obj.load('Player', 0, 0)
+						roomDir = obj.load('RoomDirector', 0, 0)
+						music = obj.load("MusicDirector", 0, 0)
+
+						gameScreen = GAME
 
 					elif mainMenu.botonS.isSelected():					
 						mainMenu.close()
@@ -159,6 +168,12 @@ def main():
 						notExit = False
 						#gameScreen = 0
 
+			elif gameScreen == DEAD:
+				if event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
+					deadMenu.close()
+					mainMenu = game.menus.MainMenu(0)
+					
+					gameScreen = INTRO
 
 		if gameScreen == GAME:
 			keys = pg.key.get_pressed()
@@ -188,9 +203,9 @@ def main():
 				roomDir.close()
 				music.close()
 
-				mainMenu = game.menus.MainMenu(0)
+				deadMenu = game.menus.DeadMenu(0)
 
-				gameScreen = INTRO
+				gameScreen = DEAD
 
 		pg.display.flip()
 		clock.tick(FPS)

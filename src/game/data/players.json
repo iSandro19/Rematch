@@ -1,1 +1,1 @@
-[{"sprtShtHash": 1, "camHash": 0, "x": 32, "y": 1000, "powerUps": {"peon": true, "alfil": true, "torre": true, "caballo": true}}]
+[{"sprtShtHash": 1, "camHash": 0, "x": 32, "y": 1000, "powerUps": {"peon": true, "alfil": false, "torre": false, "caballo": false}}]

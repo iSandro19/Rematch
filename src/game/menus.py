@@ -81,11 +81,10 @@ except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(PauseMenu))
         
 
-class Parpadeables(obj.ObjStaticR, obj.ObjDraw, obj.ObjUpdate):
+class Parpadeables(obj.ObjStaticR, obj.ObjDraw):
      
     GRP_FILE = "game/data/parpadeables.json"
-    DRAW_LAYER = 12
-    UPDT_POS = 0
+    DRAW_LAYER = 13
 
     def __init__(self, HASH, FATHR_HASH, sprtShtHash, x, y):
 
@@ -104,8 +103,7 @@ class Parpadeables(obj.ObjStaticR, obj.ObjDraw, obj.ObjUpdate):
         obj.ObjDraw.__init__(self, HASH, FATHR_HASH, sprtShtHash, rect)
         obj.ObjUpdate.__init__(self, HASH, FATHR_HASH)
 
-    def update(self):
-
+    def draw(self):
         self.i += 1
 
         if self.i < 30: self.visible = True
@@ -115,6 +113,8 @@ class Parpadeables(obj.ObjStaticR, obj.ObjDraw, obj.ObjUpdate):
 
         if self.visible:  self.image = self._sprtSht[0,0]
         else: self.image = self._sprtSht[1,0]
+
+        obj.ObjDraw.draw(self)
 
     def close(self):
         self._sprtSht.leave()
@@ -157,3 +157,35 @@ try:
 	obj.getGroup(MainMenu)
 except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(MainMenu))
+
+
+DM_SURF_HASH = 18
+
+class DeadMenu(obj.ObjDynamic, obj.ObjDraw):
+    DRAW_LAYER = 12
+    UPDT_POS = 0
+
+    def __init__(self, FATHR_HASH):
+        obj.ObjDynamic.__init__(self, FATHR_HASH)
+
+        try:
+            self._surf = obj.getGroup(Surface)[DM_SURF_HASH]
+            self._surf.watch()
+        except obj.ObjNotFoundError:
+            self._surf = obj.load(Surface, DM_SURF_HASH, hash(self))
+
+        obj.ObjDraw.__init__(self, hash(self), FATHR_HASH, self._surf.image, self._surf.image.get_rect())
+
+
+    def draw(self):
+        obj.ObjDraw.draw(self)
+        self.active = False
+
+    def close(self):
+        self._surf.leave()
+        obj.Obj.close(self)
+
+try:
+    obj.getGroup(DeadMenu)
+except obj.GroupNotFoundError:
+    obj.addGroup(obj.Group(DeadMenu))
