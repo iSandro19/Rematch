@@ -126,6 +126,7 @@ class BasicBoss(
 		self._standSprtShtHash = standSprtShtHash
 
 		self._stand = None
+		self.slash1_sound = pg.mixer.Sound('game/sounds/slashBoss.ogg')
 
 	def update(self):
 		if self._hitCnt == 0:
@@ -235,6 +236,7 @@ class BasicBoss(
 		if self._hitCnt == 0:
 			self._hitCnt = BB_HIT_CNT_MAX
 			self.life -= dmg
+			self.slash1_sound.play()
 
 	def save(self):
 		self._save(
