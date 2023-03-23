@@ -162,18 +162,6 @@
 		"colorkey": null
 	},
 	{
-		"file": "game/images/Candelabro grande.png",
-		"w": 32,
-		"h": 32,
-		"colorkey": null
-	},
-	{
-		"file": "game/images/Candelabro peque.png",
-		"w": 32,
-		"h": 32,
-		"colorkey": null
-	},
-	{
 		"file": "game/images/nueva_partida.png",
 		"w": 112,
 		"h": 16,
@@ -183,6 +171,18 @@
 		"file": "game/images/continuar.png",
 		"w": 112,
 		"h": 16,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Candelabro grande.png",
+		"w": 32,
+		"h": 32,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Candelabro peque.png",
+		"w": 32,
+		"h": 32,
 		"colorkey": null
 	}
 ]
