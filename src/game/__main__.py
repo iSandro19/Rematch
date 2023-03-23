@@ -57,7 +57,10 @@ def main():
 		for event in pg.event.get():
 			if gameScreen == INTRO:
 				if event.type == pg.QUIT:
-					music.close()
+					try:
+						music.close()
+					except Exception:
+						pass
 					mainMenu.close()
 					notExit = False
 
@@ -66,7 +69,10 @@ def main():
 					cam = obj.load('Cam', 0, 0)
 					player = obj.load('Player', 0, 0)
 					roomDir = obj.load('RoomDirector', 0, 0)
-					music.close()
+					try:
+						music.close()
+					except Exception:
+						pass
 					mainMenu.close()
 
 					gameScreen = GAME
