@@ -32,7 +32,7 @@ HIT_OFFSET_V = 0
 HIT_BOX_W = 16
 HIT_BOX_H = 32
 
-HIT_CNT_MAX = 8 # par o se queda invisible
+HIT_CNT_MAX = 14 # par o se queda invisible
 
 H_VEL = 1
 

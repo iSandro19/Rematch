@@ -43,6 +43,8 @@ class PowerUp(obj.ObjStaticRW, obj.physic.ObjRelative, obj.ObjUpdate):
 			self._name = name
 			self._obtained = obtained
 
+			self.beat = True
+
 			self._frmCnt = 0
 
 	def update(self):
@@ -79,6 +81,16 @@ class PowerUp(obj.ObjStaticRW, obj.physic.ObjRelative, obj.ObjUpdate):
 	def close(self):
 		self._surf.leave()
 		obj.Obj.close(self)
+
+
+	@property
+	def active(self):
+		return self._active
+
+	@active.setter
+	def active(self, value):
+		self._active = value and self.beat
+
 
 try:
 	obj.getGroup(PowerUp)

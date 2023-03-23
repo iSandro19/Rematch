@@ -1,42 +1,72 @@
 import obj
+from game.cam import VisibleArea, Cam
 import pygame as pg
 
-class MusicDirector(obj.ObjStaticR):
-
+class MusicDirector(obj.ObjStaticR, obj.ObjUpdate):
     GRP_FILE = "game/data/music.json"
-
-    def play_music(self):
-        pg.mixer.music.play(-1)
-
-    def stop_music(self):
-        pg.mixer.music.stop()
+    UPDT_POS = 2
 
     @property
     def active(self):
         return self._active
 
+    @active.setter
     def active(self, value):
         if value: 
-            self.play_music()
+            pg.mixer.music.unpause()
         else:
-            self.stop_music()
+            pg.mixer.music.pause()
 
         self._active = value
 
 
-    def __init__(self, HASH, FATHR_HASH, song):
+    def __init__(self, HASH, FATHR_HASH, camHash, songAreas):
 
         obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)
+        obj.ObjUpdate.__init__(self, HASH, FATHR_HASH)
 
-        pg.mixer.music.load(song)
-        pg.mixer.music.set_volume(0.15)
+        self._songAreas = songAreas
 
-        self.play_music()
+        self._playingSong = None
+
+        self._cam = obj.getGroup(Cam)[camHash]
+
+    def update(self):
+        prevSong = self._playingSong
+
+        for sa in self._songAreas:
+            for va in sa["areaHashes"]:
+                try:
+                    if obj.getGroup(VisibleArea)[va].colliderect(self._cam):
+                        if self._playingSong:
+                            self._songAreas.append(self._playingSong)
+
+                        self._playingSong = sa
+                        self._songAreas.remove(sa)
+
+                        pg.mixer.music.load(self._playingSong["song"])
+                        pg.mixer.music.play(-1)
+                        break
+
+                except obj.ObjNotFoundError:
+                    pass
+
+        if prevSong and prevSong == self._playingSong:
+            anyVA = False
+            for va in self._playingSong["areaHashes"]:
+                try:
+                    anyVA = anyVA or obj.getGroup(VisibleArea)[va].colliderect(self._cam)
+                except obj.ObjNotFoundError:
+                    pass
+
+            if not anyVA:
+                self._songAreas.append(self._playingSong)
+                self._playingSong = None   
+                pg.mixer.music.stop()
 
 
     
     def close(self):
-
         pg.mixer.music.stop()
         obj.Obj.close(self)
 

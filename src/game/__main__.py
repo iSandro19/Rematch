@@ -48,8 +48,8 @@ def main():
 
 	mainMenu = game.menus.MainMenu(0)
 
-	music = obj.load("MusicDirector", 0, 0)
-	pg.mixer.music.set_volume(0.5)
+	
+	#pg.mixer.music.set_volume(0.5)
 
 	# Instanciar player para poder llamar las funciones
 	while notExit:
@@ -57,7 +57,7 @@ def main():
 		for event in pg.event.get():
 			if gameScreen == INTRO:
 				if event.type == pg.QUIT:
-					music.close()
+					#music.close()
 					mainMenu.close()
 					notExit = False
 
@@ -66,7 +66,8 @@ def main():
 					cam = obj.load('Cam', 0, 0)
 					player = obj.load('Player', 0, 0)
 					roomDir = obj.load('RoomDirector', 0, 0)
-					music.close()
+					music = obj.load("MusicDirector", 0, 0)
+					#music.close()
 					mainMenu.close()
 
 					gameScreen = GAME
@@ -76,6 +77,7 @@ def main():
 					cam.close()
 					player.close()
 					roomDir.close()
+					music.close()
 
 					notExit = False
 
@@ -98,6 +100,7 @@ def main():
 						player.active = False
 						cam.active = False
 						roomDir.active = False
+						music.active = False
 						pauseMenu = game.menus.PauseMenu(0)
 
 						gameScreen = PAUSE
@@ -120,6 +123,7 @@ def main():
 					player.close()
 					roomDir.close()
 					pauseMenu.close()
+					music.close()
 
 					notExit = False
 
@@ -128,7 +132,9 @@ def main():
 						player.active = True
 						cam.active = True
 						roomDir.active = True
+						music.active = True
 						pauseMenu.close()
+
 
 						gameScreen = GAME
 
@@ -137,6 +143,7 @@ def main():
 						player.active = True
 						cam.active = True
 						roomDir.active = True
+						music.active = True
 						pauseMenu.close()
 
 						gameScreen = GAME
@@ -146,6 +153,7 @@ def main():
 						player.close()
 						roomDir.close()
 						pauseMenu.close()
+						music.close()
 
 						notExit = False
 						#gameScreen = 0

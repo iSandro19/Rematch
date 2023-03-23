@@ -91,6 +91,7 @@ class BasicBoss(
 		self._cam = obj.getGroup(Cam)[camHash]
 
 		for po in obj.getGroup(PowerUp):
+			po.beat = False
 			po.active = False
 
 
@@ -128,12 +129,12 @@ class BasicBoss(
 
 	def update(self):
 		if self._hitCnt == 0:
-			if self.life <= 0:
-				for po in obj.getGroup(PowerUp):
-					po.active = True
-				
+			if self.life <= 0:				
 				self.save()
 				self.close()
+				for po in obj.getGroup(PowerUp):
+					po.beat = True
+					po.active = True
 				return
 
 			if self._facingRight:

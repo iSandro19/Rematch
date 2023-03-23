@@ -140,27 +140,27 @@ class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjU
 	def update(self):
 		if not self.done:
 			if   self.attack == "basicRight":
-				if 2 <= self.frmCnt < 4:
+				if 2 <= self.frmCnt < 14:
 					self.doAttack()
 
 			elif self.attack == "basicLeft":
-				if 2 <= self.frmCnt < 4:
+				if 2 <= self.frmCnt < 14:
 					self.doAttack()
 
 			elif self.attack == "rotatoryRight":
-				if 2 <= self.frmCnt < 14:
+				if 2 <= self.frmCnt < 29:
 					self.doAttack()
 
 			elif self.attack == "rotatoryLeft":
-				if 2 <= self.frmCnt < 14:
+				if 2 <= self.frmCnt < 29:
 					self.doAttack()
 				
 			elif self.attack == "lanceRight":
-				if 2 <= self.frmCnt < 8:
+				if 2 <= self.frmCnt < 14:
 					self.doAttack()
 				
 			elif self.attack == "lanceLeft":
-				if 2 <= self.frmCnt < 8:
+				if 2 <= self.frmCnt < 14:
 					self.doAttack()
 
 			self.frmCnt += 1
