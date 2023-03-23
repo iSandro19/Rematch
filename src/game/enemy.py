@@ -1,4 +1,5 @@
 import obj
+from random import randint
 from game.image import SpriteSheet
 from game.cam import Cam
 from game.alive import ObjAlive
@@ -90,6 +91,9 @@ class Ficha(
 		self._facingRight = True
 		self._dmg = dmg
 
+		self.hit1_sound = pg.mixer.Sound('game/sounds/hitEnemy1.ogg')
+		self.hit2_sound = pg.mixer.Sound('game/sounds/hitEnemy2.ogg')
+
 	def update(self):
 		if self._hitCnt == 0:
 			if self.life <= 0:
@@ -170,6 +174,14 @@ class Ficha(
 		if self._hitCnt == 0:
 			self._hitCnt = HIT_CNT_MAX
 			self.life -= dmg
+
+			rand = randint(1,2)
+
+			if rand == 1:
+				self.hit1_sound.play()
+			else:
+				self.hit2_sound.play()
+
 		
 
 PEON_LIFE = 1
