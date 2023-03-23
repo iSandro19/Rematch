@@ -37,7 +37,8 @@ class MusicDirector(obj.ObjStaticR, obj.ObjUpdate):
         for sa in self._songAreas:
             for va in sa["areaHashes"]:
                 try:
-                    if obj.getGroup(VisibleArea)[va].colliderect(self._cam):
+                    inst = obj.getGroup(VisibleArea)[va]
+                    if inst.active and inst.colliderect(self._cam):
                         if self._playingSong:
                             self._songAreas.append(self._playingSong)
 
@@ -55,7 +56,8 @@ class MusicDirector(obj.ObjStaticR, obj.ObjUpdate):
             anyVA = False
             for va in self._playingSong["areaHashes"]:
                 try:
-                    anyVA = anyVA or obj.getGroup(VisibleArea)[va].colliderect(self._cam)
+                    inst = obj.getGroup(VisibleArea)[va]
+                    anyVA = anyVA or inst.active and inst.colliderect(self._cam)
                 except obj.ObjNotFoundError:
                     pass
 

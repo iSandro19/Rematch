@@ -63,7 +63,7 @@ def main():
 				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
 					if mainMenu.botonC.isSelected():	# CAMBIARRRRRRRRRR
 						notExit = False
-						
+
 					elif mainMenu.botonS.isSelected():					
 						mainMenu.close()
 						cam = obj.load('Cam', 0, 0)
@@ -186,6 +186,7 @@ def main():
 				cam.close()
 				player.close()
 				roomDir.close()
+				music.close()
 
 				mainMenu = game.menus.MainMenu(0)
 
