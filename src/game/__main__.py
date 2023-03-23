@@ -61,7 +61,7 @@ def main():
 					mainMenu.close()
 					notExit = False
 
-				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
+				elif event.type == MOUSEBUTTONDOWN:
 					if mainMenu.botonC.isSelected():
 						copy_tree("game/rom", "game/data")
 
@@ -123,6 +123,12 @@ def main():
 							if bigDoor.active:
 								bigDoor.doTPifInDoor()
 				
+					elif event.key == K_PLUS:
+						music.volUp()
+
+					elif event.key == K_MINUS:
+						music.volDown()
+						
 				elif event.type == KEYUP:
 					if event.key == K_SPACE:
 						player.fall()
@@ -144,7 +150,6 @@ def main():
 						roomDir.active = True
 						music.active = True
 						pauseMenu.close()
-
 
 						gameScreen = GAME
 
@@ -172,7 +177,7 @@ def main():
 				if event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
 					deadMenu.close()
 					mainMenu = game.menus.MainMenu(0)
-					
+
 					gameScreen = INTRO
 
 		if gameScreen == GAME:

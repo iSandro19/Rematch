@@ -31,6 +31,8 @@ class MusicDirector(obj.ObjStaticR, obj.ObjUpdate):
 
         self._cam = obj.getGroup(Cam)[camHash]
 
+        self._vol = 0.
+
     def update(self):
         prevSong = self._playingSong
 
@@ -67,10 +69,21 @@ class MusicDirector(obj.ObjStaticR, obj.ObjUpdate):
                 pg.mixer.music.stop()
 
 
-    
     def close(self):
         pg.mixer.music.stop()
         obj.Obj.close(self)
+
+    def volUp(self):
+        if self._vol < 1.:
+            self._vol += 0.05
+
+        pg.mixer.music.set_volume(self._vol)
+
+    def volDown(self):
+        if self._vol > 0.:
+            self._vol -= 0.05
+
+        pg.mixer.music.set_volume(self._vol)
 
 try:
 	obj.getGroup(MusicDirector)
