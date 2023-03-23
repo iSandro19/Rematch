@@ -160,5 +160,17 @@
 		"w": 32,
 		"h": 32,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/Candelabro grande.png",
+		"w": 32,
+		"h": 32,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/Candelabro peque.png",
+		"w": 32,
+		"h": 32,
+		"colorkey": null
 	}
 ]

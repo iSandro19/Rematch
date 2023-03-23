@@ -60,6 +60,10 @@
 					{
 						"type": "MusicDirector",
 						"hash": 0
+					},
+					{
+						"type": "Chandelier",
+						"hash": 0
 					}
 				]
 			},
