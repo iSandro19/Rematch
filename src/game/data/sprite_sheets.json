@@ -172,5 +172,17 @@
 		"w": 32,
 		"h": 32,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/nueva_partida.png",
+		"w": 112,
+		"h": 16,
+		"colorkey": null
+	},
+	{
+		"file": "game/images/continuar.png",
+		"w": 112,
+		"h": 16,
+		"colorkey": null
 	}
 ]
