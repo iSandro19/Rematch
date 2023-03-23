@@ -62,11 +62,10 @@ def main():
 
 				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
 					if mainMenu.botonC.isSelected():	# CAMBIARRRRRRRRRR
-						pass
-
 						notExit = False
-					elif mainMenu.botonS.isSelected():					
 						
+					elif mainMenu.botonS.isSelected():					
+						mainMenu.close()
 						cam = obj.load('Cam', 0, 0)
 						player = obj.load('Player', 0, 0)
 						roomDir = obj.load('RoomDirector', 0, 0)

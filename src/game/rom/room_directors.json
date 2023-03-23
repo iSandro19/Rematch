@@ -1,0 +1,526 @@
+[
+	{
+		"camHash": 0,
+		"rooms": [
+			{
+				"rect": [0,0,688,1344],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 0
+					},
+					{
+						"type": "TileMap",
+						"hash": 0
+					},
+					{
+						"type": "TileCollision",
+						"hash": 0
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 0
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 0
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 3
+					},
+					{
+						"type": "Peon",
+						"hash": 0
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 0
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 1
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 2
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 3
+					},
+					{
+						"type": "PowerUp",
+						"hash": 0
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 6
+					},
+					{
+						"type": "Chandelier",
+						"hash": 0
+					}
+				]
+			},
+			{
+				"rect": [656,736,448,352],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 1
+					},
+					{
+						"type": "TileMap",
+						"hash": 1
+					},
+					{
+						"type": "TileCollision",
+						"hash": 1
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 1
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 2
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 0
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 3
+					},
+					{
+						"type": "BigDoor",
+						"hash": 0
+					}
+				]
+			},
+			{
+				"rect": [624,0,480,768],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 2
+					},
+					{
+						"type": "TileMap",
+						"hash": 4
+					},
+					{
+						"type": "TileCollision",
+						"hash": 4
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 2
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 3
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 0
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 3
+					},
+					{
+						"type": "Alfil",
+						"hash": 3
+					},
+					{
+						"type": "Alfil",
+						"hash": 4
+					},
+					{
+						"type": "Torre",
+						"hash": 0
+					},
+					{
+						"type": "Torre",
+						"hash": 1
+					},
+					{
+						"type": "Peon",
+						"hash": 3
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 4
+					}
+				]
+			},
+			{
+				"rect": [1072,928,640,304],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 3
+					},
+					{
+						"type": "VisibleArea",
+						"hash": 4
+					},
+					{
+						"type": "TileMap",
+						"hash": 2
+					},
+					{
+						"type": "TileCollision",
+						"hash": 2
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 4
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 4
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 5
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 6
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 7
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 8
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 9
+					}
+				]
+			},
+			{
+				"rect": [1680,704,672,384],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 5
+					},
+					{
+						"type": "TileMap",
+						"hash": 3
+					},
+					{
+						"type": "TileCollision",
+						"hash": 3
+					},
+					{
+						"type": "Bckgnd",
+						"hash": 5
+					},
+					{
+						"type": "Peon",
+						"hash": 1
+					},
+					{
+						"type": "Peon",
+						"hash": 2
+					},
+					{
+						"type": "Alfil",
+						"hash": 0
+					},
+					{
+						"type": "Alfil",
+						"hash": 1
+					},
+					{
+						"type": "Alfil",
+						"hash": 2
+					},
+					{
+						"type": "CollideTP",
+						"hash": 0
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 2
+					}
+				]
+			},
+			{
+				"rect": [1232,1184,1312,800],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 7
+					},
+					{
+						"type": "VisibleArea",
+						"hash": 6
+					},
+					{
+						"type": "TileMap",
+						"hash": 5
+					},
+					{
+						"type": "TileCollision",
+						"hash": 5
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 1
+					},
+					{
+						"type": "BckgndParallax",
+						"hash": 2
+					},
+					{
+						"type": "Alfil",
+						"hash": 5
+					},
+					{
+						"type": "Alfil",
+						"hash": 6
+					},
+					{
+						"type": "Peon",
+						"hash": 4
+					},
+					{
+						"type": "Alfil",
+						"hash": 7
+					},
+					{
+						"type": "Torre",
+						"hash": 2
+					},
+					{
+						"type": "Caballo",
+						"hash": 0
+					},
+					{
+						"type": "Caballo",
+						"hash": 1
+					},
+					{
+						"type": "CollideTP",
+						"hash": 1
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 0
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 10
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 11
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 12
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 13
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 14
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 15
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 16
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 17
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 18
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 19
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 20
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 21
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 22
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 23
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 24
+					},
+					{
+						"type": "BreakBlock",
+						"hash": 25
+					}
+				]
+			},
+			{
+				"rect": [0,1584,256,144],
+				"objs": [
+					{
+						"type": "PowerUp",
+						"hash": 3
+					},
+					{
+						"type": "VisibleArea",
+						"hash": 8
+					},
+					{
+						"type": "BasicBoss",
+						"hash": 0
+					},
+					{
+						"type": "TileMap",
+						"hash": 6
+					},
+					{
+						"type": "TileCollision",
+						"hash": 6
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 1
+					}
+				]
+			},
+			{
+				"rect": [0,1744,256,144],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 9
+					},
+					{
+						"type": "FinalBoss",
+						"hash": 0
+					},
+					{
+						"type": "TileMap",
+						"hash": 7
+					},
+					{
+						"type": "TileCollision",
+						"hash": 7
+					},
+					{
+						"type": "BigDoor",
+						"hash": 1
+					}
+				]
+			},
+			{
+				"rect": [256,1584,256,144],
+				"objs": [
+					{
+						"type": "PowerUp",
+						"hash": 1
+					},
+					{
+						"type": "VisibleArea",
+						"hash": 10
+					},
+					{
+						"type": "BasicBoss",
+						"hash": 1
+					},
+					{
+						"type": "TileMap",
+						"hash": 8
+					},
+					{
+						"type": "TileCollision",
+						"hash": 8
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 3
+					}
+				]
+			},
+			{
+				"rect": [512,1584,256,144],
+				"objs": [
+					{
+						"type": "PowerUp",
+						"hash": 2
+					},
+					{
+						"type": "VisibleArea",
+						"hash": 11
+					},
+					{
+						"type": "BasicBoss",
+						"hash": 2
+					},
+					{
+						"type": "TileMap",
+						"hash": 9
+					},
+					{
+						"type": "TileCollision",
+						"hash": 9
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 5
+					}
+				]
+			},
+			{
+				"rect": [768,1584,256,144],
+				"objs": [
+					{
+						"type": "VisibleArea",
+						"hash": 12
+					},
+					{
+						"type": "BasicBoss",
+						"hash": 3
+					},
+					{
+						"type": "TileMap",
+						"hash": 10
+					},
+					{
+						"type": "TileCollision",
+						"hash": 10
+					},
+					{
+						"type": "SmallDoor",
+						"hash": 7
+					}
+				]
+			}
+		]
+	}
+]

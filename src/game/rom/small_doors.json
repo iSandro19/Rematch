@@ -1,0 +1,58 @@
+[
+	{
+		"camHash": 0,
+		"srcX": 1632,
+		"srcY": 1888,
+		"destX": 32,
+		"destY": 1672
+	},
+	{
+		"camHash": 0,
+		"srcX": 32,
+		"srcY": 1648,
+		"destX": 1632,
+		"destY": 1912
+	},
+	{
+		"camHash": 0,
+		"srcX": 2192,
+		"srcY": 752,
+		"destX": 288,
+		"destY": 1672
+	},
+	{
+		"camHash": 0,
+		"srcX": 288,
+		"srcY": 1648,
+		"destX": 2192,
+		"destY": 776
+	},
+	{
+		"camHash": 0,
+		"srcX": 816,
+		"srcY": 64,
+		"destX": 544,
+		"destY": 1672
+	},
+	{
+		"camHash": 0,
+		"srcX": 544,
+		"srcY": 1648,
+		"destX": 816,
+		"destY": 88
+	},
+	{
+		"camHash": 0,
+		"srcX": 48,
+		"srcY": 1232,
+		"destX": 800,
+		"destY": 1672
+	},
+	{
+		"camHash": 0,
+		"srcX": 800,
+		"srcY": 1648,
+		"destX": 48,
+		"destY": 1256
+	}
+]

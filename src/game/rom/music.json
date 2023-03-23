@@ -1,0 +1,23 @@
+[
+    {
+        "camHash": 0,
+        "songAreas": [
+            {
+                "areaHashes": [1,3,4],
+                "song": "game/songs/pasillo.ogg"
+            },
+            {
+                "areaHashes": [2],
+                "song": "game/songs/ascension.ogg"
+            },
+            {
+                "areaHashes": [8,9,10,11,12],
+                "song": "game/songs/boss.ogg"
+            },
+            {
+                "areaHashes": [5],
+                "song": "game/songs/biblioteca.ogg"
+            }
+        ]
+    }
+]
