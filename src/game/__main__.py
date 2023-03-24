@@ -16,7 +16,6 @@ import game.teleporter
 import game.powerup
 import game.music
 import game.chandelier
-import game.interact
 
 WIND_SIZE = 256,144
 FPS = 60
@@ -25,8 +24,6 @@ INTRO = 0
 GAME  = 1
 PAUSE = 2
 DEAD = 3
-END = 4
-CREDITS = 5
 
 def main():
 	pg.init()
@@ -52,6 +49,8 @@ def main():
 
 	mainMenu = game.menus.MainMenu(0)
 
+	
+	#pg.mixer.music.set_volume(0.5)
 
 	# Instanciar player para poder llamar las funciones
 	while notExit:
@@ -62,7 +61,7 @@ def main():
 					mainMenu.close()
 					notExit = False
 
-				elif event.type == MOUSEBUTTONDOWN:
+				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
 					if mainMenu.botonC.isSelected():
 						copy_tree("game/rom", "game/data")
 
@@ -101,10 +100,10 @@ def main():
 						# dash
 						player.dash()
 
-					elif event.key == K_w:
+					elif event.key == K_e:
 						player.basic_attack()
 
-					elif event.key == K_e:
+					elif event.key == K_w:
 						player.rotatory_attack()
 
 					elif event.key == K_ESCAPE:
@@ -123,23 +122,7 @@ def main():
 						for bigDoor in obj.getGroup(game.teleporter.BigDoor):
 							if bigDoor.active:
 								bigDoor.doTPifInDoor()
-
-						for portal in obj.getGroup(game.interact.Portal):
-							if portal.active:
-								cam.close()
-								player.close()
-								roomDir.close()
-								music.close()
-								endMenu = game.menus.EndMenu(0)
-
-								gameScreen = END
 				
-					elif event.key == K_PLUS:
-						music.volUp()
-
-					elif event.key == K_MINUS:
-						music.volDown()
-
 				elif event.type == KEYUP:
 					if event.key == K_SPACE:
 						player.fall()
@@ -162,6 +145,7 @@ def main():
 						music.active = True
 						pauseMenu.close()
 
+
 						gameScreen = GAME
 
 				elif event.type == MOUSEBUTTONDOWN:
@@ -182,39 +166,14 @@ def main():
 						music.close()
 
 						notExit = False
+						#gameScreen = 0
 
 			elif gameScreen == DEAD:
-				if event.type == pg.QUIT:
-					deadMenu.close()
-					notExit = False
-
-				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
+				if event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
 					deadMenu.close()
 					mainMenu = game.menus.MainMenu(0)
-
+					
 					gameScreen = INTRO
-
-			elif gameScreen == END:
-				if event.type == pg.QUIT:
-					endMenu.close()
-					notExit = False
-
-				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
-					creditMenu = game.menus.CreditMenu(0)
-
-					gameScreen = CREDITS
-
-			elif gameScreen == CREDITS:
-				if event.type == pg.QUIT:
-					creditMenu.close()
-					notExit = False
-
-				elif event.type == MOUSEBUTTONDOWN or event.type == KEYDOWN:
-					creditMenu.close()
-					mainMenu = game.menus.MainMenu(0)
-
-					gameScreen = INTRO
-
 
 		if gameScreen == GAME:
 			keys = pg.key.get_pressed()
