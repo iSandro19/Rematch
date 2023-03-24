@@ -43,12 +43,14 @@ class PowerUp(obj.ObjStaticRW, obj.physic.ObjRelative, obj.ObjUpdate):
 			self._obtained = obtained
 
 			self._frmCnt = 0
+			self.powerup_sound = pg.mixer.Sound('game/sounds/powerup.ogg')
 
 	def update(self):
 		for player in obj.getGroup(Player):
 			if player.hitBox.colliderect((self.pos, (self.rect.w, self.rect.h))):
 				player.setPowerUp(self._name)
 				self._obtained = True
+				self.powerup_sound.play()
 				self.save()
 				self.close()
 
