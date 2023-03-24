@@ -181,7 +181,7 @@ class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjU
 	def close(self):
 		try:
 			self._sprtSht.leave()
-		except ObjNotFoundError:
+		except obj.ObjNotFoundError:
 			pass
 		obj.Obj.close(self)
 
