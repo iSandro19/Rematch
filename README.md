@@ -1,6 +1,6 @@
 # Rematch
 
-Juego en 2D desarrollado para la asignatura CIIE (2022/2023) usando Pygame. El juego es...
+Juego en 2D desarrollado para la asignatura CIIE (Q8 2022/2023 UDC) usando Pygame.
 
 Autores del proyecto:
 
