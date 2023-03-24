@@ -17,10 +17,6 @@
             {
                 "areaHashes": [5],
                 "song": "game/songs/biblioteca.ogg"
-            },
-            {
-                "areaHashes": [0],
-                "song": "game/songs/jardin.ogg"
             }
         ]
     }
