@@ -19,7 +19,7 @@ Magnus Carlsen, uno de los mejores ajedrecistas de todos los tiempos, tras 10 a�
 
 ## Instalación y ejecución
 
-1. Instalar Python 3.9.7 (<https://www.python.org/downloads/release/python-397/>)
+1. Instalar Python
 2. Instalar Pygame: `pip install pygame`
 3. Instalar Ejson: `pip install ijson`
 4. Clonar el repositorio: `git clone https://github.com/iSandro19/Rematch.git`
