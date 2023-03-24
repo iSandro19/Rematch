@@ -2,7 +2,82 @@
     {
         "sprtShtHash": 29,
         "camHash": 0,
-        "x": 0,
-        "y": 0
+        "x": 864,
+        "y": 848
+    },
+    {
+        "sprtShtHash": 29,
+        "camHash": 0,
+        "x": 992,
+        "y": 848
+    },
+    {
+        "sprtShtHash": 30,
+        "camHash": 0,
+        "x": 880,
+        "y": 1008
+    },
+    {
+        "sprtShtHash": 30,
+        "camHash": 0,
+        "x": 992,
+        "y": 1008
+    },
+    {
+        "sprtShtHash": 30,
+        "camHash": 0,
+        "x": 704,
+        "y": 1008
+    },
+
+
+    {
+        "sprtShtHash": 30,
+        "camHash": 0,
+        "x": 1120,
+        "y": 1008
+    },
+    {
+        "sprtShtHash": 30,
+        "camHash": 0,
+        "x": 1264,
+        "y": 1008
+    },
+    {
+        "sprtShtHash": 30,
+        "camHash": 0,
+        "x": 1472,
+        "y": 1008
+    },
+    {
+        "sprtShtHash": 30,
+        "camHash": 0,
+        "x": 1616,
+        "y": 1008
+    },
+
+    {
+        "sprtShtHash": 29,
+        "camHash": 0,
+        "x": 1104,
+        "y": 944
+    },
+    {
+        "sprtShtHash": 29,
+        "camHash": 0,
+        "x": 1248,
+        "y": 944
+    },
+    {
+        "sprtShtHash": 29,
+        "camHash": 0,
+        "x": 1456,
+        "y": 944
+    },
+    {
+        "sprtShtHash": 29,
+        "camHash": 0,
+        "x": 1600,
+        "y": 944
     }
 ]

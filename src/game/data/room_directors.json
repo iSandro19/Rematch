@@ -97,6 +97,26 @@
 					{
 						"type": "BigDoor",
 						"hash": 0
+					},
+					{
+						"type": "Chandelier",
+						"hash": 0
+					},
+					{
+						"type": "Chandelier",
+						"hash": 1
+					},
+					{
+						"type": "Chandelier",
+						"hash": 2
+					},
+					{
+						"type": "Chandelier",
+						"hash": 3
+					},
+					{
+						"type": "Chandelier",
+						"hash": 4
 					}
 				]
 			},
@@ -203,6 +223,38 @@
 					{
 						"type": "BreakBlock",
 						"hash": 9
+					},
+					{
+						"type": "Chandelier",
+						"hash": 5
+					},
+					{
+						"type": "Chandelier",
+						"hash": 6
+					},
+					{
+						"type": "Chandelier",
+						"hash": 7
+					},
+					{
+						"type": "Chandelier",
+						"hash": 8
+					},
+					{
+						"type": "Chandelier",
+						"hash": 9
+					},
+					{
+						"type": "Chandelier",
+						"hash": 10
+					},
+					{
+						"type": "Chandelier",
+						"hash": 11
+					},
+					{
+						"type": "Chandelier",
+						"hash": 12
 					}
 				]
 			},
