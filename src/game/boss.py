@@ -378,9 +378,9 @@ class FinalBoss(
 
 		self.hit1_sound = pg.mixer.Sound("game/sounds/finalBossHit1.ogg")
 		self.hit2_sound = pg.mixer.Sound("game/sounds/finalBossHit2.ogg")
-		self.dash_sound = pg.mixer.Sound("game/sounds/dash1.ogg")
-		self.basic_sound = pg.mixer.Sound("game/sounds/ataque_normal.ogg")
-		self.giratorio_sound = pg.mixer.Sound("game/sounds/ataque_giratorio.ogg")
+		self.dash_sound = pg.mixer.Sound("game/sounds/dash_boss.ogg")
+		self.basic_sound = pg.mixer.Sound("game/sounds/basico_boss.ogg")
+		self.giratorio_sound = pg.mixer.Sound("game/sounds/giratorio_boss.ogg")
 
 	def update(self):
 		if self._hitCnt == 0:
