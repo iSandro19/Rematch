@@ -3,15 +3,23 @@
         "camHash": 0,
         "songAreas": [
             {
+                "areaHashes": [0],
+                "song": "game/songs/jardin.ogg"
+            },
+            {
                 "areaHashes": [1,3,4],
                 "song": "game/songs/pasillo.ogg"
             },
             {
                 "areaHashes": [2],
-                "song": "game/songs/ascension.ogg"
+                "song": "game/songs/Ascension_low.ogg"
             },
             {
-                "areaHashes": [8,9,10,11,12],
+                "areaHashes": [6, 7],
+                "song": "game/songs/Cantacumbias_low.ogg"
+            },
+            {
+                "areaHashes": [8,10,11,12],
                 "song": "game/songs/boss.ogg"
             },
             {
@@ -19,9 +27,10 @@
                 "song": "game/songs/biblioteca.ogg"
             },
             {
-                "areaHashes": [0],
-                "song": "game/songs/jardin.ogg"
+                "areaHashes": [9],
+                "song": "game/songs/StockfishG_2.ogg"
             }
+            
         ]
     }
 ]
