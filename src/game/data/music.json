@@ -3,7 +3,7 @@
         "camHash": 0,
         "songAreas": [
             {
-                "areaHashes": [0],
+                "areaHashes": [0,13],
                 "song": "game/songs/jardin.ogg"
             },
             {

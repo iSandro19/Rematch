@@ -61,5 +61,8 @@
 	},
 	{
 		"file": "game/images/creditos.png"
+	},
+	{
+		"file": "game/images/life_mark.png"
 	}
 ]

@@ -24,7 +24,7 @@ class Boton(obj.ObjStaticR, obj.ObjDraw, obj.ObjUpdate):
         rect = pg.Rect(x,y, self._sprtSht.clip.w, self._sprtSht.clip.h)
 
         obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)
-        obj.ObjDraw.__init__(self, HASH, FATHR_HASH, sprtShtHash, rect)
+        obj.ObjDraw.__init__(self, HASH, FATHR_HASH, None, rect)
         obj.ObjUpdate.__init__(self, HASH, FATHR_HASH)
 
 

@@ -10,6 +10,10 @@
 						"hash": 0
 					},
 					{
+						"type": "VisibleArea",
+						"hash": 13
+					},
+					{
 						"type": "TileMap",
 						"hash": 0
 					},
@@ -56,10 +60,6 @@
 					{
 						"type": "SmallDoor",
 						"hash": 6
-					},
-					{
-						"type": "Chandelier",
-						"hash": 0
 					}
 				]
 			},

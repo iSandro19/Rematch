@@ -2,7 +2,7 @@ import obj
 import pygame as pg
 from random import randint
 from game.cam import Cam
-from game.image import SpriteSheet
+from game.image import SpriteSheet, Surface
 from game.control import Control
 from game.tile import TileCollision, RECT
 from game.alive import ObjAlive
@@ -107,6 +107,30 @@ ANIMS = {
 			obj.sprite.Frame(3,3,True,DUR=4)
 		),
 		False
+	),
+	"dmgRight": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(0,4),
+		),
+		False
+	),
+	"dmgLeft": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(0,4,True),
+		),
+		False
+	),
+	"wallRight": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(0,5,True),
+		),
+		False
+	),
+	"wallLeft": obj.sprite.Animation(
+		(
+			obj.sprite.Frame(0,5),
+		),
+		False
 	)
 }
 
@@ -136,6 +160,10 @@ HIT_BOX_W = 16
 HIT_BOX_H = 32
 
 HIT_INVUL_TIME = 64
+
+HIT_STUN_TIME = 32
+
+HIT_KNOCKBACK_VEL = 4
 
 life = 4
 maxLife = 4
@@ -230,10 +258,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 		self.damage1_sound = pg.mixer.Sound('game/sounds/damage1.ogg')
 		self.damage2_sound = pg.mixer.Sound('game/sounds/damage2.ogg')
 		self.damage3_sound = pg.mixer.Sound('game/sounds/damage3.ogg')
-		self.ataque_normal_sound = pg.mixer.Sound('game/sounds/ataque_normal.ogg')
-		self.ataque_giratorio_sound = pg.mixer.Sound('game/sounds/ataque_giratorio.ogg')
-		self.dash1_sound = pg.mixer.Sound('game/sounds/dash1.ogg')
-		self.dash2_sound = pg.mixer.Sound('game/sounds/dash2.ogg')
 
 		self.powerUps = powerUps
 		self._x = x
@@ -267,6 +291,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			self.life -= dmg
 			self.attackedCnt = HIT_INVUL_TIME
 			self._ui.updateLife(self.life)
+			self.vel.x += -HIT_KNOCKBACK_VEL if self._facingRight else HIT_KNOCKBACK_VEL
 
 			rand = randint(1,3)
 
@@ -350,7 +375,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 
 	def jump(self):
-		if self.powerUps["peon"]:
+		if self.attackedCnt < HIT_STUN_TIME and self.powerUps["peon"]:
 			if self.isInGround():
 				self._inGround = False
 				self.acc.y = V_ACC
@@ -362,12 +387,14 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 				self.vel.y = -JUMP_VEL
 				self.vel.x = -MAX_H_VEL*1.1
 				self.jump1_sound.play()
+				self._facingRight = False
 			
 			elif self.powerUps["alfil"] and self.isInWall() and (not self._facingRight):
 				self.acc.y = V_ACC
 				self.vel.y = -JUMP_VEL
 				self.vel.x = MAX_H_VEL*1.1
 				self.jump1_sound.play()
+				self._facingRight = True
 				
 			elif self.powerUps["caballo"] and self.doubleJump:
 				self.acc.y = V_ACC
@@ -384,34 +411,32 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 	def stopMove(self):
 		# Condición necesaria para poder separarse de la pared si estar pulsando ningún botón, se le delega el frenado a las físicas
-		if (not self.isInWall()):
+		if self.attackedCnt < HIT_STUN_TIME and (not self.isInWall()):
 			self.vel.x = 0
 			self.acc.x = 0
 
 	def moveLeft(self):
-		self._facingRight = False
+		if self.attackedCnt < HIT_STUN_TIME:
+			self.acc.y = V_ACC
 
-		self.acc.y = V_ACC
-
-		if self.vel.x > -MAX_H_VEL:
-			self.acc.x = -H_ACC
-		else: 
-			self.acc.x = 0
+			if self.vel.x > -MAX_H_VEL:
+				self.acc.x = -H_ACC
+			else: 
+				self.acc.x = 0
 		
 
 	def moveRight(self):
-		self._facingRight = True
+		if self.attackedCnt < HIT_STUN_TIME:
+			self.acc.y = V_ACC
 
-		self.acc.y = V_ACC
-
-		if self.vel.x < MAX_H_VEL:
-			self.acc.x = H_ACC
-		else: 
-			self.acc.x = 0
+			if self.vel.x < MAX_H_VEL:
+				self.acc.x = H_ACC
+			else: 
+				self.acc.x = 0
 
 	# Inicia la acción de dasheo e inicia el contador
 	def dash(self):
-		if self.powerUps["torre"]:
+		if self.attackedCnt < HIT_STUN_TIME and self.powerUps["torre"]:
 			if self.dashing == False:
 				self.dashing = True
 				self.counter = 30
@@ -422,18 +447,14 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
 
-				rand = randint(1,2)
-
-				if rand == 1:
-					self.dash1_sound.play()
-				else:
-					self.dash2_sound.play()
-
-
 	# Se puede dashear cada 30 fps y solo una vez mientras estés en el aire
 	def dodash(self):
-		if self.powerUps["torre"]:
+		if self.attackedCnt < HIT_STUN_TIME and self.powerUps["torre"]:
 			if self.counter > 0:
+				if self.isInWall(): 
+					self.dashing = False
+					return
+
 				# Aumentar velocidad
 				if (self.vel.x > 0) & (self._facingRight) & (self.counter > 20):
 					self.vel.x  += H_ACC*2.5
@@ -460,22 +481,21 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 				self.counter -= 1
 
-			elif self.isInGround() or self.isInWall(): 
+			else:
 				self.dashing = False
 			
 	def basic_attack(self):
-		if self.powerUps["peon"]:
+		if self.attackedCnt < HIT_STUN_TIME and self.powerUps["peon"]:
 			if self.attackCnt == 0:
 				if self._facingRight:
 					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 				else:
 					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "basicLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
-				self.ataque_normal_sound.play()
 				self.attackCnt = ATTACK_COOLDOWN
 
 	def rotatory_attack(self):
-		if self.powerUps["alfil"]:
+		if self.attackedCnt < HIT_STUN_TIME and self.powerUps["alfil"]:
 			if self.attackCnt == 0:
 				if self._facingRight:
 					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
@@ -483,7 +503,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "rotatoryLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
 
 				self.attackCnt = ATTACK_COOLDOWN
-				self.ataque_giratorio_sound.play()
 
 	@property
 	def active(self):
@@ -509,6 +528,27 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 				self.life += 1
 				self._ui.updateLife(self.life)
 
+		if self.attackedCnt < HIT_STUN_TIME:
+			if self.vel.x > 0:
+				self._facingRight = True
+
+			elif self.vel.x < 0:
+				self._facingRight = False
+
+		else:
+			self.acc.y = V_ACC
+			
+			if self._facingRight:
+				if self.vel.x < 0:
+					self.acc.x = H_ACC
+				else:
+					self.vel.x = 0
+
+			else:
+				if self.vel.x > 0:
+					self.acc.x = -H_ACC
+				else:
+					self.vel.x = 0
 
 		# Controlar el dash
 		if self.dashing: 
@@ -666,16 +706,35 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 
 	def draw(self):
-		if self.isInGround():
+		if self.attackedCnt > HIT_STUN_TIME:
+			if self._facingRight:
+				if self.anim != ANIMS["dmgRight"]:
+					self.anim = ANIMS["dmgRight"]
+			else:
+				if self.anim != ANIMS["dmgLeft"]:
+					self.anim = ANIMS["dmgLeft"]
+
+		elif self.dashing and self.vel.x != 0:
+			if self._facingRight:
+				if self.anim != ANIMS["jumpRight"]:
+					self.anim = ANIMS["jumpRight"]
+			else:
+				if self.anim != ANIMS["jumpLeft"]:
+					self.anim = ANIMS["jumpLeft"]
+
+		elif self.isInGround():
 			if self._facingRight:
 				if self.vel.x == 0 and self.acc.x == 0:
 					if (
+						self.anim == ANIMS["jumpRight"] or
 						self.anim == ANIMS["fallRight"] or 
-						self.anim == ANIMS["stopJumpRight"]
+						self.anim == ANIMS["stopJumpRight"] or
+						self.anim == ANIMS["wallRight"]
 					):
 						self.anim = ANIMS["groundingRight"]
 
 					elif (
+						self.anim == ANIMS["dmgRight"] or
 						self.anim == ANIMS["groundingRight"] and self.done or
 						self.anim == ANIMS["runRight"]
 					):
@@ -686,12 +745,15 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			else:
 				if self.vel.x == 0 and self.acc.x == 0:
 					if (
+						self.anim == ANIMS["jumpLeft"] or
 						self.anim == ANIMS["fallLeft"] or 
-						self.anim == ANIMS["stopJumpLeft"]
+						self.anim == ANIMS["stopJumpLeft"] or
+						self.anim == ANIMS["wallLeft"]
 					):
 						self.anim = ANIMS["groundingLeft"]
 
 					if (
+						self.anim == ANIMS["dmgLeft"] or
 						self.anim == ANIMS["groundingLeft"] and self.done or
 						self.anim == ANIMS["runLeft"]
 					):
@@ -701,29 +763,38 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 						self.anim = ANIMS["runLeft"]
 
 		else:
-			if self.vel.y < 0:
+			if self.isInWall() and self.vel.y > 0:
 				if self._facingRight:
-					if self.anim != ANIMS["jumpRight"]:
-						self.anim = ANIMS["jumpRight"]
+					if self.anim != ANIMS["wallRight"]:
+						self.anim = ANIMS["wallRight"]
 				else:
-					if self.anim != ANIMS["jumpLeft"]:
-						self.anim = ANIMS["jumpLeft"]
-
-			elif self.vel.y > 2:
-				if self._facingRight:
-					if self.anim != ANIMS["fallRight"]:
-						self.anim = ANIMS["fallRight"]
-				else:
-					if self.anim != ANIMS["fallLeft"]:
-						self.anim = ANIMS["fallLeft"]
+					if self.anim != ANIMS["wallLeft"]:
+						self.anim = ANIMS["wallLeft"]
 
 			else:
-				if self._facingRight:
-					if self.anim != ANIMS["stopJumpRight"]:
-						self.anim = ANIMS["stopJumpRight"]
+				if self.vel.y < 0:
+					if self._facingRight:
+						if self.anim != ANIMS["jumpRight"]:
+							self.anim = ANIMS["jumpRight"]
+					else:
+						if self.anim != ANIMS["jumpLeft"]:
+							self.anim = ANIMS["jumpLeft"]
+
+				elif self.vel.y > 2:
+					if self._facingRight:
+						if self.anim != ANIMS["fallRight"]:
+							self.anim = ANIMS["fallRight"]
+					else:
+						if self.anim != ANIMS["fallLeft"]:
+							self.anim = ANIMS["fallLeft"]
+
 				else:
-					if self.anim != ANIMS["stopJumpLeft"]:
-						self.anim = ANIMS["stopJumpLeft"]
+					if self._facingRight:
+						if self.anim != ANIMS["stopJumpRight"]:
+							self.anim = ANIMS["stopJumpRight"]
+					else:
+						if self.anim != ANIMS["stopJumpLeft"]:
+							self.anim = ANIMS["stopJumpLeft"]
 
 		obj.sprite.ObjAnim.draw(self)
 		obj.physic.ObjPhysic.draw(self)
@@ -764,6 +835,8 @@ except obj.GroupNotFoundError:
 
 
 LIFE_POINT_SPRITE_SHEET_HASH = 9
+LIFE_POINT_OFFSET_H = 16
+LIFE_POINT_OFFSET_V = 8
 
 class LifePoint(obj.ObjDynamic, obj.sprite.ObjSprite):
 	DRAW_LAYER = 20
@@ -777,7 +850,14 @@ class LifePoint(obj.ObjDynamic, obj.sprite.ObjSprite):
 		except obj.ObjNotFoundError:
 			self._sprtSht = obj.load(SpriteSheet, LIFE_POINT_SPRITE_SHEET_HASH, hash(self))
 
-		obj.sprite.ObjSprite.__init__(self, hash(self), FATHR_HASH, self._sprtSht, self._sprtSht.clip.w*(number-1), 0)
+		obj.sprite.ObjSprite.__init__(
+			self,
+			hash(self),
+			FATHR_HASH,
+			self._sprtSht,
+			LIFE_POINT_OFFSET_H+self._sprtSht.clip.w*(number-1),
+			LIFE_POINT_OFFSET_V
+		)
 
 		self._number = number
 		self.frame = obj.sprite.Frame(0,0)
@@ -814,9 +894,21 @@ except obj.GroupNotFoundError:
 def _newLifePoint(number):
 	return LifePoint(0, number)
 
-class UI(obj.ObjDynamic):
+UI_SURF_HASH = 21
+
+class UI(obj.ObjDynamic, obj.ObjDraw):
+	DRAW_LAYER = 21
+
 	def __init__(self, FATHR_HASH, life, maxLife):
 		obj.ObjDynamic.__init__(self, FATHR_HASH)
+
+		try:
+			self._surf = obj.getGroup(Surface)[UI_SURF_HASH]
+			self._surf.watch()
+		except obj.ObjNotFoundError:
+			self._surf = obj.load(Surface, UI_SURF_HASH, hash(self))
+
+		obj.ObjDraw.__init__(self, hash(self), FATHR_HASH, self._surf.image, self._surf.image.get_rect())
 
 		self._lifePoints = tuple(map(_newLifePoint, range(1, maxLife+1)))
 
@@ -827,6 +919,7 @@ class UI(obj.ObjDynamic):
 			lp.updateLife(life)
 
 	def close(self):
+		self._surf.leave()
 		for lp in self._lifePoints:
 			lp.close()
 

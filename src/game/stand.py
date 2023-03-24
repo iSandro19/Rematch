@@ -5,6 +5,7 @@ from game.cam import Cam
 from game.enemy import Peon, Caballo, Alfil, Torre
 from abc import abstractmethod
 from game.interact import BreakBlock
+from random import randint
 
 CAM_HASH = 0
 
@@ -188,8 +189,33 @@ class Stand(obj.ObjDynamic, obj.sprite.ObjAnim, obj.physic.ObjRelative, obj.ObjU
 enemyTypes = (Peon, Caballo, Alfil, Torre, "BasicBoss", BreakBlock, "FinalBoss")
 
 class StandFriend(Stand):
+	ataque_normal_sound = 		None
+	ataque_giratorio_sound = 	None
+	dash1_sound = 				None
+	dash2_sound = 				None
+
+	def __init__(self, FATHR_HASH, sprtShtHash, attack, x, y):
+		Stand.__init__(self, FATHR_HASH, sprtShtHash, attack, x, y)
+		if not StandFriend.ataque_normal_sound:
+			StandFriend.ataque_normal_sound = pg.mixer.Sound('game/sounds/ataque_normal.ogg')
+			StandFriend.ataque_giratorio_sound = pg.mixer.Sound('game/sounds/ataque_giratorio.ogg')
+			StandFriend.dash1_sound = pg.mixer.Sound('game/sounds/dash1.ogg')
+			StandFriend.dash2_sound = pg.mixer.Sound('game/sounds/dash2.ogg')
+
 	def doAttack(self):
 		hitBox = HITBOX[self.attack].move(self.pos)
+
+		if self.attack == "basicRight" or self.attack == "basicLeft":
+			self.ataque_normal_sound.play()
+
+		elif self.attack == "rotatoryRight" or self.attack == "rotatoryLeft":
+			self.ataque_giratorio_sound.play()
+
+		elif self.attack == "lanceRight" or self.attack == "lanceLeft":
+			if randint(1,2) == 1:
+				self.dash1_sound.play()
+			else:
+				self.dash2_sound.play()
 
 		for enemyType in enemyTypes:
 			for enemy in obj.getGroup(enemyType):
@@ -203,8 +229,29 @@ except obj.GroupNotFoundError:
 
 
 class StandEnemy(Stand):
+	ataque_normal_sound = 		None
+	ataque_giratorio_sound = 	None
+	dash_sound = 				None
+
+	def __init__(self, FATHR_HASH, sprtShtHash, attack, x, y):
+		Stand.__init__(self, FATHR_HASH, sprtShtHash, attack, x, y)
+		if not StandEnemy.ataque_normal_sound:
+			StandEnemy.ataque_normal_sound = pg.mixer.Sound('game/sounds/basico_boss.ogg')
+			StandEnemy.ataque_giratorio_sound = pg.mixer.Sound('game/sounds/giratorio_boss.ogg')
+			StandEnemy.dash_sound = pg.mixer.Sound('game/sounds/dash_boss.ogg')
+
+
 	def doAttack(self):
 		hitBox = HITBOX[self.attack].move(self.pos)
+
+		if self.attack == "basicRight" or self.attack == "basicLeft":
+			self.ataque_normal_sound.play()
+
+		elif self.attack == "rotatoryRight" or self.attack == "rotatoryLeft":
+			self.ataque_giratorio_sound.play()
+
+		elif self.attack == "lanceRight" or self.attack == "lanceLeft":
+			self.dash_sound.play()
 
 		for player in obj.getGroup("Player"):
 			if player.hitBox.colliderect(hitBox):

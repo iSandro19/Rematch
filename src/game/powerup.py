@@ -12,6 +12,7 @@ class PowerUp(obj.ObjStaticRW, obj.physic.ObjRelative, obj.ObjUpdate):
 	GRP_FILE = "game/data/power_ups.json"
 	DRAW_LAYER = 10
 	UPDT_POS = 2
+	sound = None
 
 	def __init__(self, HASH, FATHR_HASH, surfHash, camHash, x, y, name, obtained):
 
@@ -43,14 +44,16 @@ class PowerUp(obj.ObjStaticRW, obj.physic.ObjRelative, obj.ObjUpdate):
 			self._obtained = obtained
 
 			self._frmCnt = 0
-			self.powerup_sound = pg.mixer.Sound('game/sounds/powerup.ogg')
+
+			if not PowerUp.sound:
+				PowerUp.sound = pg.mixer.Sound('game/sounds/powerup.ogg')
 
 	def update(self):
 		for player in obj.getGroup(Player):
 			if player.hitBox.colliderect((self.pos, (self.rect.w, self.rect.h))):
 				player.setPowerUp(self._name)
 				self._obtained = True
-				self.powerup_sound.play()
+				self.sound.play()
 				self.save()
 				self.close()
 

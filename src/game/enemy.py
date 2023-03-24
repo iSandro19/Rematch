@@ -43,6 +43,7 @@ class Ficha(
 	obj.sprite.ObjAnim,
 	obj.ObjUpdate
 ):
+	hit1_sound = None
 
 	@abstractmethod
 	def __init__(
@@ -91,8 +92,9 @@ class Ficha(
 		self._facingRight = True
 		self._dmg = dmg
 
-		self.hit1_sound = pg.mixer.Sound('game/sounds/hitEnemy1.ogg')
-		self.hit2_sound = pg.mixer.Sound('game/sounds/hitEnemy2.ogg')
+		if not Ficha.hit1_sound:
+			Ficha.hit1_sound = pg.mixer.Sound('game/sounds/hitEnemy1.ogg')
+			Ficha.hit2_sound = pg.mixer.Sound('game/sounds/hitEnemy2.ogg')
 
 	def update(self):
 		if self._hitCnt == 0:
@@ -184,7 +186,7 @@ class Ficha(
 
 		
 
-PEON_LIFE = 1
+PEON_LIFE = 2
 PEON_DMG = 1
 PEON_SPRT_SHT = 4
 
@@ -213,7 +215,7 @@ except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Peon))
 
 
-ALFIL_LIFE = 2
+ALFIL_LIFE = 4
 ALFIL_DMG = 2
 ALFIL_SPRT_SHT = 12
 
@@ -242,7 +244,7 @@ except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Alfil))
 
 
-CABALLO_LIFE = 1
+CABALLO_LIFE = 4
 CABALLO_DMG = 3
 CABALLO_SPRT_SHT = 13
 
@@ -271,8 +273,8 @@ except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Caballo))
 
 
-TORRE_LIFE = 3
-TORRE_DMG = 1
+TORRE_LIFE = 8
+TORRE_DMG = 2
 TORRE_SPRT_SHT = 14
 
 class Torre(Ficha):
