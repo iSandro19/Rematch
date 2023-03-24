@@ -146,11 +146,15 @@ class MainMenu (obj.ObjDraw, obj.ObjDynamic):
         self.botonC = obj.load("Boton", 2, 0)
         self.botonS = obj.load("Boton", 3, 0)
 
+        pg.mixer.music.load("game/songs/ascension.ogg")
+        pg.mixer.music.play()
+
 
     def close(self):
         self.botonC.close()
         self.botonS.close()
         self.surf.leave()
+        pg.mixer.music.stop()
         obj.Obj.close(self)
 
 try:
@@ -189,3 +193,67 @@ try:
     obj.getGroup(DeadMenu)
 except obj.GroupNotFoundError:
     obj.addGroup(obj.Group(DeadMenu))
+
+
+EM_SURF_HASH = 19
+
+class EndMenu(obj.ObjDynamic, obj.ObjDraw):
+    DRAW_LAYER = 12
+    UPDT_POS = 0
+
+    def __init__(self, FATHR_HASH):
+        obj.ObjDynamic.__init__(self, FATHR_HASH)
+
+        try:
+            self._surf = obj.getGroup(Surface)[EM_SURF_HASH]
+            self._surf.watch()
+        except obj.ObjNotFoundError:
+            self._surf = obj.load(Surface, EM_SURF_HASH, hash(self))
+
+        obj.ObjDraw.__init__(self, hash(self), FATHR_HASH, self._surf.image, self._surf.image.get_rect())
+
+
+    def draw(self):
+        obj.ObjDraw.draw(self)
+        self.active = False
+
+    def close(self):
+        self._surf.leave()
+        obj.Obj.close(self)
+
+try:
+    obj.getGroup(EndMenu)
+except obj.GroupNotFoundError:
+    obj.addGroup(obj.Group(EndMenu))
+
+
+CM_SURF_HASH = 20
+
+class CreditMenu(obj.ObjDynamic, obj.ObjDraw):
+    DRAW_LAYER = 12
+    UPDT_POS = 0
+
+    def __init__(self, FATHR_HASH):
+        obj.ObjDynamic.__init__(self, FATHR_HASH)
+
+        try:
+            self._surf = obj.getGroup(Surface)[CM_SURF_HASH]
+            self._surf.watch()
+        except obj.ObjNotFoundError:
+            self._surf = obj.load(Surface, CM_SURF_HASH, hash(self))
+
+        obj.ObjDraw.__init__(self, hash(self), FATHR_HASH, self._surf.image, self._surf.image.get_rect())
+
+
+    def draw(self):
+        obj.ObjDraw.draw(self)
+        self.active = False
+
+    def close(self):
+        self._surf.leave()
+        obj.Obj.close(self)
+
+try:
+    obj.getGroup(CreditMenu)
+except obj.GroupNotFoundError:
+    obj.addGroup(obj.Group(CreditMenu))

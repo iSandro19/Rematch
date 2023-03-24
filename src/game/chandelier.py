@@ -38,9 +38,6 @@ class Chandelier(obj.ObjStaticR, obj.sprite.ObjAnim, obj.physic.ObjRelative):
 	
 		self.anim = CH_ANIM["fire"]
 
-	def update(self):
-		pass
-
 	def draw(self):
 		obj.sprite.ObjAnim.draw(self)
 		obj.physic.ObjRelative.draw(self)

@@ -184,5 +184,11 @@
 		"w": 32,
 		"h": 32,
 		"colorkey": null
+	},
+	{
+		"file": "game/images/portal_final.png",
+		"w": 32,
+		"h": 64,
+		"colorkey": null
 	}
 ]

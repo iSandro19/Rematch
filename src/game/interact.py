@@ -1,6 +1,6 @@
 import obj
 from game.alive import ObjAlive
-from game.image import Surface
+from game.image import Surface, SpriteSheet
 from game.cam import Cam
 import pygame as pg
 
@@ -75,3 +75,69 @@ try:
 	obj.getGroup(BreakBlock)
 except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(BreakBlock))
+
+
+PORTAL_SPRITE_SHEET_HASH = 31
+
+ANIM = obj.sprite.Animation(
+	(
+		obj.sprite.Frame(0,0,True,DUR=4),
+		obj.sprite.Frame(1,0,True,DUR=4),
+		obj.sprite.Frame(2,0,True,DUR=4),
+		obj.sprite.Frame(3,0,True,DUR=4)
+	)
+)
+
+class Portal(obj.ObjStaticR, obj.physic.ObjRelative, obj.sprite.ObjAnim):
+	GRP_FILE = "game/data/portals.json"
+	DRAW_LAYER = 8
+
+	def __init__(self, HASH, FATHR_HASH, camHash, x, y):
+		obj.ObjStaticR.__init__(self, HASH, FATHR_HASH)
+
+		try:
+			self._sprtSht = obj.getGroup(SpriteSheet)[PORTAL_SPRITE_SHEET_HASH]
+			self._sprtSht.watch()
+		except obj.ObjNotFoundError:
+			self._sprtSht = obj.load(SpriteSheet, PORTAL_SPRITE_SHEET_HASH, HASH)
+
+		self._cam = obj.getGroup(Cam)[camHash]
+
+		obj.sprite.ObjAnim.__init__(self, HASH, FATHR_HASH, self._sprtSht, 0, 0)
+
+		obj.physic.ObjRelative.__init__(
+			self,
+			HASH,
+			FATHR_HASH,
+			None,
+			self._sprtSht.clip.w,
+			self._sprtSht.clip.h,
+			self._cam,
+			pg.math.Vector2(x, y)
+		)
+
+		self.anim = ANIM
+
+		self.beat = False
+
+	def draw(self):
+		obj.sprite.ObjAnim.draw(self)
+		obj.physic.ObjRelative.draw(self)
+		obj.ObjDraw.draw(self)
+
+	@property
+	def active(self):
+		return self._active
+
+	@active.setter
+	def active(self, value):
+		self._active = value and self.beat
+
+	def close(self):
+		self._sprtSht.leave()
+		obj.Obj.close(self)
+
+try:
+	obj.getGroup(Portal)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Portal))

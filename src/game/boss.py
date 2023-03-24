@@ -5,8 +5,10 @@ from game.cam import Cam
 from game.stand import StandEnemy
 from game.tile import TileCollision, RECT
 from game.powerup import PowerUp
+from game.interact import Portal
 import pygame as pg
 import math as m
+from random import shuffle
 
 
 BB_ANIMS = {
@@ -79,7 +81,8 @@ class BasicBoss(
 		attackRight,
 		attackLeft,
 		x,
-		y
+		y,
+		powerupHash
 	):
 
 		try:
@@ -89,11 +92,6 @@ class BasicBoss(
 			self._sprtSht = obj.load(SpriteSheet, sprtShtHash, HASH)
 
 		self._cam = obj.getGroup(Cam)[camHash]
-
-		for po in obj.getGroup(PowerUp):
-			po.beat = False
-			po.active = False
-
 
 		ObjAlive.__init__(
 			self,
@@ -128,14 +126,17 @@ class BasicBoss(
 		self._stand = None
 		self.slash1_sound = pg.mixer.Sound('game/sounds/slashBoss.ogg')
 
+		self._powerupHash = powerupHash
+		
+
+
 	def update(self):
 		if self._hitCnt == 0:
 			if self.life <= 0:				
 				self.save()
 				self.close()
-				for po in obj.getGroup(PowerUp):
-					po.beat = True
-					po.active = True
+				if powerupHash:
+					obj.load(PowerUp, powerupHash, HASH)
 				return
 
 			if self._facingRight:
@@ -248,7 +249,8 @@ class BasicBoss(
 			y=self.pos.y,
 			attackRight=self._attackRight,
 			attackLeft=self._attackLeft,
-			standSprtShtHash=self._standSprtShtHash
+			standSprtShtHash=self._standSprtShtHash,
+			powerupHash=self._powerupHash
 		)
 
 try:
@@ -300,10 +302,11 @@ FB_STAND_OFFSET_V = -8
 FB_ROOM_W = 16*16
 FB_ROOM_H = 9*16
 
-FB_FRM_MAX = 128*3
-
 FB_STAND_VEL_H = 4
 FB_STAND_VEL_V = 4
+
+FB_DELAY_REDUCE_VEL = 16
+FB_DELAY_MIN = 64
 
 class FinalBoss(
 	ObjAlive,
@@ -375,11 +378,35 @@ class FinalBoss(
 
 		self._frmCnt = 0
 
+		self._delay = 128
+
+		self._seq = list(range(1,4))
+
+		for p in obj.getGroup(Portal):
+			p.active = False
+
+
+	def _basicAttack(self):
+		self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "basicRight", self._roomX-40+16*6, self._roomY+6-16*2)
+		self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "basicLeft", self._roomX-40+16*10, self._roomY+6-16*2)
+
+	def _rotatoryAttack(self):
+		self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "rotatoryRight", self._roomX-40+16*4, self._roomY+6-16)
+		self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "rotatoryLeft", self._roomX-40+16*12, self._roomY+6-16)
+
+	def _lanceAttack(self):
+		self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "lanceRight", self._roomX-40+32, self._roomY+6+16*3)
+		self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "lanceLeft", self._roomX-40+224, self._roomY+6+16*3)
+
 	def update(self):
 		if self._hitCnt == 0:
 			if self.life <= 0:
 				self.save()
 				self.close()
+
+				for p in obj.getGroup(Portal):
+					p.beat = True
+					p.active = True
 				return
 
 			if self._facingRight and self.hitBox.center[0] > (self._roomX+FB_ROOM_W)//2:
@@ -410,28 +437,28 @@ class FinalBoss(
 				self.pos.y += FB_V_VEL
 
 
-			if self._frmCnt == 128:
-				self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "lanceRight", self._roomX-40+32, self._roomY+6+16*3)
-				self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "lanceLeft", self._roomX-40+224, self._roomY+6+16*3)
+			if self._frmCnt == self._delay*self._seq[0]:
+				self._lanceAttack()
+			elif self._frmCnt == self._delay*self._seq[1]:
+				self._basicAttack()
+			elif self._frmCnt == self._delay*self._seq[2]:
+				self._rotatoryAttack()
 
-			elif self._frmCnt == 128*2:
-				self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "basicRight", self._roomX-40+16*6, self._roomY+6-16*2)
-				self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "basicLeft", self._roomX-40+16*10, self._roomY+6-16*2)
-			elif self._frmCnt == 128*3:
-				self._stand0 = StandEnemy(hash(self), self._standSprtShtHash, "rotatoryRight", self._roomX-40+16*4, self._roomY+6-16)
-				self._stand1 = StandEnemy(hash(self), self._standSprtShtHash, "rotatoryLeft", self._roomX-40+16*12, self._roomY+6-16)
-
-			if 128 < self._frmCnt <= 128+20:
+			if self._delay*self._seq[0] < self._frmCnt <= self._delay*self._seq[0]+20:
 				self._stand0.pos.x += FB_STAND_VEL_H
 				self._stand1.pos.x -= FB_STAND_VEL_H
 
-			elif 256 < self._frmCnt <= 256+20:
+			elif self._delay*self._seq[1] < self._frmCnt <= self._delay*self._seq[1]+20:
 				self._stand0.pos.y += FB_STAND_VEL_V
 				self._stand1.pos.y += FB_STAND_VEL_V
 
-			if self._frmCnt < FB_FRM_MAX:
+			if self._frmCnt <= self._delay*4:
 				self._frmCnt += 1
 			else:
+				if self._delay > FB_DELAY_MIN:
+					self._delay -= FB_DELAY_REDUCE_VEL
+
+				shuffle(self._seq)
 				self._frmCnt = 0
 
 
@@ -454,13 +481,13 @@ class FinalBoss(
 
 		obj.ObjDraw.draw(self)
 
-		if self._frmCnt in range(128-8-30,128-8,4):
+		if self._frmCnt in range(self._delay*self._seq[0]-8-30,self._delay*self._seq[0]-8,4):
 			pg.draw.rect(self._BCKGND, (255,0,0), (self._roomX+16-self._cam.x,self._roomY+16*6-self._cam.y,16*14,32))
 
-		elif self._frmCnt in range(128*2-8-30,128*2-8,4):
+		elif self._frmCnt in range(self._delay*self._seq[1]-8-30,self._delay*self._seq[1]-8,4):
 			pg.draw.rect(self._BCKGND, (255,0,0), (self._roomX+16*6-self._cam.x,self._roomY+16-self._cam.y,64,16*7))
 
-		elif self._frmCnt in range(128*3-8-30,128*3-8,4):
+		elif self._frmCnt in range(self._delay*self._seq[2]-8-30,self._delay*self._seq[2]-8,4):
 			pg.draw.rect(self._BCKGND, (255,0,0), (self._roomX+16*3-self._cam.x,self._roomY+16*2-self._cam.y,16*3,32))
 			pg.draw.rect(self._BCKGND, (255,0,0), (self._roomX+16*10-self._cam.x,self._roomY+16*2-self._cam.y,16*3,32))
 

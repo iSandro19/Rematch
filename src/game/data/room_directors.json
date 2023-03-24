@@ -388,10 +388,6 @@
 				"rect": [0,1584,256,144],
 				"objs": [
 					{
-						"type": "PowerUp",
-						"hash": 3
-					},
-					{
 						"type": "VisibleArea",
 						"hash": 8
 					},
@@ -417,6 +413,10 @@
 				"rect": [0,1744,256,144],
 				"objs": [
 					{
+						"type": "Portal",
+						"hash": 0
+					},
+					{
 						"type": "VisibleArea",
 						"hash": 9
 					},
@@ -431,20 +431,12 @@
 					{
 						"type": "TileCollision",
 						"hash": 7
-					},
-					{
-						"type": "BigDoor",
-						"hash": 1
 					}
 				]
 			},
 			{
 				"rect": [256,1584,256,144],
 				"objs": [
-					{
-						"type": "PowerUp",
-						"hash": 1
-					},
 					{
 						"type": "VisibleArea",
 						"hash": 10
@@ -470,10 +462,6 @@
 			{
 				"rect": [512,1584,256,144],
 				"objs": [
-					{
-						"type": "PowerUp",
-						"hash": 2
-					},
 					{
 						"type": "VisibleArea",
 						"hash": 11

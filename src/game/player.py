@@ -424,8 +424,6 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 
 				rand = randint(1,2)
 
-				print(rand)
-
 				if rand == 1:
 					self.dash1_sound.play()
 				else:

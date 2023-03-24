@@ -31,7 +31,7 @@ class MusicDirector(obj.ObjStaticR, obj.ObjUpdate):
 
         self._cam = obj.getGroup(Cam)[camHash]
 
-        self._vol = 0.
+        self._vol = 1.
 
     def update(self):
         prevSong = self._playingSong
@@ -42,6 +42,7 @@ class MusicDirector(obj.ObjStaticR, obj.ObjUpdate):
                     inst = obj.getGroup(VisibleArea)[va]
                     if inst.active and inst.colliderect(self._cam):
                         if self._playingSong:
+                            pg.mixer.music.stop()
                             self._songAreas.append(self._playingSong)
 
                         self._playingSong = sa

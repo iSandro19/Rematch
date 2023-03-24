@@ -55,5 +55,11 @@
 	},
 	{
 		"file": "game/images/fondo_muerte.png"
+	},
+	{
+		"file": "game/images/escena_final.png"
+	},
+	{
+		"file": "game/images/creditos.png"
 	}
 ]
