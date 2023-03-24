@@ -69,7 +69,7 @@ def main():
 
 
 			if gameScreen == INTRO:
-				if event.type == pg.QUIT:
+				if event.type == pg.QUIT or event.type == KEYDOWN and event.key == K_ESCAPE:
 					mainMenu.close()
 					notExit = False
 
