@@ -70,5 +70,23 @@
 	},
 	{
 		"file": "game/images/button.png"
+	},
+	{
+		"file": "game/images/cartel_der.png"
+	},
+	{
+		"file": "game/images/cartel_izq.png"
+	},
+	{
+		"file": "game/images/cartel_space.png"
+	},
+	{
+		"file": "game/images/cartel_w.png"
+	},
+	{
+		"file": "game/images/cartel_e.png"
+	},
+	{
+		"file": "game/images/cartel_q.png"
 	}
 ]

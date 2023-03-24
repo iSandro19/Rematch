@@ -60,6 +60,22 @@
 					{
 						"type": "SmallDoor",
 						"hash": 6
+					},
+					{
+						"type": "Cartel",
+						"hash": 0
+					},
+					{
+						"type": "Cartel",
+						"hash": 1
+					},
+					{
+						"type": "Cartel",
+						"hash": 2
+					},
+					{
+						"type": "Cartel",
+						"hash": 3
 					}
 				]
 			},
@@ -178,6 +194,10 @@
 					{
 						"type": "Button",
 						"hash": 0
+					},
+					{
+						"type": "Cartel",
+						"hash": 5
 					}
 				]
 			},
@@ -308,6 +328,10 @@
 					{
 						"type": "SmallDoor",
 						"hash": 2
+					},
+					{
+						"type": "Cartel",
+						"hash": 4
 					}
 				]
 			},
@@ -437,6 +461,10 @@
 					{
 						"type": "BreakBlock",
 						"hash": 25
+					},
+					{
+						"type": "Cartel",
+						"hash": 6
 					}
 				]
 			},

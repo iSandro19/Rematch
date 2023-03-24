@@ -1,0 +1,47 @@
+[
+	{
+		"camHash": 0,
+		"surfHash": 24,
+		"x": 80,
+		"y": 1008
+	},
+	{
+		"camHash": 0,
+		"surfHash": 25,
+		"x": 16,
+		"y": 1008
+	},
+	{
+		"camHash": 0,
+		"surfHash": 26,
+		"x": 512,
+		"y": 1280
+	},
+	{
+		"camHash": 0,
+		"surfHash": 27,
+		"x": 304,
+		"y": 1088
+	},
+
+	{
+		"camHash": 0,
+		"surfHash": 28,
+		"x": 2288,
+		"y": 784
+	},
+
+	{
+		"camHash": 0,
+		"surfHash": 29,
+		"x": 720,
+		"y": 96
+	},
+
+	{
+		"camHash": 0,
+		"surfHash": 29,
+		"x": 1536,
+		"y": 1824
+	}
+]

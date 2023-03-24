@@ -202,9 +202,6 @@ class StandFriend(Stand):
 			StandFriend.dash1_sound = pg.mixer.Sound('game/sounds/dash1.ogg')
 			StandFriend.dash2_sound = pg.mixer.Sound('game/sounds/dash2.ogg')
 
-	def doAttack(self):
-		hitBox = HITBOX[self.attack].move(self.pos)
-
 		if self.attack == "basicRight" or self.attack == "basicLeft":
 			self.ataque_normal_sound.play()
 
@@ -216,6 +213,9 @@ class StandFriend(Stand):
 				self.dash1_sound.play()
 			else:
 				self.dash2_sound.play()
+
+	def doAttack(self):
+		hitBox = HITBOX[self.attack].move(self.pos)
 
 		for enemyType in enemyTypes:
 			for enemy in obj.getGroup(enemyType):

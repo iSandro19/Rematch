@@ -430,6 +430,9 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 		if self.attackedCnt < HIT_STUN_TIME:
 			self.acc.y = V_ACC
 
+			if self.vel.x == 0.0:
+				self._facingRight = False
+			
 			if self.vel.x > -MAX_H_VEL:
 				self.acc.x = -H_ACC
 			else: 
@@ -439,6 +442,9 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 	def moveRight(self):
 		if self.attackedCnt < HIT_STUN_TIME:
 			self.acc.y = V_ACC
+
+			if self.vel.x == 0.0:
+				self._facingRight = True
 
 			if self.vel.x < MAX_H_VEL:
 				self.acc.x = H_ACC
@@ -452,10 +458,13 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 				self.dashing = True
 				self.counter = 30
 
-				if self._facingRight:
-					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
-				else:
-					self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+				if self.attackCnt == 0:
+					if self._facingRight:
+						self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceRight", self.pos.x-STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+					else:
+						self.stand = StandFriend(hash(self), STAND_SPRITE_SHEET_HASH, "lanceLeft", self.pos.x-IMG_W+STAND_OFFSET_H, self.pos.y-STAND_OFFSET_V)
+
+					self.attackCnt = ATTACK_COOLDOWN
 
 
 	# Se puede dashear cada 30 fps y solo una vez mientras estés en el aire
@@ -760,6 +769,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 						self.anim = ANIMS["groundingRight"]
 
 					elif (
+						self.anim == ANIMS["standLeft"] or
 						self.anim == ANIMS["dmgRight"] or
 						self.anim == ANIMS["groundingRight"] and self.done or
 						self.anim == ANIMS["runRight"]
@@ -779,6 +789,7 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 						self.anim = ANIMS["groundingLeft"]
 
 					if (
+						self.anim == ANIMS["standRight"] or
 						self.anim == ANIMS["dmgLeft"] or
 						self.anim == ANIMS["groundingLeft"] and self.done or
 						self.anim == ANIMS["runLeft"]

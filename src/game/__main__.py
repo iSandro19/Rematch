@@ -17,6 +17,7 @@ import game.powerup
 import game.music
 import game.chandelier
 import game.interact
+import game.cartel
 
 WIND_SIZE = 256,144
 FPS = 60
