@@ -31,14 +31,15 @@ CREDITS = 5
 def main():
 	pg.init()
 	pg.display.init()
-	pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
+	pg.display.set_mode(WIND_SIZE, flags=SCALED|FULLSCREEN, vsync=True)
 	icon = pg.image.load('../assets/logo/icono.png')
 	pg.display.set_icon(icon)
 	pg.display.set_caption("Rematch 2D", "Rematch 2D")
 
 	# Variables para control
-	notExit = True	# Bucle de eventos
-	gameScreen = INTRO 	# Si estamos en el menú (0), en gameplay (1) o pausados (2)
+	notExit = True	# Bucle de principal
+	fullscreen = True
+	gameScreen = INTRO
 
 	clock = pg.time.Clock()
 	wind = pg.display.get_surface()
@@ -52,11 +53,20 @@ def main():
 
 	mainMenu = game.menus.MainMenu(0)
 
-
 	# Instanciar player para poder llamar las funciones
 	while notExit:
 		# Faltan los inputs que dependen de objetos en la pantalla (menú y pantalla de pausa)
 		for event in pg.event.get():
+			if event.type == KEYDOWN and event.key == K_F11:
+				if fullscreen:
+					pg.display.set_mode(WIND_SIZE, flags=SCALED|RESIZABLE, vsync=True)
+					fullscreen = False
+
+				else:
+					pg.display.set_mode(WIND_SIZE, flags=SCALED|FULLSCREEN, vsync=True)
+					fullscreen = True
+
+
 			if gameScreen == INTRO:
 				if event.type == pg.QUIT:
 					mainMenu.close()
