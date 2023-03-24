@@ -212,12 +212,16 @@ class EndMenu(obj.ObjDynamic, obj.ObjDraw):
 
         obj.ObjDraw.__init__(self, hash(self), FATHR_HASH, self._surf.image, self._surf.image.get_rect())
 
+        pg.mixer.music.load("game/songs/pasillo.ogg")
+        pg.mixer.music.play()
+
 
     def draw(self):
         obj.ObjDraw.draw(self)
         self.active = False
 
     def close(self):
+        pg.mixer.music.stop()
         self._surf.leave()
         obj.Obj.close(self)
 
@@ -243,7 +247,6 @@ class CreditMenu(obj.ObjDynamic, obj.ObjDraw):
             self._surf = obj.load(Surface, CM_SURF_HASH, hash(self))
 
         obj.ObjDraw.__init__(self, hash(self), FATHR_HASH, self._surf.image, self._surf.image.get_rect())
-
 
     def draw(self):
         obj.ObjDraw.draw(self)
