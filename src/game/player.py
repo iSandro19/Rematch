@@ -7,7 +7,7 @@ from game.control import Control
 from game.tile import TileCollision, RECT
 from game.alive import ObjAlive
 from game.stand import StandFriend
-from game.interact import BreakBlock
+from game.interact import BreakBlock, BlockBar
 
 ANIMS = {
 	"standRight": obj.sprite.Animation(
@@ -326,6 +326,10 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			if bb.hitBox.colliderect(self.cBox.move(0, 1)):
 				return True
 
+		for bbar in obj.getGroup(BlockBar):
+			if self.cBox.move(0, 1).colliderect((bbar.pos, (bbar.rect.w, bbar.rect.h))):
+				return True
+
 		return False
 	
 	def isInWall(self):
@@ -371,7 +375,14 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			):
 				return True
 
-		return False
+		for bbar in obj.getGroup(BlockBar):
+			if (
+				self.cBox.move(
+					-1 if self._facingRight else 1,
+					0
+				).colliderect((bbar.pos, (bbar.rect.w, bbar.rect.h)))
+			):
+				return False
 
 
 	def jump(self):
@@ -619,10 +630,12 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			if self.vel.x < 0:
 				if bb.hitBox.colliderect(self.cBox):
 					cBox.left = bb.hitBox.right
+					self.vel.x = 0
 
 			elif self.vel.x > 0:
 				if bb.hitBox.colliderect(self.cBox):
 					cBox.right = bb.hitBox.left
+					self.vel.x = 0
 
 		self.cBox = cBox
 
@@ -679,10 +692,23 @@ class Player(obj.physic.ObjPhysic, obj.ObjStaticRW, obj.sprite.ObjAnim, ObjAlive
 			if self.vel.y < 0:
 				if bb.hitBox.colliderect(self.cBox):
 					cBox.top = bb.hitBox.bottom
+					self.vel.y = 0
 
 			elif self.vel.y > 0:
 				if bb.hitBox.colliderect(self.cBox):
 					cBox.bottom = bb.hitBox.top
+					self.vel.y = 0
+
+		for bbar in obj.getGroup(BlockBar):
+			if self.vel.y < 0:
+				if self.cBox.colliderect((bbar.pos, (bbar.rect.w, bbar.rect.h))):
+					cBox.top = bbar.pos.y+bbar.rect.h
+					self.vel.y = 0
+
+			elif self.vel.y > 0:
+				if self.cBox.colliderect((bbar.pos, (bbar.rect.w, bbar.rect.h))):
+					cBox.bottom = bbar.pos.y
+					self.vel.y = 0
 
 		self.cBox = cBox
 

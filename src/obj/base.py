@@ -18,7 +18,7 @@ class GroupNotFoundError(ValueError):
 		"""
 		ValueError.__init__(
 			self,
-			"Group with TYPE=%s not found"%objType.__qualname__
+			"Group with TYPE=%s not found"%(objType if type(objType) == str else objType.__qualname__)
 		)
 
 class GroupsTable:

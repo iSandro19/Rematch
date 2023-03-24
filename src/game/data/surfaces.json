@@ -64,5 +64,11 @@
 	},
 	{
 		"file": "game/images/life_mark.png"
+	},
+	{
+		"file": "game/images/block_bar.png"
+	},
+	{
+		"file": "game/images/button.png"
 	}
 ]

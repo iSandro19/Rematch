@@ -24,7 +24,7 @@ class BreakBlock(obj.ObjStaticR, ObjAlive):
 			self._surf = obj.getGroup(Surface)[BB_SURF_HASH]
 			self._surf.watch()
 		except obj.ObjNotFoundError:
-			self._surf = obj.load(Surface, BB_SURF_HASH, FATHR_HASH)
+			self._surf = obj.load(Surface, BB_SURF_HASH, hash(self))
 
 		self._cam = obj.getGroup(Cam)[camHash]
 
@@ -141,3 +141,106 @@ try:
 	obj.getGroup(Portal)
 except obj.GroupNotFoundError:
 	obj.addGroup(obj.Group(Portal))
+
+
+BBAR_SURF_HASH = 22
+
+class BlockBar(obj.ObjDynamic, obj.physic.ObjRelative):
+	DRAW_LAYER = 6
+
+	def __init__(self, FATHR_HASH, camHash, x, y):
+		obj.obj.ObjDynamic.__init__(self, FATHR_HASH)
+
+		try:
+			self._surf = obj.getGroup(Surface)[BBAR_SURF_HASH]
+			self._surf.watch()
+		except obj.ObjNotFoundError:
+			self._surf = obj.load(Surface, BBAR_SURF_HASH, hash(self))
+
+		self._cam = obj.getGroup(Cam)[camHash]
+
+		_, _, w, h = self._surf.image.get_rect()
+
+		obj.physic.ObjRelative.__init__(
+			self,
+			hash(self),
+			FATHR_HASH,
+			self._surf.image,
+			w,
+			h,
+			self._cam,
+			pg.math.Vector2(x, y)
+		)
+
+	def draw(self):
+		obj.physic.ObjRelative.draw(self)
+		obj.ObjDraw.draw(self)
+
+	def close(self):
+		self._surf.leave()
+		obj.Obj.close(self)
+
+try:
+	obj.getGroup(BlockBar)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(BlockBar))
+
+
+BUTTON_SURF_HASH = 23
+
+class Button(obj.ObjStaticR, obj.physic.ObjRelative, obj.ObjUpdate):
+	GRP_FILE = "game/data/buttons.json"
+	DRAW_LAYER = 6
+	UPDT_POS = 2
+	sound = None
+
+	def __init__(self, HASH, FATHR_HASH, camHash, x, y, barX, barY):
+		obj.obj.ObjDynamic.__init__(self, FATHR_HASH)
+
+		try:
+			self._surf = obj.getGroup(Surface)[BUTTON_SURF_HASH]
+			self._surf.watch()
+		except obj.ObjNotFoundError:
+			self._surf = obj.load(Surface, BUTTON_SURF_HASH, hash(self))
+
+		self._cam = obj.getGroup(Cam)[camHash]
+
+		self._bar = BlockBar(hash(self), camHash, barX, barY)
+
+		_, _, w, h = self._surf.image.get_rect()
+
+		obj.physic.ObjRelative.__init__(
+			self,
+			hash(self),
+			FATHR_HASH,
+			self._surf.image,
+			w,
+			h,
+			self._cam,
+			pg.math.Vector2(x, y)
+		)
+
+		if not Button.sound:
+			Button.sound = pg.mixer.Sound('game/sounds/powerup.ogg')
+
+	def update(self):
+		if self._bar:
+			for player in obj.getGroup("Player"):
+				if player.cBox.colliderect(pg.Rect((self.pos,(self.rect.w, self.rect.h)))):
+					self._bar.close()
+					self._bar = None
+					self.pos.y += 5
+					self.sound.play()
+
+	def draw(self):
+		obj.physic.ObjRelative.draw(self)
+		obj.ObjDraw.draw(self)
+
+	def close(self):
+		self._surf.leave()
+		obj.Obj.close(self)
+
+try:
+	obj.getGroup(Button)
+except obj.GroupNotFoundError:
+	obj.addGroup(obj.Group(Button))
